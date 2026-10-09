@@ -15,9 +15,6 @@ npx remotion render WhatsAppPromo out/whatsapp-promo.mp4 --codec h264 --crf 16
 
 The latest render is committed at `renders/whatsapp-promo.mp4`.
 
-```console
-```
-
 ## Structure
 
 | Path | What |
