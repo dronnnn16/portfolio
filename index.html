@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>मैं क्यों लिखता हूँ</title>
+<meta name="description" content="कक्षा 10 हिंदी, कृतिका भाग 2: अज्ञेय के पाठ 'मैं क्यों लिखता हूँ' का 15 मिनट का आसान रिवीजन और NCERT प्रश्न-अभ्यास।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;700&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --paper:#E6E8EA;      /* पत्थर: ठंडा धूसर कागज़ */
+  --surface:#F3F4F5;
+  --ink:#1B2130;        /* स्याही */
+  --muted:#586174;
+  --line:#C9CDD3;
+  --indigo:#2E3A7C;     /* लिखने की स्याही, मुख्य रंग */
+  --indigo-soft:#DDE1F2;
+  --ember:#A8381B;      /* जलन, केवल अनुभूति के क्षण के लिए */
+  --ember-soft:#F3DFD7;
+  --stone-a:#8F8A82; --stone-b:#6E6A64; --stone-c:#4C4945;
+  --shadow-fig:#2A2724;
+  --good:#2F6B4A;
+  --serif:"Tiro Devanagari Hindi","Noto Serif Devanagari",serif;
+  --sans:"Mukta","Noto Sans Devanagari",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#12151C; --surface:#1A1E28; --ink:#E4E7EE; --muted:#9BA3B5; --line:#2D3342;
+    --indigo:#AAB5F2; --indigo-soft:#232B4D; --ember:#F0835E; --ember-soft:#3A2119;
+    --stone-a:#6E6962; --stone-b:#524E49; --stone-c:#2F2D2A; --shadow-fig:#0C0B0A;
+    --good:#7CC79C; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12151C; --surface:#1A1E28; --ink:#E4E7EE; --muted:#9BA3B5; --line:#2D3342;
+  --indigo:#AAB5F2; --indigo-soft:#232B4D; --ember:#F0835E; --ember-soft:#3A2119;
+  --stone-a:#6E6962; --stone-b:#524E49; --stone-c:#2F2D2A; --shadow-fig:#0C0B0A;
+  --good:#7CC79C; color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.125rem;line-height:1.75}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.35;margin:0}
+p{margin:0 0 .75rem}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--indigo);outline-offset:3px;border-radius:4px}
+.wrap{max-width:44rem;margin:0 auto;padding:0 16px}
+
+/* scroll line */
+.scrollbar{position:fixed;inset:0 0 auto 0;height:3px;z-index:20;background:transparent}
+.scrollbar span{display:block;height:100%;width:0;background:var(--indigo)}
+
+/* theme toggle */
+.theme{position:absolute;top:12px;right:16px;z-index:21;border:1px solid var(--line);background:var(--surface);
+  border-radius:999px;padding:.2rem .8rem;font-size:.9rem;cursor:pointer}
+
+/* ---------- hero ---------- */
+.hero{padding-top:3.5rem;padding-bottom:2rem}
+.hero-grid{display:grid;grid-template-columns:1fr 13rem;gap:1.5rem;align-items:end}
+.book{color:var(--muted);font-size:.95rem;margin-bottom:.5rem}
+.hero h1{font-size:clamp(2.6rem,9vw,4.4rem);letter-spacing:-.01em;line-height:1.15}
+.author{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--muted);margin:.6rem 0 1.2rem}
+.tag{display:inline-block;border:1.5px solid var(--indigo);color:var(--indigo);border-radius:4px;
+  padding:0 .55rem;font-weight:500;font-size:.95rem}
+.stone{width:100%;height:auto;display:block}
+.stone-cap{font-size:.85rem;color:var(--muted);line-height:1.5;margin-top:.4rem}
+.progress{margin-top:1.8rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem}
+.progress-top{display:flex;justify-content:space-between;gap:1rem;font-size:.95rem}
+.progress-top b{font-weight:700;color:var(--indigo)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:.45rem}
+.bar i{display:block;height:100%;width:0;background:var(--indigo);border-radius:99px;transition:width .4s ease}
+.progress small{display:block;color:var(--muted);font-size:.85rem;margin-top:.35rem}
+.toc{display:flex;flex-wrap:wrap;gap:.35rem .9rem;margin-top:1rem;font-size:.95rem}
+.toc a{color:var(--indigo);text-underline-offset:3px}
+.toc a.seen{color:var(--muted);text-decoration-style:dotted}
+
+/* ---------- sections ---------- */
+section{padding:2.6rem 0;border-top:1px solid var(--line)}
+.sec-h{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.1rem}
+.sec-h .n{font-family:var(--serif);color:var(--indigo);font-size:1.6rem;min-width:1.4rem}
+.sec-h h2{font-size:clamp(1.6rem,5vw,2rem)}
+.lede{color:var(--muted)}
+
+.easy{display:block;margin:.6rem 0 0;padding:.35rem .75rem;border-left:3px solid var(--indigo);
+  background:var(--indigo-soft);border-radius:0 6px 6px 0;font-size:1rem;line-height:1.6}
+.easy b{font-weight:700;color:var(--indigo)}
+
+ul.plain{margin:0;padding-left:1.2rem}
+ul.plain li{margin-bottom:.4rem}
+ul.plain li::marker{color:var(--indigo)}
+
+ol.story{list-style:none;margin:0;padding:0;counter-reset:s}
+ol.story li{position:relative;padding:0 0 1rem 2.4rem;counter-increment:s}
+ol.story li::before{content:counter(s,devanagari);position:absolute;left:0;top:.05rem;width:1.7rem;height:1.7rem;
+  border-radius:50%;border:1.5px solid var(--indigo);color:var(--indigo);font-family:var(--serif);
+  display:grid;place-items:center;font-size:1rem;line-height:1}
+
+/* idea blocks: each has its own treatment */
+.idea{margin:0 0 2.2rem}
+.idea:last-child{margin-bottom:0}
+.idea h3{font-size:1.45rem;margin-bottom:.5rem}
+.like{margin-top:.8rem;font-size:1rem;color:var(--muted);line-height:1.6}
+.like b{color:var(--ink);font-weight:500}
+
+.press{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.press span{border:1px dashed var(--muted);border-radius:6px;padding:.05rem .6rem;font-size:1rem}
+
+/* comparison */
+.vs{display:grid;grid-template-columns:5.2rem 1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  background:var(--surface);font-size:1rem;line-height:1.55;margin-top:.6rem}
+.vs > div{padding:.6rem .7rem;border-top:1px solid var(--line)}
+.vs > .hd{border-top:0;font-family:var(--serif);font-size:1.3rem;padding:.7rem}
+.vs > .hd.a{color:var(--ink)}
+.vs > .hd.b{color:var(--ember);background:var(--ember-soft)}
+.vs > .k{color:var(--muted);font-size:.9rem}
+.vs > .b{background:var(--ember-soft)}
+.vs > .hd:first-child{background:transparent}
+
+/* hiroshima: the stone panel */
+.hiro{background:var(--stone-c);color:#EDEBE7;border-radius:4px 18px 6px 14px;padding:1.4rem 1.2rem;position:relative;overflow:hidden}
+.hiro::before{content:"";position:absolute;inset:0;opacity:.35;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.hiro > *{position:relative}
+.hiro h3{color:#fff}
+.hiro p{color:#E4E1DC}
+.hiro .moment{border-left:3px solid #F0835E;padding-left:.8rem;color:#fff}
+.hiro .easy{background:rgba(255,255,255,.08);border-left-color:#F0835E;color:#F2F0EC}
+.hiro .easy b{color:#F7A487}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:.95rem;top:.6rem;bottom:.6rem;width:2px;background:var(--line)}
+.tl li{position:relative;padding:0 0 1.4rem 3rem}
+.tl li:last-child{padding-bottom:0}
+.tl .dot{position:absolute;left:0;top:0;width:2rem;height:2rem;border-radius:50%;background:var(--paper);
+  border:2px solid var(--indigo);color:var(--indigo);display:grid;place-items:center;font-family:var(--serif);line-height:1}
+.tl b{font-family:var(--serif);font-weight:400;font-size:1.25rem;display:block;line-height:1.4}
+.tl small{display:block;color:var(--muted);font-size:.98rem;line-height:1.55}
+.tl .gap b{color:var(--muted)}
+.tl .hot .dot{background:var(--ember);border-color:var(--ember);color:#fff}
+.tl .hot b{color:var(--ember)}
+.tl-note{margin-top:1.2rem;font-size:1rem}
+
+/* remember box */
+.remember{border:2px solid var(--indigo);border-radius:12px;padding:1.2rem 1.1rem;background:var(--surface)}
+.remember dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.55rem 1rem}
+.remember dt{font-family:var(--serif);font-size:1.2rem;color:var(--indigo);line-height:1.5}
+.remember dd{margin:0;font-size:1rem;line-height:1.6}
+.remember .tip{margin-top:1rem;font-size:1rem;border-top:1px dashed var(--line);padding-top:.8rem}
+
+/* ---------- practice ---------- */
+.score{position:sticky;top:3px;z-index:10;background:var(--paper);padding:.6rem 0;margin:0 0 1rem;border-bottom:1px solid var(--line)}
+.score-row{display:flex;justify-content:space-between;align-items:center;gap:.8rem;font-size:1rem}
+.score-row b{color:var(--good);font-size:1.15rem}
+.reset{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.9rem;padding:.2rem}
+.score .bar i{background:var(--good)}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem 1rem 1.1rem;margin-bottom:1rem}
+.q.done{border-color:var(--good)}
+.q-top{display:flex;justify-content:space-between;align-items:baseline;font-size:.9rem;color:var(--muted)}
+.q-top .ok{color:var(--good);font-weight:500;visibility:hidden}
+.q.done .q-top .ok{visibility:visible}
+.q h3{font-size:1.2rem;margin:.3rem 0 .8rem;line-height:1.55}
+.q h3 .sub{display:block;margin-top:.3rem}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem}
+.acts button{border:1.5px solid var(--indigo);background:transparent;color:var(--indigo);border-radius:8px;
+  padding:.3rem .9rem;cursor:pointer;font-weight:500;font-size:1rem;min-height:44px}
+.acts button[aria-expanded="true"]{background:var(--indigo);color:var(--surface)}
+.hint{margin-top:.8rem;font-size:1rem;line-height:1.6;padding:.5rem .75rem;border-radius:6px;background:var(--indigo-soft)}
+.ans{margin-top:.8rem;border-top:1px dashed var(--line);padding-top:.8rem}
+.ans p{font-family:var(--serif);font-size:1.12rem;line-height:1.95}
+.ans .part{font-family:var(--sans);font-weight:700;color:var(--indigo);font-size:.95rem;margin:.4rem 0 .1rem}
+.got{margin-top:.3rem;border:1.5px solid var(--good);background:transparent;color:var(--good);border-radius:8px;
+  padding:.3rem .9rem;cursor:pointer;font-weight:500;min-height:44px}
+.got[aria-pressed="true"]{background:var(--good);color:var(--surface)}
+[hidden]{display:none!important}
+
+footer{padding:2rem 0 3rem;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+
+/* ---------- mobile ---------- */
+@media (max-width:620px){
+  body{font-size:1.06rem}
+  .hero{padding-top:3.2rem}
+  .hero-grid{grid-template-columns:1fr;gap:1rem}
+  .stone-fig{max-width:12rem}
+  .vs{grid-template-columns:4.2rem 1fr 1fr;font-size:.95rem}
+  .vs > div{padding:.5rem .5rem}
+  .remember dl{grid-template-columns:1fr;gap:.1rem}
+  .remember dd{margin-bottom:.6rem}
+}
+</style>
+</head>
+<body>
+<div class="scrollbar" aria-hidden="true"><span id="scrollLine"></span></div>
+<button class="theme" id="themeBtn" type="button" aria-label="रंग बदलें">रात / दिन</button>
+
+<header class="hero wrap" id="top">
+  <div class="hero-grid">
+    <div>
+      <p class="book">कक्षा 10 हिंदी, कृतिका भाग 2</p>
+      <h1>मैं क्यों लिखता हूँ</h1>
+      <p class="author">अज्ञेय (सच्चिदानंद हीरानंद वात्स्यायन)</p>
+      <span class="tag">15 मिनट रिवीजन</span>
+    </div>
+    <figure class="stone-fig" style="margin:0">
+      <svg class="stone" viewBox="0 0 220 240" role="img" aria-label="जला हुआ पत्थर, जिस पर एक मनुष्य की छाया छपी है">
+        <defs>
+          <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+          <filter id="soft"><feGaussianBlur stdDeviation="3.6"/></filter>
+          <radialGradient id="burn" cx="50%" cy="45%" r="70%">
+            <stop offset="0" style="stop-color:var(--stone-a)"/><stop offset=".7" style="stop-color:var(--stone-b)"/><stop offset="1" style="stop-color:var(--stone-c)"/>
+          </radialGradient>
+          <clipPath id="slab"><path d="M18 22 L196 8 L212 120 L204 228 L30 236 L8 132 Z"/></clipPath>
+        </defs>
+        <path d="M18 22 L196 8 L212 120 L204 228 L30 236 L8 132 Z" fill="url(#burn)"/>
+        <g clip-path="url(#slab)">
+          <rect width="220" height="240" fill="#000" filter="url(#grain)"/>
+          <g style="fill:var(--shadow-fig)" opacity=".6" filter="url(#soft)" transform="rotate(-4 108 140)">
+            <ellipse cx="108" cy="58" rx="13" ry="16"/>
+            <path d="M94 78 C100 74 116 74 122 78 C127 96 126 122 122 146 C121 170 120 190 118 214 L111 214 C110 194 109 176 108 160 C107 176 106 194 104 214 L97 214 C96 190 95 170 95 146 C91 122 90 96 94 78 Z"/>
+            <path d="M95 82 C88 98 84 118 85 140 L90 141 C91 120 95 102 100 90 Z"/>
+            <path d="M121 82 C130 96 134 112 136 132 L131 134 C128 116 123 102 116 92 Z"/>
+          </g>
+        </g>
+      </svg>
+      <figcaption class="stone-cap">हिरोशिमा का पत्थर: यहीं से कविता का जन्म हुआ।</figcaption>
+    </figure>
+  </div>
+
+  <div class="progress" aria-live="polite">
+    <div class="progress-top"><span>तुम्हारी तैयारी</span><b id="pctText">0%</b></div>
+    <div class="bar" role="progressbar" aria-label="रिवीजन प्रगति" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="pctBar"><i></i></div>
+    <small id="pctNote">हर भाग पढ़ो और हर प्रश्न का उत्तर याद करके निशान लगाओ।</small>
+  </div>
+
+  <nav class="toc" aria-label="पाठ के भाग">
+    <a href="#lekhak" data-sec="lekhak">लेखक</a>
+    <a href="#saar" data-sec="saar">सार</a>
+    <a href="#vichar" data-sec="vichar">मुख्य विचार</a>
+    <a href="#samay" data-sec="samay">समय-रेखा</a>
+    <a href="#yaad" data-sec="yaad">याद रखो</a>
+    <a href="#abhyas" data-sec="abhyas">प्रश्न-अभ्यास</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- १ लेखक परिचय -->
+  <section id="lekhak" data-track>
+    <div class="sec-h"><span class="n">१</span><h2>लेखक परिचय</h2></div>
+    <ul class="plain">
+      <li>पूरा नाम सच्चिदानंद हीरानंद वात्स्यायन, उपनाम 'अज्ञेय'। जन्म 1911 में कुशीनगर (उत्तर प्रदेश) में, निधन 1987 में।</li>
+      <li>कवि, कहानीकार, उपन्यासकार, निबंधकार और पत्रकार। स्वतंत्रता-आंदोलन में जेल भी गए।</li>
+      <li>'तार सप्तक' का संपादन करके हिंदी कविता में प्रयोगवाद की शुरुआत की।</li>
+      <li>'कितनी नावों में कितनी बार' के लिए ज्ञानपीठ पुरस्कार मिला। प्रसिद्ध उपन्यास: 'शेखर: एक जीवनी'।</li>
+    </ul>
+  </section>
+
+  <!-- २ पाठ का सार -->
+  <section id="saar" data-track>
+    <div class="sec-h"><span class="n">२</span><h2>पाठ का सार</h2></div>
+    <ol class="story">
+      <li>लेखक खुद से पूछते हैं: "मैं क्यों लिखता हूँ?" सवाल आसान लगता है, पर जवाब कठिन है।</li>
+      <li>उनका जवाब: वे यही जानने के लिए लिखते हैं कि वे क्यों लिखते हैं। लिखकर ही वे मन की बेचैनी को पहचानते हैं और उससे छूटते हैं।</li>
+      <li>कुछ लेखक बाहर के दबाव से भी लिखते हैं: संपादक कहे, प्रकाशक माँगे, या पैसों की ज़रूरत हो।</li>
+      <li>लेखक के लिए आँखों देखे अनुभव से ज़्यादा ज़रूरी है अनुभूति, यानी दिल से महसूस करना।</li>
+      <li>उदाहरण हिरोशिमा का है। लेखक ने अणु-बम के बारे में पढ़ा, जापान जाकर अस्पताल भी देखा, फिर भी कुछ नहीं लिखा।</li>
+      <li>एक जले पत्थर पर मनुष्य की छाया देखकर उनका मन हिल गया। भारत लौटकर रेलगाड़ी में उन्होंने 'हिरोशिमा' कविता लिखी।</li>
+    </ol>
+  </section>
+
+  <!-- ३ मुख्य विचार -->
+  <section id="vichar" data-track>
+    <div class="sec-h"><span class="n">३</span><h2>मुख्य विचार</h2></div>
+
+    <div class="idea">
+      <h3>लेखक क्यों लिखता है</h3>
+      <p>लेखक के मन में कोई बात अंदर से ज़ोर लगाती है। इसे <b>भीतरी (आभ्यंतर) विवशता</b> कहते हैं। लिखकर ही लेखक इस विवशता को पहचानता है, और लिखकर ही उससे मुक्त होता है।</p>
+      <span class="easy"><b>आसान भाषा में:</b> मन में कोई बात अटकी हो तो चैन नहीं आता। लिख दो, तो मन हल्का हो जाता है।</span>
+      <p class="like"><b>रोज़ की मिसाल:</b> स्कूल में कोई बड़ी बात हुई। जब तक घर आकर माँ को बता न दो, बेचैनी रहती है। बताते ही मन हल्का। लेखक के लिए लिखना ऐसा ही "बताना" है।</p>
+    </div>
+
+    <div class="idea">
+      <h3>बाहरी दबाव</h3>
+      <p>कुछ रचनाकार बाहर के कारणों से भी लिखते हैं:</p>
+      <div class="press"><span>संपादक का आग्रह</span><span>प्रकाशक का तकाज़ा</span><span>पैसे (आर्थिक) की ज़रूरत</span></div>
+      <p>बाहरी दबाव मदद कर सकता है, पर सच्चे लेखन की असली जड़ भीतरी विवशता ही है।</p>
+      <span class="easy"><b>आसान भाषा में:</b> बाहरी दबाव यानी कोई दूसरा कहे, तब काम करना।</span>
+      <p class="like"><b>रोज़ की मिसाल:</b> नींद खुल चुकी है, फिर भी बिस्तर में पड़े हो। अलार्म बजा, तब उठे। अलार्म ने नींद नहीं तोड़ी, बस उठने में मदद की।</p>
+    </div>
+
+    <div class="idea">
+      <h3>अनुभव बनाम अनुभूति</h3>
+      <div class="vs" role="table" aria-label="अनुभव और अनुभूति की तुलना">
+        <div class="hd" role="columnheader"></div>
+        <div class="hd a" role="columnheader">अनुभव</div>
+        <div class="hd b" role="columnheader">अनुभूति</div>
+
+        <div class="k" role="rowheader">मतलब</div>
+        <div role="cell">जो आँखों से देखा या खुद पर बीता</div>
+        <div class="b" role="cell">संवेदना और कल्पना से भीतर तक महसूस करना</div>
+
+        <div class="k" role="rowheader">कहाँ से</div>
+        <div role="cell">घटना से</div>
+        <div class="b" role="cell">दिल और कल्पना से</div>
+
+        <div class="k" role="rowheader">शर्त</div>
+        <div role="cell">घटना हमारे साथ घटे</div>
+        <div class="b" role="cell">घटना हमारे साथ न घटी हो, तब भी हो सकती है</div>
+
+        <div class="k" role="rowheader">पाठ में</div>
+        <div role="cell">अस्पताल में घायल लोग देखे, पर लिख न सके</div>
+        <div class="b" role="cell">पत्थर पर छाया देखी और कविता बनी</div>
+
+        <div class="k" role="rowheader">मिसाल</div>
+        <div role="cell">खुद गिरे, घुटना छिला</div>
+        <div class="b" role="cell">दोस्त को गिरते देखा और तुम्हारे मुँह से "आह" निकल गई</div>
+      </div>
+      <span class="easy"><b>आसान भाषा में:</b> अनुभव आँख से होता है, अनुभूति दिल से। लेखक कहते हैं कि लिखने में अनुभूति ज़्यादा मदद करती है।</span>
+    </div>
+
+    <div class="idea hiro">
+      <h3>हिरोशिमा प्रसंग</h3>
+      <p>लेखक विज्ञान के विद्यार्थी थे। अणु-बम और उसकी किरणों के असर के बारे में उन्हें किताबों से पता था। पर यह बस दिमाग़ की जानकारी थी।</p>
+      <p>जापान जाकर उन्होंने हिरोशिमा देखा, वह अस्पताल भी देखा जहाँ विस्फोट से घायल लोग दुख झेल रहे थे। फिर भी कुछ नहीं लिखा।</p>
+      <p class="moment">एक दिन सड़क पर उन्हें एक जला हुआ पत्थर दिखा। उस पर एक मनुष्य की छाया छपी थी। विस्फोट के समय वह आदमी वहाँ खड़ा था। किरणों ने उसे भाप बनाकर उड़ा दिया, पर पत्थर पर उसकी छाया रह गई।</p>
+      <p>उस पल लेखक को लगा जैसे विस्फोट उनके भीतर घट गया। वे खुद उस विस्फोट के <b>भोक्ता</b> बन गए। भारत लौटकर, रेलगाड़ी में बैठे-बैठे, 'हिरोशिमा' कविता लिखी गई।</p>
+      <span class="easy"><b>आसान भाषा में:</b> भोक्ता यानी जिसने दर्द खुद झेला हो। लेखक विस्फोट के समय वहाँ नहीं थे, फिर भी उन्होंने वह दर्द ऐसे महसूस किया जैसे खुद झेला हो।</span>
+    </div>
+
+    <div class="idea">
+      <h3>विज्ञान का दुरुपयोग</h3>
+      <p>हिरोशिमा पर अणु-बम गिराना विज्ञान का सबसे भयानक दुरुपयोग था। पाठ का संदेश: विज्ञान इंसान की भलाई के लिए है, विनाश के लिए नहीं।</p>
+      <span class="easy"><b>आसान भाषा में:</b> विज्ञान ताकत है। उसे अच्छे काम में लगाओ तो वरदान, बुरे काम में लगाओ तो अभिशाप।</span>
+      <p class="like"><b>रोज़ की मिसाल:</b> चाकू से माँ सब्ज़ी काटती हैं, वही चाकू किसी को चोट भी पहुँचा सकता है। गलती चाकू की नहीं, चलाने वाले की होती है।</p>
+    </div>
+  </section>
+
+  <!-- ४ समय-रेखा -->
+  <section id="samay" data-track>
+    <div class="sec-h"><span class="n">४</span><h2>कविता कैसे बनी</h2></div>
+    <ol class="tl">
+      <li class="gap"><span class="dot">१</span><b>हिरोशिमा के बारे में पढ़ा</b><small>अणु-बम का ज्ञान किताबों से था। दिमाग़ ने समझा, दिल ने नहीं।</small></li>
+      <li class="gap"><span class="dot">२</span><b>जापान गए</b><small>हिरोशिमा और घायलों का अस्पताल देखा। यह अनुभव था, पर कविता नहीं बनी।</small></li>
+      <li><span class="dot">३</span><b>पत्थर पर छाया देखी</b><small>जले पत्थर पर एक मनुष्य की छाया छपी थी।</small></li>
+      <li class="hot"><span class="dot">४</span><b>अनुभूति हुई</b><small>लगा कि विस्फोट उनके भीतर घटा। वे खुद को उसका भोक्ता महसूस करने लगे।</small></li>
+      <li><span class="dot">५</span><b>कविता लिखी</b><small>भारत लौटकर, रेलगाड़ी में बैठे-बैठे, 'हिरोशिमा' कविता लिखी।</small></li>
+    </ol>
+    <p class="tl-note easy"><b>याद रखने की चाबी:</b> पहले दो कदमों पर कविता नहीं बनी, चौथे पर बनी। यही अनुभव और अनुभूति का फ़र्क है।</p>
+  </section>
+
+  <!-- ५ याद रखो -->
+  <section id="yaad" data-track>
+    <div class="sec-h"><span class="n">५</span><h2>परीक्षा के लिए याद रखो</h2></div>
+    <div class="remember">
+      <dl>
+        <dt>आंतरिक विवशता</dt><dd>मन के अंदर की वह बेचैनी जो लेखक को लिखने पर मजबूर करे। पाठ में इसे 'आभ्यंतर विवशता' भी कहा गया है।</dd>
+        <dt>अनुभूति</dt><dd>संवेदना और कल्पना से किसी सत्य को भीतर तक महसूस करना, चाहे वह घटना अपने साथ न घटी हो।</dd>
+        <dt>अनुभव</dt><dd>जो घटना खुद देखी या खुद पर बीती।</dd>
+        <dt>भोक्ता</dt><dd>जिसने कोई दुख या घटना खुद झेली हो।</dd>
+        <dt>बाह्य दबाव</dt><dd>बाहर से मिलने वाली प्रेरणा: संपादक का आग्रह, प्रकाशक का तकाज़ा, आर्थिक आवश्यकता।</dd>
+      </dl>
+      <p class="tip">उत्तर लिखते समय ये शब्द ज़रूर डालो। परीक्षक इन्हीं शब्दों को ढूँढ़ते हैं।</p>
+    </div>
+  </section>
+
+  <!-- ६ प्रश्न-अभ्यास -->
+  <section id="abhyas" data-track>
+    <div class="sec-h"><span class="n">६</span><h2>प्रश्न-अभ्यास</h2></div>
+    <p class="lede">पहले खुद सोचो, फिर संकेत देखो, आखिर में मॉडल उत्तर पढ़ो। याद हो जाए तो निशान लगाओ।</p>
+
+    <div class="score">
+      <div class="score-row">
+        <span>याद हुए: <b id="scoreText">0 / 8</b></span>
+        <button class="reset" id="resetBtn" type="button">फिर से शुरू करो</button>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="scoreBar"></i></div>
+    </div>
+
+    <div id="qs"></div>
+  </section>
+</main>
+
+<footer class="wrap">
+  NCERT कृतिका भाग 2 के पाठ 'मैं क्यों लिखता हूँ' पर आधारित। मॉडल उत्तर अभ्यास के लिए हैं; अपनी भाषा में लिखो। <a href="#top" style="color:var(--indigo)">ऊपर जाओ</a>
+</footer>
+
+<script>
+(function(){
+  var QS = [
+    {q:"लेखक के अनुसार प्रत्यक्ष अनुभव की अपेक्षा अनुभूति उनके लेखन में कहीं अधिक मदद करती है, क्यों?",
+     h:"अनुभव = घटना से; अनुभूति = संवेदना और कल्पना से। अस्पताल देखकर नहीं लिखा, पत्थर पर छाया देखकर लिखा।",
+     a:["लेखक के अनुसार प्रत्यक्ष अनुभव केवल उस घटना का होता है जो हमारे साथ घटती है, जबकि अनुभूति उससे कहीं गहरी होती है। अनुभूति संवेदना और कल्पना के सहारे उस सत्य को भी भीतर तक महसूस करा देती है जो लेखक के साथ घटा ही नहीं। हिरोशिमा में घायलों का अस्पताल देखकर भी लेखक कुछ न लिख सके, पर जले पत्थर पर मनुष्य की छाया देखकर जो अनुभूति हुई, उसी से कविता बनी। इसलिए अनुभूति लेखन में अधिक सहायक है।"]},
+    {q:"लेखक ने अपने आपको हिरोशिमा के विस्फोट का भोक्ता कब और किस तरह महसूस किया?",
+     h:"कब: जापान में, सड़क पर जला पत्थर देखकर। कैसे: छाया देखकर लगा कि विस्फोट उनके भीतर घटा।",
+     a:["जापान जाकर लेखक ने हिरोशिमा का वह अस्पताल देखा जहाँ विस्फोट से आहत लोग कष्ट भोग रहे थे, फिर भी वे कुछ लिख न सके। एक दिन सड़क पर घूमते हुए उन्होंने एक जले हुए पत्थर पर मनुष्य की छाया देखी। विस्फोट के समय वहाँ खड़ा व्यक्ति भाप बनकर उड़ गया था और पत्थर पर केवल उसकी छाया रह गई थी। उसी क्षण लेखक को लगा मानो विस्फोट उनके भीतर घटित हो गया हो। तब उन्होंने स्वयं को उस विस्फोट का भोक्ता महसूस किया।"]},
+    {q:"(क) लेखक को कौन-सी बातें लिखने के लिए प्रेरित करती हैं?",
+     q2:"(ख) किसी रचनाकार के प्रेरणा स्रोत किसी दूसरे को कुछ भी रचने के लिए किस तरह उत्साहित कर सकते हैं?",
+     h:"(क) भीतरी विवशता, खुद को जानने की इच्छा, अनुभूति; कभी-कभी बाहरी दबाव। (ख) एक की प्रेरणा दूसरे को रास्ता दिखाती है।",
+     a:["(क)","लेखक को लिखने की प्रेरणा मुख्य रूप से उनकी भीतरी (आभ्यंतर) विवशता से मिलती है। वे यह जानने के लिए लिखते हैं कि वे क्यों लिखते हैं। लिखकर ही वे उस विवशता को पहचानते हैं और उससे मुक्त होते हैं। उनके लिए प्रत्यक्ष अनुभव से अधिक अनुभूति प्रेरक है। कभी-कभी संपादकों का आग्रह, प्रकाशकों का तकाज़ा और आर्थिक आवश्यकता जैसे बाहरी दबाव भी सहायक बनते हैं।",
+        "(ख)","किसी रचनाकार के प्रेरणा-स्रोत जानकर दूसरे लोग समझते हैं कि रचना आसपास की साधारण-सी घटना से भी जन्म ले सकती है। अज्ञेय को एक जले पत्थर पर पड़ी छाया ने कविता लिखने को विवश कर दिया। यह जानकर पाठक भी अपने अनुभवों को ध्यान से देखने लगता है और उन्हें शब्दों, चित्रों या संगीत में ढालने के लिए उत्साहित होता है। इस प्रकार एक की प्रेरणा दूसरे के लिए मार्गदर्शक बन जाती है।"]},
+    {q:"कुछ रचनाकारों के लिए आत्मानुभूति के साथ-साथ बाह्य दबाव भी महत्वपूर्ण होता है। ये बाह्य दबाव कौन-कौन से हो सकते हैं?",
+     h:"संपादक, प्रकाशक, पैसा। साथ में जोड़ो: समय-सीमा, पाठकों की माँग, किसी अवसर के लिए लिखना, प्रसिद्धि।",
+     a:["कई रचनाकार आत्मानुभूति के साथ-साथ बाहरी कारणों से भी लिखते हैं। ये बाह्य दबाव हो सकते हैं: संपादकों का आग्रह, प्रकाशकों का तकाज़ा, आर्थिक आवश्यकता, निश्चित समय-सीमा में रचना पूरी करने की बाध्यता, पाठकों की माँग, किसी विशेष अवसर के लिए लिखने का अनुरोध तथा प्रसिद्धि या पुरस्कार पाने की इच्छा। ये दबाव लेखन में सहायक तो हो सकते हैं, परंतु सच्ची रचना का मूल कारण रचनाकार की भीतरी विवशता ही होती है।"]},
+    {q:"क्या बाह्य दबाव केवल लेखन से जुड़े रचनाकारों को ही प्रभावित करते हैं या अन्य क्षेत्रों के कलाकारों को भी? कैसे?",
+     h:"हाँ, सबको। गायक (श्रोता), अभिनेता (निर्देशक, निर्माता), चित्रकार और मूर्तिकार (ग्राहक), साथ में पैसा और बाज़ार।",
+     a:["बाह्य दबाव केवल लेखकों को ही नहीं, अन्य क्षेत्रों के कलाकारों को भी प्रभावित करते हैं। गायक को श्रोताओं की पसंद के अनुसार गाना पड़ता है। अभिनेता निर्देशक और निर्माता के कहने पर अभिनय करता है। चित्रकार और मूर्तिकार को ग्राहक की माँग के अनुसार रचना करनी पड़ती है। आर्थिक आवश्यकता, बाज़ार की माँग, समय-सीमा और प्रसिद्धि की चाह भी उन पर दबाव डालती है। अतः हर कलाकार किसी-न-किसी बाहरी दबाव में काम करता है।"]},
+    {q:"हिरोशिमा पर लिखी कविता लेखक के अंतः और बाह्य दोनों दबावों का परिणाम है, यह आप कैसे कह सकते हैं?",
+     h:"बाहर: हिरोशिमा का विनाश, जापान-यात्रा, अस्पताल, पत्थर पर छाया। अंदर: अनुभूति और बेचैनी, जिससे मुक्त होने के लिए लिखा।",
+     a:["हिरोशिमा का विनाश, लेखक की जापान-यात्रा, अस्पताल में पीड़ितों को देखना और जले पत्थर पर मनुष्य की छाया देखना, ये सब बाहरी कारण थे जिन्होंने लेखक को झकझोर दिया। इन्हीं से उनके भीतर गहरी अनुभूति जागी और मन में ऐसी बेचैनी पैदा हुई जो उनका आंतरिक दबाव बन गई। इसी विवशता से मुक्त होने के लिए उन्होंने भारत लौटकर रेलगाड़ी में 'हिरोशिमा' कविता लिखी। अतः यह कविता अंतः और बाह्य दोनों दबावों का परिणाम है।"]},
+    {q:"हिरोशिमा की घटना विज्ञान का भयानकतम दुरुपयोग है। आपकी दृष्टि में विज्ञान का दुरुपयोग कहाँ-कहाँ हो रहा है?",
+     h:"हथियार और आतंक, लिंग-जाँच, ज़हरीले कीटनाशक, प्रदूषण, साइबर अपराध और झूठी खबरें।",
+     a:["हिरोशिमा पर अणु-बम गिराना विज्ञान का सबसे भयानक दुरुपयोग था। आज भी विज्ञान का दुरुपयोग कई रूपों में हो रहा है: परमाणु, रासायनिक और जैविक हथियार बनाने में; आतंकवादी विस्फोटों में; भ्रूण की लिंग-जाँच कराकर कन्या भ्रूण-हत्या में; खेती में ज़हरीले रसायनों और कीटनाशकों के अधिक प्रयोग में; उद्योगों द्वारा जल और वायु को प्रदूषित करने में; तथा इंटरनेट और मोबाइल से साइबर अपराध और झूठी खबरें फैलाने में। इससे मानवता और प्रकृति दोनों की हानि हो रही है।"]},
+    {q:"एक संवेदनशील युवा नागरिक की हैसियत से विज्ञान का दुरुपयोग रोकने में आपकी क्या भूमिका है?",
+     h:"खुद सही उपयोग करो, लोगों को जागरूक करो, गलत काम का विरोध करो और सूचना दो, शांति का संदेश दो।",
+     a:["एक संवेदनशील युवा नागरिक के रूप में मेरी भूमिका यह है कि मैं स्वयं विज्ञान का उपयोग केवल भलाई के कामों में करूँ। लोगों को परमाणु हथियारों, प्रदूषण, प्लास्टिक और ज़हरीले रसायनों के खतरों के बारे में जागरूक करूँ। भ्रूण की लिंग-जाँच जैसे अपराधों का विरोध करूँ और उनकी सूचना प्रशासन को दूँ। इंटरनेट पर झूठी खबरें न फैलाऊँ। लेख, नाटक और पोस्टर के माध्यम से शांति और विज्ञान के सही उपयोग का संदेश दूँ।"]}
+  ];
+  var DIG = "०१२३४५६७८९";
+  function dev(n){return String(n).replace(/\d/g,function(d){return DIG[d];});}
+
+  // ---- storage (optional; page works without it) ----
+  var KEY = "mkl-revision-v1";
+  var state = {seen:{}, got:{}};
+  try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.seen && s.got) state = s; } catch(e){}
+  function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+  // ---- render questions ----
+  var box = document.getElementById("qs");
+  QS.forEach(function(item, i){
+    var n = i+1, el = document.createElement("article");
+    el.className = "q"; el.id = "q"+n;
+    var ans = item.a.map(function(t){
+      return /^\([कख]\)$/.test(t) ? '<div class="part">'+t+'</div>' : '<p>'+t+'</p>';
+    }).join("");
+    el.innerHTML =
+      '<div class="q-top"><span>प्रश्न '+dev(n)+'</span><span class="ok">याद है ✓</span></div>'+
+      '<h3>'+item.q+(item.q2?'<span class="sub">'+item.q2+'</span>':'')+'</h3>'+
+      '<div class="acts">'+
+        '<button type="button" aria-expanded="false" aria-controls="h'+n+'">संकेत</button>'+
+        '<button type="button" aria-expanded="false" aria-controls="a'+n+'">मॉडल उत्तर</button>'+
+      '</div>'+
+      '<div class="hint" id="h'+n+'" hidden><b>संकेत:</b> '+item.h+'</div>'+
+      '<div class="ans" id="a'+n+'" hidden>'+ans+
+        '<button type="button" class="got" aria-pressed="false">मुझे याद हो गया</button></div>';
+    box.appendChild(el);
+  });
+
+  box.addEventListener("click", function(e){
+    var b = e.target.closest("button"); if (!b) return;
+    var card = b.closest(".q"), n = card.id.slice(1);
+    if (b.hasAttribute("aria-controls")){
+      var panel = document.getElementById(b.getAttribute("aria-controls"));
+      var open = b.getAttribute("aria-expanded") !== "true";
+      b.setAttribute("aria-expanded", open); panel.hidden = !open;
+    } else if (b.classList.contains("got")){
+      if (state.got[n]) delete state.got[n]; else state.got[n] = 1;
+      save(); paint();
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    state.got = {}; save();
+    box.querySelectorAll("[aria-expanded]").forEach(function(b){ b.setAttribute("aria-expanded","false"); });
+    box.querySelectorAll(".hint,.ans").forEach(function(p){ p.hidden = true; });
+    paint();
+  });
+
+  // ---- section tracking ----
+  var secs = document.querySelectorAll("[data-track]");
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ state.seen[en.target.id] = 1; save(); paint(); }
+      });
+    }, {threshold:0, rootMargin:"0px 0px -60% 0px"});
+    secs.forEach(function(s){ io.observe(s); });
+  }
+
+  function paint(){
+    var got = Object.keys(state.got).length, seen = 0;
+    secs.forEach(function(s){ if (state.seen[s.id]) seen++; });
+    QS.forEach(function(_, i){
+      var n = i+1, card = document.getElementById("q"+n), on = !!state.got[n];
+      card.classList.toggle("done", on);
+      var g = card.querySelector(".got");
+      g.setAttribute("aria-pressed", on); g.textContent = on ? "याद हो गया ✓" : "मुझे याद हो गया";
+    });
+    document.getElementById("scoreText").textContent = dev(got)+" / "+dev(QS.length);
+    document.getElementById("scoreBar").style.width = (got/QS.length*100)+"%";
+    var pct = Math.round((seen + got) / (secs.length + QS.length) * 100);
+    document.getElementById("pctText").textContent = dev(pct)+"%";
+    var bar = document.getElementById("pctBar");
+    bar.setAttribute("aria-valuenow", pct); bar.firstElementChild.style.width = pct+"%";
+    document.getElementById("pctNote").textContent =
+      "पढ़े गए भाग: "+dev(seen)+"/"+dev(secs.length)+", याद किए उत्तर: "+dev(got)+"/"+dev(QS.length)+
+      (pct===100 ? "। शाबाश, तुम तैयार हो!" : "");
+    document.querySelectorAll(".toc a").forEach(function(a){ a.classList.toggle("seen", !!state.seen[a.dataset.sec]); });
+  }
+  paint();
+
+  // ---- scroll line ----
+  var line = document.getElementById("scrollLine");
+  function onScroll(){
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    line.style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + "%";
+  }
+  addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+  // ---- theme ----
+  var root = document.documentElement, btn = document.getElementById("themeBtn");
+  try { var t = localStorage.getItem("mkl-theme"); if (t) root.setAttribute("data-theme", t); } catch(e){}
+  function isDark(){
+    var t = root.getAttribute("data-theme");
+    return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function label(){ btn.textContent = isDark() ? "दिन का रंग" : "रात का रंग"; }
+  btn.addEventListener("click", function(){
+    var next = isDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("mkl-theme", next); } catch(e){}
+    label();
+  });
+  label();
+})();
+</script>
+</body>
+</html>
