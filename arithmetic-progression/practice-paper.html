@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AP Practice Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Lexend:wght@400;600;700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&display=swap">
+<style>
+/* Layout: one printed exam sheet on a desk. A red margin line runs down the left of every question
+   (question numbers and the teacher's marks live there). Questions are printed in a book serif;
+   your answers appear in blue-pen handwriting; checking adds red teacher ticks and circled marks. */
+:root {
+  --desk: #E7EBF2;
+  --paper: #FFFFFF;
+  --print: #1C1F26;
+  --muted: #5A6070;
+  --rule: #D5DEEC;
+  --margin: #E26464;
+  --pen: #1E3FAE;
+  --pen-soft: #E4EAFB;
+  --teacher: #C62A20;
+  --ok: #17734A;
+
+  --font-print: "Literata", Georgia, "Times New Roman", serif;
+  --font-ui: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --font-pen: "Kalam", "Segoe Print", "Comic Sans MS", cursive;
+
+  --gutter: 4.25rem;
+  --line: 2.1rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --desk: #0E1016; --paper: #181B23; --print: #E9EBF1; --muted: #A2A8B7; --rule: #2B3243;
+    --margin: #B4555B; --pen: #9DB3FF; --pen-soft: #252F55; --teacher: #FF7B6F; --ok: #58D39B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --desk: #0E1016; --paper: #181B23; --print: #E9EBF1; --muted: #A2A8B7; --rule: #2B3243;
+  --margin: #B4555B; --pen: #9DB3FF; --pen-soft: #252F55; --teacher: #FF7B6F; --ok: #58D39B;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--desk);
+  color: var(--print);
+  font-family: var(--font-print);
+  font-size: 1.075rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+[hidden] { display: none !important; }
+h1, h2, h3, h4, p, ol, ul { margin: 0; }
+sub, sup { font-size: 0.68em; line-height: 0; }
+:focus-visible { outline: 3px solid var(--pen); outline-offset: 2px; border-radius: 4px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Sticky score strip ---------- */
+.strip {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--desk);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-ui);
+}
+.strip-in {
+  max-width: 56rem; margin: 0 auto; padding: 10px 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px;
+}
+.strip-name { font-weight: 700; margin-right: auto; }
+.stat { display: flex; align-items: baseline; gap: 6px; font-size: 0.9rem; color: var(--muted); }
+.stat b { font-size: 1.15rem; color: var(--print); font-variant-numeric: tabular-nums; }
+.timer { display: flex; align-items: center; gap: 8px; }
+.clock { font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; min-width: 3.4rem; }
+.clock.up { color: var(--teacher); }
+
+/* ---------- Sheet ---------- */
+.desk { padding-inline: 16px; padding-block: 28px 64px; }
+.sheet {
+  max-width: 56rem; margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 1px 0 var(--rule), 0 18px 40px -28px rgba(20, 30, 60, 0.35);
+}
+
+.paper-head { padding: 36px 32px 28px; display: grid; gap: 18px; border-bottom: 2px solid var(--print); }
+.paper-kind { font-family: var(--font-ui); font-size: 0.9rem; color: var(--muted); text-align: center; }
+.paper-title { font-family: var(--font-print); font-weight: 700; font-size: clamp(1.9rem, 5.5vw, 2.8rem); line-height: 1.1; text-align: center; text-wrap: balance; }
+.paper-sub { text-align: center; color: var(--muted); }
+.paper-facts { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-ui); font-weight: 600; border-top: 1px solid var(--rule); padding-top: 14px; }
+.instr h2 { font-family: var(--font-ui); font-size: 1rem; margin-bottom: 6px; }
+.instr ol { padding-left: 1.3em; display: grid; gap: 2px; font-size: 0.98rem; }
+.instr .pen-note { font-family: var(--font-pen); color: var(--pen); font-size: 1.15rem; }
+
+/* The red margin line runs through the whole question list */
+.qs { position: relative; display: flex; flex-direction: column; padding-bottom: 12px; }
+.qs::before { content: ""; position: absolute; top: 0; bottom: 0; left: var(--gutter); width: 2px; background: var(--margin); opacity: .8; }
+
+.sec { padding: 26px 24px 10px calc(var(--gutter) + 22px); border-top: 1px solid var(--rule); }
+.qs > .sec:first-child { border-top: 0; }
+.sec h2 { font-family: var(--font-ui); font-size: 1.2rem; }
+.sec p { color: var(--muted); font-size: 0.95rem; }
+
+.q { display: grid; grid-template-columns: var(--gutter) minmax(0, 1fr); padding-block: 18px; scroll-margin-top: 80px; }
+.q + .q { border-top: 1px dashed var(--rule); }
+.q-margin { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 2px; }
+.q-no { font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; }
+.tmark {
+  font-family: var(--font-pen); font-weight: 700; color: var(--teacher);
+  font-size: 1.05rem; line-height: 1;
+  border: 2px solid var(--teacher); border-radius: 50%;
+  padding: 0.45em 0.4em 0.3em;
+  transform: rotate(-9deg);
+  white-space: nowrap;
+  min-width: 2.7em; text-align: center;
+}
+.q-body { padding: 0 24px 0 22px; display: grid; gap: 12px; min-width: 0; }
+
+.q-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-family: var(--font-ui); font-size: 0.82rem; color: var(--muted); }
+.level { display: inline-flex; align-items: center; gap: 3px; font-weight: 600; color: var(--print); }
+.level i { width: 6px; height: 12px; border-radius: 2px; border: 1.5px solid var(--print); display: inline-block; }
+.level i:nth-child(2) { height: 15px; }
+.level i:nth-child(3) { height: 18px; }
+.level i.on { background: var(--print); }
+.level span { margin-left: 4px; }
+.marks { margin-left: auto; font-weight: 600; color: var(--print); white-space: nowrap; }
+
+.q-text { display: grid; gap: 8px; max-width: 40rem; }
+
+/* Parts (answer lines and OMR bubbles) */
+.parts { display: grid; gap: 10px; }
+.part { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 12px; border: 0; margin: 0; padding: 0; min-width: 0; }
+.part-label { flex: 0 1 22rem; min-width: 0; }
+.ans { display: inline-flex; align-items: flex-end; gap: 8px; }
+.ans-pre { font-family: var(--font-ui); font-size: 0.85rem; color: var(--muted); padding-bottom: 6px; }
+.ans input {
+  font-family: var(--font-pen); font-size: 1.5rem; line-height: 1; color: var(--pen);
+  width: 8.5rem; padding: 6px 4px 2px;
+  background: transparent; border: 0; border-bottom: 2px solid var(--rule); border-radius: 0;
+}
+.ans input:focus { border-bottom-color: var(--pen); }
+.ans input:focus-visible { outline: none; background: var(--pen-soft); }
+.ans input::placeholder { color: var(--rule); }
+.tick { font-family: var(--font-pen); font-weight: 700; font-size: 1.6rem; line-height: 1; color: var(--teacher); min-width: 1.2em; }
+
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 16px; flex: 1 1 100%; }
+.opts.long { grid-template-columns: minmax(0, 1fr); }
+.opt { position: relative; display: flex; align-items: flex-start; gap: 10px; padding: 5px 6px; border-radius: 8px; cursor: pointer; }
+.opt:hover { background: var(--pen-soft); }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.bubble {
+  flex: none; width: 1.65rem; height: 1.65rem; border-radius: 50%;
+  border: 1.5px solid var(--print);
+  display: grid; place-items: center;
+  font-family: var(--font-ui); font-weight: 600; font-size: 0.8rem;
+}
+.opt input:checked + .bubble { background: var(--pen); border-color: var(--pen); color: var(--paper); }
+.opt input:focus-visible + .bubble { outline: 3px solid var(--pen); outline-offset: 2px; }
+.opt-text { padding-top: 1px; min-width: 0; }
+.opt-row { display: flex; align-items: center; gap: 8px; flex: 1 1 100%; }
+
+.q-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+button {
+  font-family: var(--font-ui); font-weight: 600; font-size: 0.92rem;
+  padding: 8px 16px; border-radius: 999px;
+  border: 1.5px solid var(--print); background: var(--print); color: var(--paper);
+  cursor: pointer;
+}
+button.ghost { background: transparent; color: var(--print); border-color: var(--rule); }
+button.ghost:hover { border-color: var(--print); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+.q-feedback { font-family: var(--font-ui); font-weight: 600; font-size: 0.95rem; min-height: 0; }
+.q-feedback.good { color: var(--ok); }
+.q-feedback.part, .q-feedback.bad { color: var(--teacher); }
+.q-hint { font-family: var(--font-pen); font-size: 1.2rem; line-height: 1.4; color: var(--pen); }
+
+.q-sol {
+  padding: 4px 16px 10px;
+  border-left: 3px solid var(--ok);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--line) - 1px), var(--rule) calc(var(--line) - 1px), var(--rule) var(--line));
+  line-height: var(--line);
+}
+.q-sol h3 { font-family: var(--font-ui); font-size: 0.9rem; color: var(--ok); line-height: var(--line); }
+.q-sol ol { list-style: none; padding: 0; font-variant-numeric: tabular-nums; }
+
+/* ---------- Report ---------- */
+.finish { padding: 28px 24px 36px calc(var(--gutter) + 22px); border-top: 2px solid var(--print); display: grid; gap: 16px; }
+.finish h2 { font-family: var(--font-ui); font-size: 1.3rem; }
+.report { display: grid; gap: 18px; }
+.report-top { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; }
+.big-mark {
+  font-family: var(--font-pen); font-weight: 700; color: var(--teacher);
+  font-size: 2.6rem; line-height: 1;
+  border: 3px solid var(--teacher); border-radius: 50%;
+  padding: 0.5em 0.45em 0.35em;
+  transform: rotate(-7deg);
+}
+.remark { font-family: var(--font-pen); color: var(--teacher); font-size: 1.45rem; line-height: 1.3; max-width: 26rem; }
+.sec-table-wrap { overflow-x: auto; }
+.sec-table { border-collapse: collapse; font-family: var(--font-ui); font-size: 0.95rem; min-width: 18rem; }
+.sec-table th, .sec-table td { padding: 6px 18px 6px 0; text-align: left; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.sec-table th { color: var(--muted); font-weight: 600; }
+.revise { display: grid; gap: 6px; padding-left: 1.2em; }
+.revise a { color: var(--pen); font-weight: 600; }
+
+.foot { max-width: 56rem; margin: 18px auto 0; font-family: var(--font-ui); font-size: 0.85rem; color: var(--muted); text-align: center; }
+
+@media (max-width: 640px) {
+  :root { --gutter: 2.9rem; }
+  .paper-head { padding: 26px 18px 20px; }
+  .sec { padding: 22px 14px 8px calc(var(--gutter) + 14px); }
+  .q-body { padding: 0 14px 0 14px; }
+  .finish { padding: 24px 14px 28px calc(var(--gutter) + 14px); }
+  .opts { grid-template-columns: minmax(0, 1fr); }
+  .marks { margin-left: 0; }
+  .tmark { font-size: 0.85rem; }
+  .strip-name { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="strip" role="region" aria-label="Your progress">
+  <div class="strip-in">
+    <span class="strip-name">AP Practice Paper</span>
+    <span class="stat">Score <b id="scoreNow">0</b>/ <span id="scoreMax">37</span></span>
+    <span class="stat">Checked <b id="doneNow">0</b>of 14</span>
+    <span class="timer"><span class="clock" id="clock" aria-live="off">60:00</span><button type="button" class="ghost" id="timerBtn">Start timer</button></span>
+  </div>
+</div>
+
+<div class="desk">
+  <div class="sheet">
+    <header class="paper-head">
+      <p class="paper-kind">Class 10 Mathematics, Chapter 5</p>
+      <h1 class="paper-title">Arithmetic Progressions Practice Paper</h1>
+      <p class="paper-sub">14 questions, from basic to advanced</p>
+      <div class="paper-facts"><span>Time allowed: 1 hour</span><span>Maximum marks: 37</span></div>
+      <section class="instr" aria-labelledby="instr-h">
+        <h2 id="instr-h">General instructions</h2>
+        <ol>
+          <li>The paper has five sections. Questions get harder as you go.</li>
+          <li>Section A has 4 multiple-choice questions of 1 mark each.</li>
+          <li>Section B has 3 questions of 2 marks each.</li>
+          <li>Section C has 3 questions of 3 marks each.</li>
+          <li>Section D has 2 long questions of 5 marks each.</li>
+          <li>Section E has 2 case-based questions of 4 marks each.</li>
+          <li>Solve each question in your notebook first. Then write the final answer here and press Check answer. Fractions such as 9/2 are fine.</li>
+        </ol>
+        <p class="pen-note">Your answers are saved in this browser, so you can come back and finish later.</p>
+      </section>
+    </header>
+
+    <div class="qs" id="qs"></div>
+
+    <section class="finish" aria-labelledby="finish-h">
+      <h2 id="finish-h">Finished?</h2>
+      <p>Press the button to add up your marks and see which topics to revise. Questions you haven't checked count as zero.</p>
+      <div class="q-actions">
+        <button type="button" id="finishBtn">Finish paper and see my report</button>
+        <button type="button" class="ghost" id="clearBtn">Clear all answers</button>
+      </div>
+      <div class="report" id="report" hidden aria-live="polite"></div>
+    </section>
+  </div>
+  <p class="foot">Practice questions written for the Class 10 CBSE syllabus. Not an official board paper.</p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SECTIONS = {
+    A: "Multiple choice, 1 mark each",
+    B: "Very short answers, 2 marks each",
+    C: "Short answers, 3 marks each",
+    D: "Long answers, 5 marks each",
+    E: "Case-based questions, 4 marks each"
+  };
+  var LEVELS = { Basic: 1, Medium: 2, Advanced: 3 };
+
+  var Q = [
+    { sec: "A", level: "Basic", topic: "Common difference", marks: 1,
+      text: "<p>The common difference of the AP 7, 3, −1, −5, … is</p>",
+      parts: [{ options: ["4", "−4", "3", "−3"], answer: 1, marks: 1 }],
+      hint: "Subtract a term from the one just after it: 3 − 7.",
+      sol: ["d = a<sub>2</sub> − a<sub>1</sub> = 3 − 7 = −4", "Check: −1 − 3 = −4. Same jump.", "<b>Answer: (b) −4</b>"] },
+    { sec: "A", level: "Basic", topic: "Spotting an AP", marks: 1,
+      text: "<p>Which of these lists is an AP?</p>",
+      parts: [{ options: ["1, 3, 9, 27, …", "2, 5, 9, 14, …", "−4, −1, 2, 5, …", "1, 4, 9, 16, …"], answer: 2, marks: 1 }],
+      hint: "Find the jumps between neighbours in each list. In an AP every jump is the same.",
+      sol: ["(a) jumps 2, 6, 18. Not an AP.", "(b) jumps 3, 4, 5. Not an AP.", "(c) jumps 3, 3, 3. This is an AP.", "(d) jumps 3, 5, 7. Not an AP.", "<b>Answer: (c)</b>"] },
+    { sec: "A", level: "Basic", topic: "nth term", marks: 1,
+      text: "<p>The 15th term of the AP 4, 9, 14, … is</p>",
+      parts: [{ options: ["74", "79", "69", "75"], answer: 0, marks: 1 }],
+      hint: "a = 4 and d = 5. The 15th term needs 14 jumps.",
+      sol: ["a = 4, d = 9 − 4 = 5, n = 15", "a<sub>15</sub> = a + 14d = 4 + 14 × 5 = 74", "<b>Answer: (a) 74</b>"] },
+    { sec: "A", level: "Medium", topic: "Middle term rule, 2b = a + c", marks: 1,
+      text: "<p><b>Assertion (A):</b> 2k + 1, 13 and 5k − 3 are three consecutive terms of an AP when k = 4.</p><p><b>Reason (R):</b> If a, b and c are consecutive terms of an AP, then 2b = a + c.</p>",
+      parts: [{ long: true, answer: 0, marks: 1, options: [
+        "Both A and R are true, and R is the correct explanation of A.",
+        "Both A and R are true, but R is not the correct explanation of A.",
+        "A is true, but R is false.",
+        "A is false, but R is true."] }],
+      hint: "Use 2b = a + c with b = 13, and solve for k.",
+      sol: ["R is true: in an AP, the middle term is the average of its neighbours, so 2b = a + c.", "Using R: 2 × 13 = (2k + 1) + (5k − 3)", "26 = 7k − 2, so 7k = 28 and k = 4. So A is true.", "We used R to prove A, so R correctly explains A.", "<b>Answer: (a)</b>"] },
+
+    { sec: "B", level: "Basic", topic: "Which term", marks: 2,
+      text: "<p>Which term of the AP 8, 14, 20, … is 128?</p>",
+      parts: [{ label: "n =", answer: 21, marks: 2 }],
+      hint: "Solve 128 = 8 + (n − 1) × 6 for n.",
+      sol: ["a = 8, d = 6, a<sub>n</sub> = 128", "128 = 8 + (n − 1) × 6", "120 = (n − 1) × 6, so n − 1 = 20", "<b>Answer: n = 21. 128 is the 21st term.</b>"] },
+    { sec: "B", level: "Medium", topic: "Term from the end", marks: 2,
+      text: "<p>Find the 12th term from the end of the AP 5, 9, 13, …, 201.</p>",
+      parts: [{ label: "12th term from the end =", answer: 157, marks: 2 }],
+      hint: "Start at the last term and jump backwards: l − (n − 1)d.",
+      sol: ["l = 201, d = 9 − 5 = 4, n = 12", "12th term from the end = 201 − (12 − 1) × 4", "= 201 − 44", "<b>Answer: 157</b>"] },
+    { sec: "B", level: "Medium", topic: "Is a number a term?", marks: 2,
+      text: "<p>Is 184 a term of the AP 3, 7, 11, …? Find the value of n you get, then decide.</p>",
+      parts: [
+        { label: "(i) Value of n from the formula", answer: 46.25, marks: 1 },
+        { label: "(ii) Is 184 a term of this AP?", options: ["Yes", "No"], answer: 1, marks: 1, inline: true }],
+      hint: "Solve 184 = 3 + (n − 1) × 4. Is n a whole number?",
+      sol: ["a = 3, d = 4", "184 = 3 + (n − 1) × 4", "181 = (n − 1) × 4, so n − 1 = 45.25 and n = 46.25", "A term number must be a positive whole number, so 184 is not in this AP.", "<b>Answer: n = 46.25, so No.</b>"] },
+
+    { sec: "C", level: "Medium", topic: "Counting terms", marks: 3,
+      text: "<p>How many three-digit numbers are divisible by 7?</p>",
+      parts: [{ label: "Number of such numbers =", answer: 128, marks: 3 }],
+      hint: "The smallest three-digit multiple of 7 is 105 and the largest is 994.",
+      sol: ["The numbers are 105, 112, 119, …, 994", "a = 105, d = 7, l = 994", "994 = 105 + (n − 1) × 7", "889 = (n − 1) × 7, so n − 1 = 127", "<b>Answer: 128</b>"] },
+    { sec: "C", level: "Medium", topic: "AP from two terms", marks: 3,
+      text: "<p>The 4th term of an AP is 14 and its 9th term is 34. Find the first term, the common difference and the 15th term.</p>",
+      parts: [
+        { label: "First term, a =", answer: 2, marks: 1 },
+        { label: "Common difference, d =", answer: 4, marks: 1 },
+        { label: "15th term =", answer: 58, marks: 1 }],
+      hint: "Write a + 3d = 14 and a + 8d = 34. Subtract one equation from the other.",
+      sol: ["a + 3d = 14 … (1)", "a + 8d = 34 … (2)", "(2) − (1): 5d = 20, so d = 4", "From (1): a + 12 = 14, so a = 2", "a<sub>15</sub> = a + 14d = 2 + 56 = 58", "<b>Answer: a = 2, d = 4, a<sub>15</sub> = 58</b>"] },
+    { sec: "C", level: "Advanced", topic: "Three numbers in AP", marks: 3,
+      text: "<p>Three numbers are in AP. Their sum is 24 and their product is 440. Find the numbers.</p>",
+      parts: [
+        { label: "Smallest number =", answer: 5, marks: 1 },
+        { label: "Middle number =", answer: 8, marks: 1 },
+        { label: "Largest number =", answer: 11, marks: 1 }],
+      hint: "Call the numbers a − d, a and a + d. Adding them gives a straight away.",
+      sol: ["Let the numbers be a − d, a, a + d.", "Sum: 3a = 24, so a = 8", "Product: (8 − d) × 8 × (8 + d) = 440", "8(64 − d<sup>2</sup>) = 440, so 64 − d<sup>2</sup> = 55 and d<sup>2</sup> = 9", "d = 3 or −3. Both give the same three numbers.", "<b>Answer: 5, 8, 11</b>"] },
+
+    { sec: "D", level: "Advanced", topic: "Sum of n terms", marks: 5,
+      text: "<p>How many terms of the AP 45, 39, 33, … must be taken so that their sum is 180? You will find two answers. Explain why both are correct.</p>",
+      parts: [
+        { label: "Smaller value of n =", answer: 6, marks: 2 },
+        { label: "Larger value of n =", answer: 10, marks: 2 },
+        { label: "Sum of the 7th to 10th terms =", answer: 0, marks: 1 }],
+      hint: "Put a = 45 and d = −6 into S = n/2 [2a + (n − 1)d], set it equal to 180, and solve the quadratic.",
+      sol: ["a = 45, d = −6, S<sub>n</sub> = 180", "180 = n/2 [90 + (n − 1)(−6)] = n/2 [96 − 6n]", "180 = n(48 − 3n), so 3n<sup>2</sup> − 48n + 180 = 0", "Divide by 3: n<sup>2</sup> − 16n + 60 = 0", "(n − 6)(n − 10) = 0, so n = 6 or n = 10", "The 7th to 10th terms are 9, 3, −3, −9. They add up to 0, so the sum stays 180.", "<b>Answer: n = 6 or 10. The 7th to 10th terms add up to 0.</b>"] },
+    { sec: "D", level: "Advanced", topic: "Finding an AP from S<sub>n</sub>", marks: 5,
+      text: "<p>The sum of the first n terms of an AP is S<sub>n</sub> = 3n<sup>2</sup> + 5n. Find:</p>",
+      parts: [
+        { label: "(i) the first term", answer: 8, marks: 1 },
+        { label: "(ii) the common difference", answer: 6, marks: 2 },
+        { label: "(iii) the 20th term", answer: 122, marks: 2 }],
+      hint: "S<sub>1</sub> is the first term. The second term is S<sub>2</sub> − S<sub>1</sub>.",
+      sol: ["S<sub>1</sub> = 3 + 5 = 8, so a = 8", "S<sub>2</sub> = 12 + 10 = 22, so a<sub>2</sub> = S<sub>2</sub> − S<sub>1</sub> = 14", "d = 14 − 8 = 6", "a<sub>20</sub> = a + 19d = 8 + 114 = 122", "<b>Answer: a = 8, d = 6, a<sub>20</sub> = 122</b>"] },
+
+    { sec: "E", level: "Medium", topic: "Word problem: savings", marks: 4,
+      text: "<p>Aarav is saving for a bicycle. He saves ₹20 in the first week, ₹25 in the second week, ₹30 in the third week, and keeps saving ₹5 more each week than the week before.</p>",
+      parts: [
+        { label: "(i) How much does he save in the 10th week? (₹)", answer: 65, marks: 1 },
+        { label: "(ii) In which week does he save exactly ₹100?", answer: 17, marks: 1 },
+        { label: "(iii) How much has he saved altogether after 20 weeks? (₹)", answer: 1350, marks: 2 }],
+      hint: "The weekly amounts form an AP with a = 20 and d = 5.",
+      sol: ["Savings 20, 25, 30, … form an AP with a = 20, d = 5.", "(i) a<sub>10</sub> = 20 + 9 × 5 = 65, so ₹65", "(ii) 100 = 20 + (n − 1) × 5, so n − 1 = 16 and n = 17", "(iii) S<sub>20</sub> = 20/2 [40 + 19 × 5] = 10 × 135 = 1350, so ₹1350", "<b>Answers: ₹65, week 17, ₹1350</b>"] },
+    { sec: "E", level: "Medium", topic: "Word problem: seating", marks: 4,
+      text: "<p>A school hall has 30 rows of seats. The first row has 20 seats, and every row has 2 more seats than the row in front of it.</p>",
+      parts: [
+        { label: "(i) How many seats are in the last row?", answer: 78, marks: 1 },
+        { label: "(ii) Which row has 50 seats?", answer: 16, marks: 1 },
+        { label: "(iii) How many seats are there in the hall altogether?", answer: 1470, marks: 2 }],
+      hint: "Row sizes form an AP with a = 20, d = 2 and n = 30.",
+      sol: ["Seats per row: 20, 22, 24, … an AP with a = 20, d = 2", "(i) a<sub>30</sub> = 20 + 29 × 2 = 78 seats", "(ii) 50 = 20 + (n − 1) × 2, so n − 1 = 15 and n = 16", "(iii) S<sub>30</sub> = 30/2 × (20 + 78) = 15 × 98 = 1470 seats", "<b>Answers: 78, row 16, 1470</b>"] }
+  ];
+
+  var TOTAL = Q.reduce(function (s, q) { return s + q.marks; }, 0);
+  document.getElementById("scoreMax").textContent = TOTAL;
+
+  /* ---------- Saved answers (this browser only) ---------- */
+  var KEY = "ap-practice-paper-v1";
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+
+  /* ---------- Render ---------- */
+  var qs = document.getElementById("qs");
+  var lastSec = null;
+  var LETTERS = "abcd";
+  Q.forEach(function (q, qi) {
+    var n = qi + 1;
+    q.n = n; q.earned = 0; q.checked = false;
+    if (q.sec !== lastSec) {
+      lastSec = q.sec;
+      var s = document.createElement("div");
+      s.className = "sec";
+      s.innerHTML = "<h2>Section " + q.sec + "</h2><p>" + SECTIONS[q.sec] + "</p>";
+      qs.appendChild(s);
+    }
+    var lv = LEVELS[q.level];
+    var meter = "";
+    for (var i = 1; i <= 3; i++) meter += "<i class='" + (i <= lv ? "on" : "") + "'></i>";
+
+    var partsHtml = q.parts.map(function (p, pi) {
+      var id = "q" + n + "p" + pi;
+      if (p.options) {
+        var opts = p.options.map(function (o, oi) {
+          return "<label class='opt'><input type='radio' name='" + id + "' id='" + id + "o" + oi + "' value='" + oi + "'>" +
+            "<span class='bubble' aria-hidden='true'>" + LETTERS[oi] + "</span><span class='opt-text'><span class='sr'>(" + LETTERS[oi] + ") </span>" + o + "</span></label>";
+        }).join("");
+        return "<fieldset class='part' data-p='" + pi + "'><legend class='" + (p.label ? "part-label" : "sr") + "'>" + (p.label || "Choose one option") + "</legend>" +
+          "<div class='opt-row'><div class='opts" + (p.long ? " long" : "") + "'>" + opts + "</div><span class='tick' aria-hidden='true'></span></div></fieldset>";
+      }
+      return "<div class='part' data-p='" + pi + "'><label class='part-label' for='" + id + "'>" + p.label + "</label>" +
+        "<span class='ans'><span class='ans-pre' aria-hidden='true'>Ans.</span><input id='" + id + "' type='text' inputmode='decimal' autocomplete='off' spellcheck='false'></span>" +
+        "<span class='tick' aria-hidden='true'></span></div>";
+    }).join("");
+
+    var art = document.createElement("article");
+    art.className = "q"; art.id = "q" + n;
+    art.setAttribute("aria-labelledby", "q" + n + "no");
+    art.innerHTML =
+      "<div class='q-margin'><span class='q-no' id='q" + n + "no'>Q" + n + "</span><span class='tmark' hidden></span></div>" +
+      "<div class='q-body'>" +
+        "<div class='q-meta'><span class='level' title='Difficulty'>" + meter + "<span>" + q.level + "</span></span><span>" + q.topic + "</span>" +
+        "<span class='marks'>[" + q.marks + " mark" + (q.marks === 1 ? "" : "s") + "]</span></div>" +
+        "<div class='q-text'>" + q.text + "</div>" +
+        "<div class='parts'>" + partsHtml + "</div>" +
+        "<div class='q-actions'><button type='button' data-act='check'>Check answer</button>" +
+        "<button type='button' class='ghost' data-act='hint' aria-expanded='false'>Hint</button>" +
+        "<button type='button' class='ghost' data-act='sol' aria-expanded='false'>Show solution</button></div>" +
+        "<p class='q-feedback' aria-live='polite'></p>" +
+        "<p class='q-hint' hidden>" + q.hint + "</p>" +
+        "<div class='q-sol' hidden><h3>Solution</h3><ol>" + q.sol.map(function (l) { return "<li>" + l + "</li>"; }).join("") + "</ol></div>" +
+      "</div>";
+    qs.appendChild(art);
+    q.el = art;
+
+    // restore saved values
+    q.parts.forEach(function (p, pi) {
+      var id = "q" + n + "p" + pi;
+      if (saved[id] === undefined) return;
+      if (p.options) { var r = document.getElementById(id + "o" + saved[id]); if (r) r.checked = true; }
+      else document.getElementById(id).value = saved[id];
+    });
+  });
+
+  qs.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t.matches("input[type=text]")) saved[t.id] = t.value;
+    else if (t.matches("input[type=radio]")) saved[t.name] = t.value;
+    else return;
+    persist();
+  });
+
+  /* ---------- Checking ---------- */
+  function parseAns(s) {
+    s = String(s).replace(/[−–]/g, "-").replace(/[₹,\s]/g, "").replace(/^n=/i, "");
+    if (!s) return null;
+    var m = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    if (m) { var den = Number(m[2]); return den === 0 ? NaN : Number(m[1]) / den; }
+    return /^-?\d*\.?\d+$/.test(s) ? Number(s) : NaN;
+  }
+
+  function checkQ(q) {
+    var n = q.n, results = [], blank = 0;
+    q.parts.forEach(function (p, pi) {
+      var id = "q" + n + "p" + pi, ok, empty;
+      if (p.options) {
+        var sel = q.el.querySelector("input[name='" + id + "']:checked");
+        empty = !sel; ok = !!sel && Number(sel.value) === p.answer;
+      } else {
+        var v = parseAns(document.getElementById(id).value);
+        empty = v === null; ok = v !== null && !isNaN(v) && Math.abs(v - p.answer) < 1e-6;
+      }
+      if (empty) blank++;
+      results.push({ ok: ok, empty: empty });
+    });
+    var fb = q.el.querySelector(".q-feedback");
+    if (blank === q.parts.length) {
+      fb.className = "q-feedback bad";
+      fb.textContent = "Write an answer first" + (q.parts.length > 1 ? ", at least for one part." : ".");
+      return;
+    }
+    var earned = 0, wrong = [];
+    results.forEach(function (r, i) {
+      var tick = q.el.querySelector(".part[data-p='" + i + "'] .tick");
+      tick.textContent = r.ok ? "✓" : "✗";
+      if (r.ok) earned += q.parts[i].marks; else wrong.push(i);
+    });
+    q.earned = earned; q.checked = true;
+    var tm = q.el.querySelector(".tmark");
+    tm.textContent = earned + "/" + q.marks; tm.hidden = false;
+    tm.setAttribute("aria-label", earned + " out of " + q.marks + " marks");
+    if (earned === q.marks) {
+      fb.className = "q-feedback good";
+      fb.textContent = "Correct. " + earned + " out of " + q.marks + " mark" + (q.marks === 1 ? "" : "s") + ".";
+    } else {
+      var names = wrong.map(function (i) { return q.parts.length > 1 ? "part " + (i + 1) : "your answer"; });
+      fb.className = "q-feedback " + (earned ? "part" : "bad");
+      fb.textContent = earned + " out of " + q.marks + ". Look again at " + names.join(" and ") + ", or open the hint.";
+    }
+    updateTotals();
+  }
+
+  function toggle(btn, panel, showText, hideText) {
+    var open = panel.hidden;
+    panel.hidden = !open;
+    btn.setAttribute("aria-expanded", String(open));
+    if (showText) btn.textContent = open ? hideText : showText;
+  }
+
+  qs.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-act]");
+    if (!btn) return;
+    var q = Q[Number(btn.closest(".q").id.slice(1)) - 1];
+    var act = btn.dataset.act;
+    if (act === "check") checkQ(q);
+    else if (act === "hint") toggle(btn, q.el.querySelector(".q-hint"), "Hint", "Hide hint");
+    else if (act === "sol") toggle(btn, q.el.querySelector(".q-sol"), "Show solution", "Hide solution");
+  });
+
+  // Enter in an answer line checks that question
+  qs.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && e.target.matches("input[type=text]")) {
+      e.preventDefault();
+      checkQ(Q[Number(e.target.closest(".q").id.slice(1)) - 1]);
+    }
+  });
+
+  function updateTotals() {
+    var score = 0, done = 0;
+    Q.forEach(function (q) { score += q.earned; if (q.checked) done++; });
+    document.getElementById("scoreNow").textContent = score;
+    document.getElementById("doneNow").textContent = done;
+    if (!document.getElementById("report").hidden) showReport();
+  }
+
+  /* ---------- Report ---------- */
+  function showReport() {
+    var score = 0;
+    var bySec = {};
+    Q.forEach(function (q) {
+      score += q.earned;
+      bySec[q.sec] = bySec[q.sec] || { got: 0, max: 0 };
+      bySec[q.sec].got += q.earned; bySec[q.sec].max += q.marks;
+    });
+    var pct = Math.round(score / TOTAL * 100);
+    var remark = pct >= 90 ? "Excellent work. You're ready for board questions on this chapter." :
+                 pct >= 70 ? "Good work. Fix the few slips below and you're there." :
+                 pct >= 40 ? "A fair start. Revise the topics below, then try those questions again." :
+                             "Go back over the lesson, then try the paper again. You'll improve quickly.";
+    var rows = Object.keys(bySec).map(function (k) {
+      return "<tr><td>Section " + k + "</td><td>" + bySec[k].got + " / " + bySec[k].max + "</td></tr>";
+    }).join("");
+    var todo = Q.filter(function (q) { return q.earned < q.marks; });
+    var list = todo.length ?
+      "<h3 style='font-family:var(--font-ui);font-size:1rem'>Revise these</h3><ol class='revise'>" + todo.map(function (q) {
+        return "<li><a href='#q" + q.n + "'>Q" + q.n + "</a> " + q.topic + (q.checked ? ", " + q.earned + " of " + q.marks : ", not checked yet") + "</li>";
+      }).join("") + "</ol>" :
+      "<p class='remark'>Full marks on every question.</p>";
+    var rep = document.getElementById("report");
+    rep.innerHTML =
+      "<div class='report-top'><span class='big-mark' role='img' aria-label='" + score + " out of " + TOTAL + "'>" + score + "/" + TOTAL + "</span>" +
+      "<div><p style='font-family:var(--font-ui);font-weight:700'>" + pct + "%</p><p class='remark'>" + remark + "</p></div></div>" +
+      "<div class='sec-table-wrap'><table class='sec-table'><thead><tr><th scope='col'>Section</th><th scope='col'>Marks</th></tr></thead><tbody>" + rows + "</tbody></table></div>" +
+      list;
+    rep.hidden = false;
+  }
+  document.getElementById("finishBtn").addEventListener("click", function () {
+    showReport();
+    document.getElementById("report").scrollIntoView({ block: "nearest" });
+  });
+
+  /* ---------- Clear (tap twice to confirm) ---------- */
+  var clearBtn = document.getElementById("clearBtn"), clearArmed = null;
+  clearBtn.addEventListener("click", function () {
+    if (!clearArmed) {
+      clearBtn.textContent = "Tap again to clear everything";
+      clearArmed = setTimeout(function () { clearArmed = null; clearBtn.textContent = "Clear all answers"; }, 3000);
+      return;
+    }
+    clearTimeout(clearArmed); clearArmed = null;
+    clearBtn.textContent = "Cleared";
+    setTimeout(function () { clearBtn.textContent = "Clear all answers"; }, 1500);
+    saved = {}; persist();
+    Q.forEach(function (q) {
+      q.earned = 0; q.checked = false;
+      q.el.querySelectorAll("input[type=text]").forEach(function (i) { i.value = ""; });
+      q.el.querySelectorAll("input[type=radio]").forEach(function (i) { i.checked = false; });
+      q.el.querySelectorAll(".tick").forEach(function (t) { t.textContent = ""; });
+      q.el.querySelector(".tmark").hidden = true;
+      var fb = q.el.querySelector(".q-feedback"); fb.textContent = ""; fb.className = "q-feedback";
+      [[".q-hint", "[data-act=hint]", "Hint"], [".q-sol", "[data-act=sol]", "Show solution"]].forEach(function (x) {
+        q.el.querySelector(x[0]).hidden = true;
+        var b = q.el.querySelector(x[1]); b.textContent = x[2]; b.setAttribute("aria-expanded", "false");
+      });
+    });
+    document.getElementById("report").hidden = true;
+    updateTotals();
+  });
+
+  /* ---------- Timer ---------- */
+  var LIMIT = 60 * 60 * 1000, left = LIMIT, endAt = null, tickId = null;
+  var clock = document.getElementById("clock"), timerBtn = document.getElementById("timerBtn");
+  function showClock() {
+    var s = Math.max(0, Math.ceil(left / 1000));
+    clock.textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  }
+  timerBtn.addEventListener("click", function () {
+    if (left <= 0) { left = LIMIT; clock.classList.remove("up"); showClock(); timerBtn.textContent = "Start timer"; return; }
+    if (tickId) {
+      clearInterval(tickId); tickId = null; left = endAt - Date.now();
+      timerBtn.textContent = "Resume timer";
+      return;
+    }
+    endAt = Date.now() + left;
+    timerBtn.textContent = "Pause timer";
+    tickId = setInterval(function () {
+      left = endAt - Date.now();
+      showClock();
+      if (left <= 0) {
+        clearInterval(tickId); tickId = null;
+        clock.textContent = "Time's up"; clock.classList.add("up");
+        timerBtn.textContent = "Reset timer";
+      }
+    }, 250);
+  });
+  showClock();
+})();
+</script>
+</body>
+</html>
