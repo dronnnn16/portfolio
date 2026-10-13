@@ -50,10 +50,10 @@
     <section class="hero" id="top">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="hindi" lang="hi">जयपुर का अपना जिम</p>
-          <h1>Get strong in the Pink City.</h1>
-          <p class="lede">Iron Haveli is a strength and conditioning gym in Malviya Nagar, Jaipur. Coached on the floor by founder Aaron Chaudhry and his team, open from 5 am every day.</p>
-          <div class="hero-actions">
+          <p class="hindi hero-anim" lang="hi">जयपुर का अपना जिम</p>
+          <h1><span class="line"><span>Get strong</span></span><span class="line"><span>in the</span></span><span class="line"><span>Pink City.</span></span></h1>
+          <p class="lede hero-anim" style="animation-delay:.35s">Iron Haveli is a strength and conditioning gym in Malviya Nagar, Jaipur. Coached on the floor by founder Aaron Chaudhry and his team, open from 5 am every day.</p>
+          <div class="hero-actions hero-anim" style="animation-delay:.5s">
             <a class="btn" href="#trial">Book a free trial</a>
             <a class="btn btn-ghost" href="#membership">See membership plans</a>
           </div>
@@ -68,11 +68,18 @@
         </div>
       </div>
       <ul class="wrap hero-facts">
-        <li><strong>5 am – 11 pm</strong> open all week</li>
-        <li><strong>8,000 sq ft</strong> of training floor</li>
-        <li><strong>Women-only</strong> morning batch</li>
+        <li class="hero-anim" style="animation-delay:.65s"><strong>5 am – 11 pm</strong> open all week</li>
+        <li class="hero-anim" style="animation-delay:.75s"><strong>8,000 sq ft</strong> of training floor</li>
+        <li class="hero-anim" style="animation-delay:.85s"><strong>Women-only</strong> morning batch</li>
       </ul>
     </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="marquee-group"><span>Powerlifting</span><span>Functional conditioning</span><span>Boxing</span><span>Women-only morning batch</span><span>Personal training</span><span>Open from 5 am</span></div>
+        <div class="marquee-group"><span>Powerlifting</span><span>Functional conditioning</span><span>Boxing</span><span>Women-only morning batch</span><span>Personal training</span><span>Open from 5 am</span></div>
+      </div>
+    </div>
 
     <!-- ABOUT -->
     <section class="about" id="about">
@@ -94,8 +101,8 @@
           </blockquote>
           <dl class="about-facts">
             <div><dt>Coaching since</dt><dd>2012</dd></div>
-            <div><dt>Certified coaches</dt><dd>9</dd></div>
-            <div><dt>Members trained</dt><dd>2,400+</dd></div>
+            <div><dt>Certified coaches</dt><dd data-count="9">9</dd></div>
+            <div><dt>Members trained</dt><dd data-count="2400" data-suffix="+">2,400+</dd></div>
           </dl>
         </div>
       </div>
