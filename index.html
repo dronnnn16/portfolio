@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coordinate Geometry Revision</title>
+<meta name="description" content="NCERT Class 10 Maths, Chapter 7: Coordinate Geometry. A 10-minute exam revision with simple explanations, worked examples and 10 practice questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script>
+  // Apply saved theme before paint to avoid a flash.
+  try { var t = localStorage.getItem('cg-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+<style>
+:root {
+  --paper: #F5F8FB;
+  --surface: #FFFFFF;
+  --grid: #E0E7EF;
+  --line: #C6D1DC;
+  --ink: #142231;
+  --muted: #536273;
+  --accent: #2446C8;
+  --accent-soft: #E4E9FA;
+  --on-accent: #FFFFFF;
+  --good: #1D7348;
+  --bad: #B3261E;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #17211E;
+    --surface: #1D2925;
+    --grid: #22312C;
+    --line: #34463F;
+    --ink: #E6EDE8;
+    --muted: #A2B3AA;
+    --accent: #9EB5FF;
+    --accent-soft: #24303F;
+    --on-accent: #0F1A33;
+    --good: #82D6A6;
+    --bad: #FF9E91;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #17211E;
+  --surface: #1D2925;
+  --grid: #22312C;
+  --line: #34463F;
+  --ink: #E6EDE8;
+  --muted: #A2B3AA;
+  --accent: #9EB5FF;
+  --accent-soft: #24303F;
+  --on-accent: #0F1A33;
+  --good: #82D6A6;
+  --bad: #FF9E91;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 46rem; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- Top bar ---------- */
+.bar {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-inner { display: flex; align-items: center; gap: 12px; height: 52px; }
+.bar-title { font-family: var(--display); font-weight: 700; font-size: 1rem; white-space: nowrap; margin-right: auto; text-decoration: none; color: var(--ink); }
+.bar-score { font-size: .9rem; color: var(--muted); white-space: nowrap; text-decoration: none; }
+.bar-score b { color: var(--ink); }
+.bar-track { position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; }
+.bar-fill { height: 100%; width: 0; background: var(--accent); transition: width .4s ease; }
+.icon-btn {
+  appearance: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+}
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-sun { display: none; }
+:root[data-theme="dark"] .icon-sun { display: block; }
+:root[data-theme="dark"] .icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .icon-sun { display: block; }
+  :root:not([data-theme="light"]) .icon-moon { display: none; }
+}
+
+/* ---------- Hero: the hero is Quadrant I ---------- */
+.hero {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+  padding-top: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.plane {
+  position: relative;
+  margin: 0 0 0 28px;
+  padding: 18px 0 44px 26px;
+  border-left: 2.5px solid var(--ink);
+  border-bottom: 2.5px solid var(--ink);
+}
+.plane::before, .plane::after { content: ""; position: absolute; border: 7px solid transparent; }
+.plane::before { /* y-axis arrow */ top: -14px; left: -8.5px; border-bottom: 12px solid var(--ink); border-top: 0; }
+.plane::after { /* x-axis arrow */ right: -14px; bottom: -8.5px; border-left: 12px solid var(--ink); border-right: 0; }
+.axis-name { position: absolute; font-family: var(--display); font-weight: 700; font-size: .95rem; color: var(--muted); }
+.axis-name.y { top: -12px; left: 12px; }
+.axis-name.x { right: -6px; bottom: 8px; }
+.origin { position: absolute; left: -7px; bottom: -7px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.origin-label { position: absolute; left: -2px; bottom: -32px; font-size: .85rem; color: var(--muted); white-space: nowrap; }
+.kicker { margin: 0 0 6px; color: var(--muted); font-size: .95rem; }
+h1 {
+  font-family: var(--display);
+  font-stretch: 75%;
+  font-variation-settings: "wdth" 75, "opsz" 96;
+  font-weight: 800;
+  font-size: clamp(2.9rem, 13vw, 5.6rem);
+  line-height: .9;
+  letter-spacing: -.02em;
+  margin: 0 0 18px;
+}
+.tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: var(--on-accent);
+  font-weight: 700; font-size: .95rem;
+  padding: 6px 14px 6px 10px; border-radius: 999px;
+}
+.tag svg { width: 18px; height: 18px; }
+.lede { max-width: 32rem; margin: 16px 0 0; }
+
+.progress { padding: 46px 0 28px; }
+.progress-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.progress-head strong { font-family: var(--display); font-size: 1.1rem; }
+.progress-head span { color: var(--muted); font-size: .95rem; }
+.track { height: 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+.fill { height: 100%; width: 0; background: var(--accent); border-radius: 999px; transition: width .5s ease; }
+.toc { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.toc a {
+  display: inline-flex; align-items: center; gap: 6px;
+  text-decoration: none; color: var(--ink); font-size: .92rem;
+  background: var(--surface); border: 1px solid var(--line);
+  padding: 5px 12px; border-radius: 999px;
+}
+.toc a .tick { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 11px; line-height: 1; }
+.toc a.done { border-color: var(--accent); }
+.toc a.done .tick { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+/* ---------- Sections ---------- */
+section.part { padding: 52px 0 8px; }
+.part-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 6px; }
+.part-num {
+  flex: none; font-family: var(--display); font-weight: 800; font-size: 1rem;
+  width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink);
+  display: grid; place-items: center; transform: translateY(-4px);
+}
+h2 { font-family: var(--display); font-weight: 800; font-size: clamp(1.7rem, 6vw, 2.2rem); line-height: 1.1; margin: 0; letter-spacing: -.01em; }
+h3 { font-family: var(--display); font-weight: 700; font-size: 1.3rem; line-height: 1.2; margin: 36px 0 8px; }
+p { margin: 10px 0; }
+.sub { color: var(--muted); margin-top: 2px; }
+ul.plain { padding-left: 1.2em; margin: 10px 0; }
+ul.plain li { margin: 4px 0; }
+
+.formula {
+  background: var(--surface); border: 2px solid var(--ink); border-radius: 10px;
+  padding: 10px 14px; margin: 16px 0; overflow-x: auto; font-size: 1.1rem;
+}
+.formula .katex-display { margin: .4em 0; }
+.formula-note { margin: -8px 0 16px; color: var(--muted); font-size: .95rem; }
+
+.think {
+  background: var(--accent-soft); border-radius: 0 10px 10px 0; border-left: 4px solid var(--accent);
+  padding: 12px 16px; margin: 16px 0;
+}
+.think > strong:first-child { display: block; font-family: var(--display); font-size: 1.05rem; margin-bottom: 2px; }
+.think p { margin: 6px 0; }
+.figure { display: block; width: 100%; max-width: 420px; height: auto; margin: 10px 0 4px; }
+
+.example { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 14px 16px; margin: 16px 0; }
+.example .ex-q { margin: 0 0 6px; font-weight: 700; }
+.steps { margin: 6px 0; padding-left: 1.4em; }
+.steps li { margin: 6px 0; padding-left: 4px; }
+.steps li::marker { color: var(--accent); font-weight: 700; }
+.ex-ans { margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); }
+.ex-ans b { color: var(--accent); }
+.katex { font-size: 1.06em; }
+.steps .katex, .example .katex { white-space: nowrap; }
+
+.uses { display: grid; gap: 12px; margin: 14px 0; }
+@media (min-width: 640px) { .uses { grid-template-columns: 1fr 1fr; } }
+.use { border-top: 3px solid var(--ink); padding-top: 8px; }
+.use h4 { margin: 0 0 4px; font-family: var(--display); font-size: 1.1rem; }
+.use p { margin: 6px 0; font-size: .98rem; }
+
+/* ---------- Graph ---------- */
+.graph-box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; margin: 16px 0; }
+#plane:focus { outline: none; }
+#plane:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+#plane { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; cursor: crosshair; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+#plane .g-grid { stroke: var(--grid); stroke-width: 1; }
+#plane .g-axis { stroke: var(--ink); stroke-width: 2; }
+#plane .g-tick { fill: var(--muted); font: 11px var(--body); }
+#plane .g-q { fill: var(--accent); opacity: 0; transition: opacity .25s; }
+#plane .g-q.on { opacity: .1; }
+#plane .g-qlabel { fill: var(--muted); font: 700 13px var(--display); }
+#plane .g-qlabel.on { fill: var(--accent); }
+#plane .g-guide { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+#plane .g-dot { fill: var(--accent); stroke: var(--surface); stroke-width: 2.5; }
+#plane .g-label { fill: var(--ink); font: 700 14px var(--body); paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+#plane .g-axisname { fill: var(--ink); font: 700 13px var(--display); }
+#pointer.pop .g-dot { animation: pop .3s ease; transform-box: fill-box; transform-origin: center; }
+@keyframes pop { 0% { transform: scale(.3); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.readout { text-align: center; padding: 6px 4px 4px; min-height: 4.4em; }
+.readout .coords { font-family: var(--display); font-weight: 800; font-size: 1.6rem; line-height: 1.2; }
+.readout .why { color: var(--muted); margin: 2px 0 0; font-size: .98rem; }
+
+.signs { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .98rem; }
+.signs th, .signs td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); }
+.signs th { font-family: var(--display); font-weight: 700; }
+.signs td:nth-child(2) { font-weight: 700; white-space: nowrap; }
+
+/* ---------- Cheat sheet ---------- */
+.cheat { border: 2.5px solid var(--ink); border-radius: 14px; background: var(--surface); padding: 6px 16px 14px; margin: 16px 0; }
+.cheat-row { display: grid; grid-template-columns: 1fr; gap: 2px 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.cheat-row:last-child { border-bottom: 0; }
+.cheat-row dt { font-weight: 700; font-size: .95rem; color: var(--muted); }
+.cheat-row dd { margin: 0; overflow-x: auto; }
+@media (min-width: 640px) { .cheat-row { grid-template-columns: 11rem 1fr; align-items: center; } }
+.btn {
+  appearance: none; font: 700 .98rem var(--body); cursor: pointer;
+  padding: 9px 16px; border-radius: 8px; border: 1.5px solid var(--ink);
+  background: var(--surface); color: var(--ink);
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); }
+
+/* ---------- Mistakes ---------- */
+.mistakes { list-style: none; padding: 0; margin: 14px 0; counter-reset: m; }
+.mistakes li { position: relative; padding: 12px 0 12px 40px; border-bottom: 1px solid var(--line); }
+.mistakes li::before {
+  content: "✕"; position: absolute; left: 0; top: 12px; width: 28px; height: 28px; border-radius: 50%;
+  background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad);
+  display: grid; place-items: center; font-weight: 700; font-size: .9rem;
+}
+.mistakes strong { font-family: var(--display); font-size: 1.08rem; }
+.mistakes p { margin: 4px 0 0; }
+.wrong { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.right { color: var(--good); font-weight: 700; }
+
+/* ---------- Practice ---------- */
+.score-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--ink); color: var(--paper); border-radius: 12px; padding: 12px 16px; margin: 16px 0 6px;
+}
+.score-card .num { font-family: var(--display); font-weight: 800; font-size: 1.9rem; line-height: 1; }
+.score-card .num small { font-size: 1rem; font-weight: 700; opacity: .7; }
+.score-card .btn { background: transparent; color: var(--paper); border-color: color-mix(in srgb, var(--paper) 50%, transparent); padding: 6px 12px; font-size: .9rem; }
+.typing-tip { color: var(--muted); font-size: .92rem; margin: 6px 0 14px; }
+.q { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px 16px; margin: 14px 0; }
+.q.solved { border-color: var(--good); box-shadow: inset 4px 0 0 var(--good); }
+.q-top { display: flex; gap: 12px; align-items: baseline; }
+.q-n { flex: none; font-family: var(--display); font-weight: 800; color: var(--accent); font-size: 1.15rem; min-width: 1.6em; }
+.q-text { margin: 0; font-weight: 700; }
+.q-fields { display: grid; gap: 10px; margin: 12px 0 0; }
+.field label { display: block; font-size: .9rem; color: var(--muted); margin-bottom: 3px; }
+.field input, .field select {
+  width: 100%; font: 1.02rem var(--body); color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 9px 11px;
+}
+.field input.ok, .field select.ok { border-color: var(--good); }
+.field input.no, .field select.no { border-color: var(--bad); }
+.q-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.q-actions .btn { padding: 7px 13px; font-size: .93rem; }
+.feedback { margin: 10px 0 0; font-weight: 700; min-height: 0; }
+.feedback.ok { color: var(--good); }
+.feedback.no { color: var(--bad); }
+.reveal { margin-top: 10px; padding: 10px 14px; border-radius: 8px; background: var(--accent-soft); }
+.reveal[hidden] { display: none; }
+.reveal p { margin: 4px 0; }
+.reveal .steps { margin: 4px 0; }
+
+footer { padding: 48px 0 64px; color: var(--muted); }
+footer p { font-family: var(--display); font-weight: 700; font-size: 1.3rem; color: var(--ink); margin: 0 0 4px; }
+
+/* ---------- Print: cheat sheet only ---------- */
+@media print {
+  :root, :root[data-theme="dark"] {
+    --paper: #fff; --surface: #fff; --ink: #000; --muted: #333; --line: #999; --accent: #000; --accent-soft: #fff;
+  }
+  html.print-cheat .bar, html.print-cheat .hero, html.print-cheat footer,
+  html.print-cheat main > *:not(#cheat), html.print-cheat .no-print { display: none !important; }
+  html.print-cheat #cheat { padding-top: 0; }
+  .bar, .no-print, .q-actions, .q-fields { display: none !important; }
+  .cheat { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap bar-inner">
+    <a class="bar-title" href="#top">Ch 7 revision</a>
+    <a class="bar-score" href="#practice">Practice <b id="bar-score">0/10</b></a>
+    <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch light or dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+  <div class="bar-track" aria-hidden="true"><div class="bar-fill" id="bar-fill"></div></div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <div class="plane">
+      <span class="axis-name y" aria-hidden="true">y</span>
+      <span class="axis-name x" aria-hidden="true">x</span>
+      <span class="origin" aria-hidden="true"></span>
+      <span class="origin-label" aria-hidden="true">O (0, 0), start here</span>
+      <p class="kicker">NCERT Class 10 Maths, Chapter 7</p>
+      <h1>Coordinate<br>Geometry</h1>
+      <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>10-minute revision</span>
+      <p class="lede">Two formulas. A few tricks. Ten exam questions. Read top to bottom, then do the practice.</p>
+    </div>
+    <div class="progress">
+      <div class="progress-head">
+        <strong>Your progress</strong>
+        <span id="progress-text">0 of 6 sections read</span>
+      </div>
+      <div class="track" role="progressbar" aria-label="Sections read" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress-bar"><div class="fill" id="progress-fill"></div></div>
+      <ul class="toc" id="toc">
+        <li><a href="#basics" data-for="basics"><span class="tick" aria-hidden="true"></span>Basics</a></li>
+        <li><a href="#distance" data-for="distance"><span class="tick" aria-hidden="true"></span>Distance formula</a></li>
+        <li><a href="#section" data-for="section"><span class="tick" aria-hidden="true"></span>Section formula</a></li>
+        <li><a href="#cheat" data-for="cheat"><span class="tick" aria-hidden="true"></span>Cheat sheet</a></li>
+        <li><a href="#mistakes" data-for="mistakes"><span class="tick" aria-hidden="true"></span>Common mistakes</a></li>
+        <li><a href="#practice" data-for="practice"><span class="tick" aria-hidden="true"></span>Practice</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ======================= 1. BASICS ======================= -->
+<section class="part" id="basics">
+  <div class="part-head"><span class="part-num">1</span><h2>The basics</h2></div>
+  <p class="sub">Every point has an address. The address is two numbers: \((x, y)\).</p>
+
+  <ul class="plain">
+    <li>The <b>x-axis</b> is the flat line. It goes left and right.</li>
+    <li>The <b>y-axis</b> is the standing line. It goes up and down.</li>
+    <li>They cross at the <b>origin</b>, \(O(0, 0)\).</li>
+    <li>\(x\) says how far <b>left or right</b>. \(y\) says how far <b>up or down</b>.</li>
+    <li>Right and up are \(+\). Left and down are \(-\).</li>
+  </ul>
+
+  <div class="graph-box">
+    <svg id="plane" viewBox="-205 -205 410 410" role="img" tabindex="0" aria-label="Coordinate graph. Tap or click a spot to see its coordinates. With the keyboard, use the arrow keys to move the point."></svg>
+    <div class="readout" aria-live="polite">
+      <div class="coords" id="ro-coords">Tap anywhere</div>
+      <p class="why" id="ro-why">Tap the graph. You will see the point's address and its quadrant.</p>
+    </div>
+  </div>
+
+  <table class="signs">
+    <thead><tr><th>Where</th><th>Signs</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Quadrant I (top right)</td><td>(+, +)</td><td>\((3, 2)\)</td></tr>
+      <tr><td>Quadrant II (top left)</td><td>(−, +)</td><td>\((-3, 5)\)</td></tr>
+      <tr><td>Quadrant III (bottom left)</td><td>(−, −)</td><td>\((-2, -4)\)</td></tr>
+      <tr><td>Quadrant IV (bottom right)</td><td>(+, −)</td><td>\((4, -1)\)</td></tr>
+      <tr><td>On the x-axis</td><td>\((x, 0)\)</td><td>\((5, 0)\)</td></tr>
+      <tr><td>On the y-axis</td><td>\((0, y)\)</td><td>\((0, -4)\)</td></tr>
+    </tbody>
+  </table>
+  <p>A point on an axis is in <b>no quadrant</b>. It sits on the border line.</p>
+</section>
+
+<!-- ======================= 2. DISTANCE ======================= -->
+<section class="part" id="distance">
+  <div class="part-head"><span class="part-num">2</span><h2>Distance formula</h2></div>
+  <p class="sub">How far apart are two points \(A(x_1, y_1)\) and \(B(x_2, y_2)\)?</p>
+
+  <div class="formula">\[ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} \]</div>
+  <p class="formula-note">In words: x-gap squared, plus y-gap squared, then square root.</p>
+
+  <div class="think">
+    <strong>Think of it like this</strong>
+    <p>You live in a city of square blocks. To go from A to B, you walk 3 blocks right. Then 4 blocks up.</p>
+    <p>A bird does not walk. It flies straight. That straight line is the shortcut.</p>
+    <svg class="figure" viewBox="0 0 300 220" role="img" aria-label="A at (1,2) walks 3 right and 4 up to reach B at (4,6). The straight shortcut is 5.">
+      <g stroke="var(--line)" stroke-width="1">
+        <path d="M40 10V210M80 10V210M120 10V210M160 10V210M200 10V210M240 10V210M280 10V210"/>
+        <path d="M20 30H290M20 60H290M20 90H290M20 120H290M20 150H290M20 180H290"/>
+      </g>
+      <path d="M80 180H200V60" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M80 180L200 60" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="8 6"/>
+      <circle cx="80" cy="180" r="7" fill="var(--ink)"/>
+      <circle cx="200" cy="60" r="7" fill="var(--ink)"/>
+      <g font-family="Atkinson Hyperlegible, sans-serif" font-size="15" font-weight="700" fill="var(--ink)">
+        <text x="56" y="205">A(1, 2)</text>
+        <text x="176" y="44">B(4, 6)</text>
+        <text x="112" y="202">3 right</text>
+        <text x="210" y="125">4 up</text>
+        <text x="126" y="114" fill="var(--accent)" text-anchor="end">shortcut = 5</text>
+      </g>
+    </svg>
+    <p>This is Pythagoras: \(\text{shortcut}^2 = 3^2 + 4^2 = 25\). So shortcut \(= 5\).</p>
+  </div>
+
+  <div class="example">
+    <p class="ex-q">Example: find the distance between \(A(1, 2)\) and \(B(4, 6)\).</p>
+    <ol class="steps">
+      <li>x-gap: \(x_2 - x_1 = 4 - 1 = 3\)</li>
+      <li>y-gap: \(y_2 - y_1 = 6 - 2 = 4\)</li>
+      <li>Square and add: \(3^2 + 4^2 = 9 + 16 = 25\)</li>
+      <li>Square root: \(d = \sqrt{25} = 5\)</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>5 units</b></p>
+  </div>
+
+  <h3>Special case: distance from the origin</h3>
+  <p>One point is \(O(0, 0)\). The zeros vanish:</p>
+  <div class="formula">\[ d = \sqrt{x^2 + y^2} \]</div>
+  <p class="formula-note">Example: \(P(3, 4)\) is \(\sqrt{9 + 16} = 5\) units from the origin.</p>
+
+  <h3>Two exam uses</h3>
+  <div class="uses">
+    <div class="use">
+      <h4>Are 3 points on one line?</h4>
+      <p>Find AB, BC and AC. If the two small ones add up to the big one, the points are <b>collinear</b> (on one line).</p>
+      <p>\(AB + BC = AC\) means yes.</p>
+      <p>Example: \(A(1,1), B(2,2), C(3,3)\). \(AB = \sqrt2\), \(BC = \sqrt2\), \(AC = \sqrt8 = 2\sqrt2\). \(\sqrt2 + \sqrt2 = 2\sqrt2\). Yes, collinear.</p>
+    </div>
+    <div class="use">
+      <h4>Same distance from two points</h4>
+      <p>Call the unknown point \(P\). Write \(PA = PB\). Square both sides so the \(\sqrt{\ }\) goes away. Then solve.</p>
+      <p>Example: point on the x-axis, same distance from \(A(2,-5)\) and \(B(-2,9)\). Take \(P(x, 0)\).</p>
+      <p>\((x-2)^2 + 25 = (x+2)^2 + 81\)<br>\(-4x + 29 = 4x + 85\)<br>\(x = -7\). So \(P(-7, 0)\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 3. SECTION FORMULA ======================= -->
+<section class="part" id="section">
+  <div class="part-head"><span class="part-num">3</span><h2>Section formula</h2></div>
+  <p class="sub">A point \(P\) cuts the line from \(A(x_1, y_1)\) to \(B(x_2, y_2)\) in the ratio \(m : n\). Where is \(P\)?</p>
+
+  <div class="formula">\[ P = \left( \frac{m x_2 + n x_1}{m + n},\ \frac{m y_2 + n y_1}{m + n} \right) \]</div>
+  <p class="formula-note">Cross over: \(m\) goes with B's numbers. \(n\) goes with A's numbers.</p>
+
+  <div class="think">
+    <strong>Think of it like this</strong>
+    <p>A chocolate bar goes from A to B. You break it in the ratio \(2 : 3\). Your friend gets 2 pieces. You get 3 pieces.</p>
+    <svg class="figure" viewBox="0 0 300 110" role="img" aria-label="A chocolate bar of 5 pieces from A to B. P is after 2 pieces, so AP is 2 parts and PB is 3 parts.">
+      <g stroke="var(--surface)" stroke-width="3">
+        <rect x="25" y="30" width="50" height="40" rx="5" fill="var(--accent)"/>
+        <rect x="75" y="30" width="50" height="40" rx="5" fill="var(--accent)"/>
+        <rect x="125" y="30" width="50" height="40" rx="5" fill="var(--muted)"/>
+        <rect x="175" y="30" width="50" height="40" rx="5" fill="var(--muted)"/>
+        <rect x="225" y="30" width="50" height="40" rx="5" fill="var(--muted)"/>
+      </g>
+      <path d="M125 18V82" stroke="var(--ink)" stroke-width="3" stroke-dasharray="5 4"/>
+      <g font-family="Atkinson Hyperlegible, sans-serif" font-size="15" font-weight="700" fill="var(--ink)" text-anchor="middle">
+        <text x="25" y="20">A</text>
+        <text x="125" y="13">P</text>
+        <text x="275" y="20">B</text>
+        <text x="75" y="100" fill="var(--accent)">m = 2</text>
+        <text x="200" y="100">n = 3</text>
+      </g>
+    </svg>
+    <p>\(P\) is the cut. \(AP : PB = 2 : 3\). So \(P\) is closer to A.</p>
+    <p>A bigger \(m\) pushes \(P\) towards B. That is why \(m\) multiplies B's numbers.</p>
+  </div>
+
+  <div class="example">
+    <p class="ex-q">Example: find P dividing \(A(4, -3)\) and \(B(8, 5)\) in the ratio \(3 : 1\).</p>
+    <ol class="steps">
+      <li>Write it down: \(m = 3,\ n = 1\). \(x_1 = 4,\ y_1 = -3\). \(x_2 = 8,\ y_2 = 5\).</li>
+      <li>x: \(\dfrac{3(8) + 1(4)}{3 + 1} = \dfrac{24 + 4}{4} = \dfrac{28}{4} = 7\)</li>
+      <li>y: \(\dfrac{3(5) + 1(-3)}{4} = \dfrac{15 - 3}{4} = \dfrac{12}{4} = 3\)</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>\(P(7, 3)\)</b></p>
+  </div>
+
+  <h3>Midpoint: ratio 1 : 1</h3>
+  <p>The midpoint is the exact middle. Add, then halve.</p>
+  <div class="formula">\[ M = \left( \frac{x_1 + x_2}{2},\ \frac{y_1 + y_2}{2} \right) \]</div>
+  <div class="example">
+    <p class="ex-q">Example: midpoint of \((-2, 3)\) and \((6, -7)\).</p>
+    <ol class="steps">
+      <li>x: \(\dfrac{-2 + 6}{2} = \dfrac{4}{2} = 2\)</li>
+      <li>y: \(\dfrac{3 + (-7)}{2} = \dfrac{-4}{2} = -2\)</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>\((2, -2)\)</b></p>
+  </div>
+
+  <h3>Trick: "find the ratio" → take \(k : 1\)</h3>
+  <p>Do not use two unknowns. Use \(m = k\) and \(n = 1\). Solve for \(k\) using just the x-part (or just the y-part).</p>
+  <div class="example">
+    <p class="ex-q">Example: in what ratio does \(P(0, 3)\) divide \(A(-2, 1)\) and \(B(4, 7)\)?</p>
+    <ol class="steps">
+      <li>Let the ratio be \(k : 1\).</li>
+      <li>x-part: \(\dfrac{k(4) + 1(-2)}{k + 1} = 0\)</li>
+      <li>So \(4k - 2 = 0\), which gives \(k = \dfrac{1}{2}\).</li>
+      <li>\(\dfrac{1}{2} : 1\) is the same as \(1 : 2\).</li>
+      <li>Check y: \(\dfrac{\frac12(7) + 1}{\frac12 + 1} = \dfrac{4.5}{1.5} = 3\). Correct.</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>\(1 : 2\)</b></p>
+  </div>
+
+  <h3>Trick: an axis does the cutting</h3>
+  <ul class="plain">
+    <li><b>x-axis divides</b> the line? The cut point is on the x-axis, so put \(y = 0\).</li>
+    <li><b>y-axis divides</b> the line? The cut point is on the y-axis, so put \(x = 0\).</li>
+  </ul>
+  <div class="example">
+    <p class="ex-q">Example: in what ratio does the x-axis divide \(A(2, -3)\) and \(B(5, 6)\)? Find the point too.</p>
+    <ol class="steps">
+      <li>Let the ratio be \(k : 1\). On the x-axis, \(y = 0\).</li>
+      <li>y-part: \(\dfrac{k(6) + 1(-3)}{k + 1} = 0\)</li>
+      <li>So \(6k - 3 = 0\), which gives \(k = \dfrac12\). Ratio \(= 1 : 2\).</li>
+      <li>x with \(1 : 2\): \(\dfrac{1(5) + 2(2)}{3} = \dfrac{9}{3} = 3\)</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>\(1 : 2\)</b>, point <b>\((3, 0)\)</b></p>
+  </div>
+
+  <h3>Points of trisection: ratios 1 : 2 and 2 : 1</h3>
+  <p>"Trisect" means cut into 3 equal parts. That needs 2 cut points. The first is at \(1 : 2\). The second is at \(2 : 1\).</p>
+  <div class="example">
+    <p class="ex-q">Example: trisection points of \(A(1, -2)\) and \(B(7, 4)\).</p>
+    <ol class="steps">
+      <li>P at \(1 : 2\): x \(= \dfrac{1(7) + 2(1)}{3} = \dfrac{9}{3} = 3\), y \(= \dfrac{1(4) + 2(-2)}{3} = \dfrac{0}{3} = 0\)</li>
+      <li>Q at \(2 : 1\): x \(= \dfrac{2(7) + 1(1)}{3} = \dfrac{15}{3} = 5\), y \(= \dfrac{2(4) + 1(-2)}{3} = \dfrac{6}{3} = 2\)</li>
+      <li>Check: A(1, −2) → (3, 0) → (5, 2) → B(7, 4). Each step is +2, +2. Equal parts.</li>
+    </ol>
+    <p class="ex-ans">Answer: <b>\((3, 0)\)</b> and <b>\((5, 2)\)</b></p>
+  </div>
+</section>
+
+<!-- ======================= 4. CHEAT SHEET ======================= -->
+<section class="part" id="cheat">
+  <div class="part-head"><span class="part-num">4</span><h2>Formula cheat sheet</h2></div>
+  <p class="sub">Everything on one card. Look at it once more just before the exam.</p>
+  <dl class="cheat">
+    <div class="cheat-row"><dt>Quadrant signs</dt><dd>I \((+,+)\), II \((-,+)\), III \((-,-)\), IV \((+,-)\)</dd></div>
+    <div class="cheat-row"><dt>On an axis</dt><dd>x-axis: \((x, 0)\). y-axis: \((0, y)\)</dd></div>
+    <div class="cheat-row"><dt>Distance</dt><dd>\(d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\)</dd></div>
+    <div class="cheat-row"><dt>From origin</dt><dd>\(d = \sqrt{x^2 + y^2}\)</dd></div>
+    <div class="cheat-row"><dt>Collinear test</dt><dd>\(AB + BC = AC\)</dd></div>
+    <div class="cheat-row"><dt>Section formula</dt><dd>\(\left( \dfrac{m x_2 + n x_1}{m + n},\ \dfrac{m y_2 + n y_1}{m + n} \right)\)</dd></div>
+    <div class="cheat-row"><dt>Midpoint</dt><dd>\(\left( \dfrac{x_1 + x_2}{2},\ \dfrac{y_1 + y_2}{2} \right)\)</dd></div>
+    <div class="cheat-row"><dt>Find the ratio</dt><dd>Take \(k : 1\)</dd></div>
+    <div class="cheat-row"><dt>Axis divides</dt><dd>x-axis: put \(y = 0\). y-axis: put \(x = 0\)</dd></div>
+    <div class="cheat-row"><dt>Trisection</dt><dd>Ratios \(1 : 2\) and \(2 : 1\)</dd></div>
+  </dl>
+  <button class="btn no-print" type="button" id="print-btn">Print cheat sheet</button>
+</section>
+
+<!-- ======================= 5. MISTAKES ======================= -->
+<section class="part" id="mistakes">
+  <div class="part-head"><span class="part-num">5</span><h2>Common mistakes</h2></div>
+  <p class="sub">These cost marks every year. Do not be that student.</p>
+  <ul class="mistakes">
+    <li>
+      <strong>Sign errors with negatives</strong>
+      <p>Put negatives in brackets. \(4 - (-3) = 7\). Writing <span class="wrong">\(4 - 3 = 1\)</span> is wrong.</p>
+    </li>
+    <li>
+      <strong>Squaring a negative</strong>
+      <p>\((-3)^2 = 9\). It is always positive. Never <span class="wrong">\(-9\)</span>.</p>
+    </li>
+    <li>
+      <strong>Swapping m and n</strong>
+      <p>\(m\) goes with B's numbers \(x_2, y_2\). \(n\) goes with A's numbers \(x_1, y_1\). It crosses over.</p>
+    </li>
+    <li>
+      <strong>Forgetting the square root</strong>
+      <p>You got \(9 + 16 = 25\). The answer is <span class="right">\(\sqrt{25} = 5\)</span>, not <span class="wrong">25</span>.</p>
+    </li>
+    <li>
+      <strong>Midpoint: subtracting instead of adding</strong>
+      <p>Midpoint <b>adds</b> and halves. Distance <b>subtracts</b>. Do not mix them up.</p>
+    </li>
+  </ul>
+</section>
+
+<!-- ======================= 6. PRACTICE ======================= -->
+<section class="part" id="practice">
+  <div class="part-head"><span class="part-num">6</span><h2>Practice: 10 exam questions</h2></div>
+  <div class="score-card">
+    <div><span class="num" id="score">0<small> / 10</small></span> <span>correct</span></div>
+    <button class="btn" type="button" id="reset-btn">Start again</button>
+  </div>
+  <p class="typing-tip">Typing tips: write √ as <b>root</b> or <b>sqrt</b> (so 3√5 is <b>3root5</b>). Write fractions like <b>-3/2</b>. Ratios like <b>2:7</b>. Points like <b>(1, 5)</b>.</p>
+  <div id="questions"></div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>You've got this. All the best tomorrow.</p>
+    Read the cheat sheet once more before you sleep.
+  </div>
+</footer>
+
+<script>
+/* ---------- Safe storage ---------- */
+var store = {
+  get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- Theme ---------- */
+(function () {
+  var root = document.documentElement;
+  document.getElementById('theme-btn').addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('cg-theme', next); } catch (e) {}
+  });
+})();
+
+/* ---------- Sections read ---------- */
+(function () {
+  var ids = ['basics', 'distance', 'section', 'cheat', 'mistakes', 'practice'];
+  var read = store.get('cg-read', {});
+  var ticking = false;
+  function paint() {
+    var n = ids.filter(function (id) { return read[id]; }).length;
+    var pct = Math.round(n / ids.length * 100) + '%';
+    document.getElementById('progress-fill').style.width = pct;
+    document.getElementById('bar-fill').style.width = pct;
+    document.getElementById('progress-bar').setAttribute('aria-valuenow', n);
+    document.getElementById('progress-text').textContent =
+      n === ids.length ? 'All 6 sections read. Well done!' : n + ' of 6 sections read';
+    ids.forEach(function (id) {
+      var a = document.querySelector('.toc a[data-for="' + id + '"]');
+      a.classList.toggle('done', !!read[id]);
+      a.querySelector('.tick').textContent = read[id] ? '✓' : '';
+    });
+  }
+  function check() {
+    ticking = false;
+    var changed = false;
+    ids.forEach(function (id) {
+      if (read[id]) return;
+      var r = document.getElementById(id).getBoundingClientRect();
+      // A section counts as read once its end has come into view.
+      if (r.bottom <= window.innerHeight + 4 && r.top < window.innerHeight * 0.6) { read[id] = true; changed = true; }
+    });
+    if (changed) { store.set('cg-read', read); paint(); }
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  window.addEventListener('resize', check);
+  paint();
+  window.resetRead = function () { read = {}; store.set('cg-read', read); paint(); };
+})();
+
+/* ---------- Interactive coordinate plane ---------- */
+(function () {
+  var svg = document.getElementById('plane');
+  var U = 28, R = 6, E = R * U;
+  var NS = 'http://www.w3.org/2000/svg';
+  var h = '';
+  // Quadrant shading: I, II, III, IV
+  h += '<rect class="g-q" data-q="1" x="0" y="' + (-E) + '" width="' + E + '" height="' + E + '"/>';
+  h += '<rect class="g-q" data-q="2" x="' + (-E) + '" y="' + (-E) + '" width="' + E + '" height="' + E + '"/>';
+  h += '<rect class="g-q" data-q="3" x="' + (-E) + '" y="0" width="' + E + '" height="' + E + '"/>';
+  h += '<rect class="g-q" data-q="4" x="0" y="0" width="' + E + '" height="' + E + '"/>';
+  for (var i = -R; i <= R; i++) {
+    if (i === 0) continue;
+    h += '<line class="g-grid" x1="' + i * U + '" y1="' + (-E) + '" x2="' + i * U + '" y2="' + E + '"/>';
+    h += '<line class="g-grid" x1="' + (-E) + '" y1="' + i * U + '" x2="' + E + '" y2="' + i * U + '"/>';
+  }
+  h += '<line class="g-axis" x1="' + (-E - 12) + '" y1="0" x2="' + (E + 12) + '" y2="0"/>';
+  h += '<line class="g-axis" x1="0" y1="' + (E + 12) + '" x2="0" y2="' + (-E - 12) + '"/>';
+  h += '<path fill="var(--ink)" d="M' + (E + 20) + ' 0l-10 -5v10z M0 ' + (-E - 20) + 'l-5 10h10z"/>';
+  h += '<text class="g-axisname" x="' + (E + 8) + '" y="-10">x</text>';
+  h += '<text class="g-axisname" x="9" y="' + (-E - 8) + '">y</text>';
+  for (i = -R; i <= R; i++) {
+    if (i === 0 || i % 2 !== 0) continue;
+    h += '<text class="g-tick" x="' + i * U + '" y="15" text-anchor="middle">' + (i < 0 ? '−' + (-i) : i) + '</text>';
+    h += '<text class="g-tick" x="-6" y="' + (-i * U + 4) + '" text-anchor="end">' + (i < 0 ? '−' + (-i) : i) + '</text>';
+  }
+  h += '<text class="g-tick" x="-6" y="15" text-anchor="end">O</text>';
+  var ql = [[1, 4, 5.3, 'I (+, +)'], [2, -4, 5.3, 'II (−, +)'], [3, -4, -5.6, 'III (−, −)'], [4, 4, -5.6, 'IV (+, −)']];
+  ql.forEach(function (q) {
+    h += '<text class="g-qlabel" data-q="' + q[0] + '" x="' + q[1] * U + '" y="' + (-q[2] * U) + '" text-anchor="middle">' + q[3] + '</text>';
+  });
+  h += '<g id="pointer" style="display:none"><line class="g-guide" id="gx"/><line class="g-guide" id="gy"/><circle class="g-dot" id="gdot" r="7"/><text class="g-label" id="glabel"></text></g>';
+  svg.innerHTML = h;
+
+  var pointer = svg.querySelector('#pointer');
+  var cur = null;
+  function fmt(n) { return n < 0 ? '−' + (-n) : String(n); }
+  function words(n, pos, neg) { return n === 0 ? '' : Math.abs(n) + ' ' + (n > 0 ? pos : neg); }
+
+  function show(x, y) {
+    cur = [x, y];
+    var px = x * U, py = -y * U;
+    pointer.style.display = '';
+    var gx = svg.querySelector('#gx'), gy = svg.querySelector('#gy');
+    gx.setAttribute('x1', px); gx.setAttribute('y1', py); gx.setAttribute('x2', px); gx.setAttribute('y2', 0);
+    gy.setAttribute('x1', px); gy.setAttribute('y1', py); gy.setAttribute('x2', 0); gy.setAttribute('y2', py);
+    var dot = svg.querySelector('#gdot');
+    dot.setAttribute('cx', px); dot.setAttribute('cy', py);
+    var label = svg.querySelector('#glabel');
+    label.textContent = '(' + fmt(x) + ', ' + fmt(y) + ')';
+    label.setAttribute('text-anchor', x > 2 ? 'end' : 'start');
+    label.setAttribute('x', px + (x > 2 ? -12 : 12));
+    label.setAttribute('y', py + (y > 4 ? 22 : -12));
+    pointer.classList.remove('pop'); void pointer.getBoundingClientRect(); pointer.classList.add('pop');
+
+    var q = 0;
+    if (x > 0 && y > 0) q = 1; else if (x < 0 && y > 0) q = 2; else if (x < 0 && y < 0) q = 3; else if (x > 0 && y < 0) q = 4;
+    svg.querySelectorAll('[data-q]').forEach(function (el) { el.classList.toggle('on', +el.getAttribute('data-q') === q); });
+
+    var walk = [words(x, 'right', 'left'), words(y, 'up', 'down')].filter(Boolean).join(', ');
+    var why;
+    if (x === 0 && y === 0) why = 'Both numbers are 0. This is the origin O.';
+    else if (y === 0) why = 'Walk ' + walk + '. y is 0, so it is on the x-axis. No quadrant.';
+    else if (x === 0) why = 'Walk ' + walk + '. x is 0, so it is on the y-axis. No quadrant.';
+    else {
+      var names = ['', 'I', 'II', 'III', 'IV'];
+      var signs = ['', '(+, +)', '(−, +)', '(−, −)', '(+, −)'];
+      why = 'Walk ' + walk + '. Signs ' + signs[q] + ', so Quadrant ' + names[q] + '.';
+    }
+    document.getElementById('ro-coords').textContent = '(' + fmt(x) + ', ' + fmt(y) + ')' +
+      (q ? '  in Quadrant ' + ['', 'I', 'II', 'III', 'IV'][q] : (x === 0 && y === 0 ? '  the origin' : (y === 0 ? '  on the x-axis' : '  on the y-axis')));
+    document.getElementById('ro-why').textContent = why;
+  }
+
+  svg.addEventListener('click', function (e) {
+    var pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    var x = Math.max(-R, Math.min(R, Math.round(p.x / U)));
+    var y = Math.max(-R, Math.min(R, Math.round(-p.y / U)));
+    show(x, y);
+  });
+  svg.addEventListener('keydown', function (e) {
+    var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    var c = cur || [0, 0];
+    show(Math.max(-R, Math.min(R, c[0] + d[0])), Math.max(-R, Math.min(R, c[1] + d[1])));
+  });
+})();
+
+/* ---------- Print cheat sheet ---------- */
+document.getElementById('print-btn').addEventListener('click', function () {
+  document.documentElement.classList.add('print-cheat');
+  window.print();
+});
+window.addEventListener('afterprint', function () { document.documentElement.classList.remove('print-cheat'); });
+
+/* ---------- Answer parsing ---------- */
+function norm(s) {
+  return String(s).toLowerCase()
+    .replace(/[−–—]/g, '-').replace(/×/g, '*').replace(/÷/g, '/')
+    .replace(/sqrt|root|rt/g, '√').replace(/\s+/g, '');
+}
+// Tiny safe parser: numbers, + - * / ^, brackets, √ and implicit multiply (2√2).
+function evalExpr(s) {
+  var i = 0;
+  function num() {
+    var m = /^\d*\.?\d+/.exec(s.slice(i));
+    if (!m) throw 0;
+    i += m[0].length; return parseFloat(m[0]);
+  }
+  function atom() {
+    var c = s[i];
+    if (c === '(') { i++; var v = expr(); if (s[i] !== ')') throw 0; i++; return v; }
+    if (c === '√') { i++; return Math.sqrt(atom()); }
+    return num();
+  }
+  function power() { var b = atom(); if (s[i] === '^') { i++; b = Math.pow(b, unary()); } return b; }
+  function unary() { if (s[i] === '-') { i++; return -unary(); } if (s[i] === '+') { i++; return unary(); } return power(); }
+  function term() {
+    var v = unary();
+    for (;;) {
+      if (s[i] === '*' || s[i] === '/') { var op = s[i++]; var f = unary(); v = op === '*' ? v * f : v / f; }
+      else if (s[i] === '√' || s[i] === '(' || /[0-9.]/.test(s[i] || '')) v *= unary();
+      else break;
+    }
+    return v;
+  }
+  function expr() {
+    var v = term();
+    while (s[i] === '+' || s[i] === '-') { var op = s[i++]; var t = term(); v = op === '+' ? v + t : v - t; }
+    return v;
+  }
+  try { if (!s) return NaN; var r = expr(); return i === s.length ? r : NaN; } catch (e) { return NaN; }
+}
+function close(a, b) { return isFinite(a) && Math.abs(a - b) < 0.011; }
+function parsePoint(raw) {
+  var s = norm(raw).replace(/^[a-z]*=/, '');
+  if (s[0] === '(' && s[s.length - 1] === ')') s = s.slice(1, -1);
+  var parts = s.split(',');
+  if (parts.length !== 2) return null;
+  var p = [evalExpr(parts[0]), evalExpr(parts[1])];
+  return isFinite(p[0]) && isFinite(p[1]) ? p : null;
+}
+function samePoint(p, q) { return p && close(p[0], q[0]) && close(p[1], q[1]); }
+var checkers = {
+  num: function (raw, ans) { return close(evalExpr(norm(raw).replace(/^[a-z]*=/, '')), ans); },
+  point: function (raw, ans) { return samePoint(parsePoint(raw), ans); },
+  ratio: function (raw, ans) {
+    var s = norm(raw).replace(/to/g, ':');
+    var parts = s.split(':');
+    var v = parts.length === 2 ? evalExpr(parts[0]) / evalExpr(parts[1]) : parts.length === 1 ? evalExpr(parts[0]) : NaN;
+    return isFinite(v) && Math.abs(v - ans[0] / ans[1]) < 1e-6;
+  },
+  numset: function (raw, ans) {
+    var vals = norm(raw).replace(/[a-z]=/g, '').split(/,|or|and|;|&/).filter(Boolean).map(evalExpr);
+    if (vals.length !== ans.length) return false;
+    var left = ans.slice();
+    return vals.every(function (v) {
+      var k = left.findIndex(function (a) { return close(v, a); });
+      if (k < 0) return false; left.splice(k, 1); return true;
+    });
+  },
+  pointset: function (raw, ans) {
+    var s = norm(raw), pts = [], m, re = /\(([^()]*)\)/g;
+    while ((m = re.exec(s))) pts.push(parsePoint(m[1]));
+    if (pts.length !== ans.length) return false;
+    var left = ans.slice();
+    return pts.every(function (p) {
+      var k = left.findIndex(function (a) { return samePoint(p, a); });
+      if (k < 0) return false; left.splice(k, 1); return true;
+    });
+  },
+  select: function (raw, ans) { return raw === ans; }
+};
+
+/* ---------- Practice questions ---------- */
+var PLACES = ['Quadrant I', 'Quadrant II', 'Quadrant III', 'Quadrant IV', 'On the x-axis', 'On the y-axis', 'At the origin'];
+var QUESTIONS = [
+  {
+    q: String.raw`Find the distance between \((2, 3)\) and \((4, 1)\).`,
+    fields: [{ label: 'Distance', type: 'num', ans: 2 * Math.SQRT2, ph: 'e.g. 3root5' }],
+    hint: String.raw`Use \(d = \sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}\). The x-gap is \(4 - 2\). The y-gap is \(1 - 3\).`,
+    steps: [
+      String.raw`x-gap: \(4 - 2 = 2\)`,
+      String.raw`y-gap: \(1 - 3 = -2\)`,
+      String.raw`\(d = \sqrt{2^2 + (-2)^2} = \sqrt{4 + 4} = \sqrt{8}\)`,
+      String.raw`\(\sqrt{8} = \sqrt{4 \times 2} = 2\sqrt{2}\)`
+    ],
+    answer: String.raw`\(2\sqrt{2}\) units`
+  },
+  {
+    q: String.raw`Find the distance of the point \((-6, 8)\) from the origin.`,
+    fields: [{ label: 'Distance', type: 'num', ans: 10, ph: 'e.g. 7' }],
+    hint: String.raw`From the origin, use \(d = \sqrt{x^2 + y^2}\). Remember \((-6)^2\) is positive.`,
+    steps: [
+      String.raw`\(d = \sqrt{(-6)^2 + 8^2}\)`,
+      String.raw`\(= \sqrt{36 + 64} = \sqrt{100}\)`,
+      String.raw`\(= 10\)`
+    ],
+    answer: String.raw`\(10\) units`
+  },
+  {
+    q: String.raw`In which quadrant does \((-3, 5)\) lie? Where does \((0, -4)\) lie?`,
+    fields: [
+      { label: String.raw`Where is (−3, 5)?`, type: 'select', ans: 'Quadrant II', options: PLACES },
+      { label: String.raw`Where is (0, −4)?`, type: 'select', ans: 'On the y-axis', options: PLACES }
+    ],
+    hint: String.raw`Look at the signs. Negative x means left. Positive y means up. If x is 0, the point is on the y-axis.`,
+    steps: [
+      String.raw`\((-3, 5)\): x is −, y is +. Signs \((-, +)\). That is Quadrant II.`,
+      String.raw`\((0, -4)\): x is 0. So the point is on the y-axis, 4 units below the origin.`
+    ],
+    answer: String.raw`Quadrant II; on the y-axis`
+  },
+  {
+    q: String.raw`Find the midpoint of \((3, 4)\) and \((-1, 6)\).`,
+    fields: [{ label: 'Midpoint', type: 'point', ans: [1, 5], ph: 'e.g. (2, 3)' }],
+    hint: String.raw`Midpoint = add the x's and halve, add the y's and halve.`,
+    steps: [
+      String.raw`x: \(\dfrac{3 + (-1)}{2} = \dfrac{2}{2} = 1\)`,
+      String.raw`y: \(\dfrac{4 + 6}{2} = \dfrac{10}{2} = 5\)`
+    ],
+    answer: String.raw`\((1, 5)\)`
+  },
+  {
+    q: String.raw`Find the point that divides the join of \((-1, 7)\) and \((4, -3)\) in the ratio \(2 : 3\).`,
+    fields: [{ label: 'Point', type: 'point', ans: [1, 3], ph: 'e.g. (2, 3)' }],
+    hint: String.raw`\(m = 2\), \(n = 3\). A is \((-1, 7)\), B is \((4, -3)\). Remember: \(m\) goes with B.`,
+    steps: [
+      String.raw`x: \(\dfrac{2(4) + 3(-1)}{2 + 3} = \dfrac{8 - 3}{5} = \dfrac{5}{5} = 1\)`,
+      String.raw`y: \(\dfrac{2(-3) + 3(7)}{5} = \dfrac{-6 + 21}{5} = \dfrac{15}{5} = 3\)`
+    ],
+    answer: String.raw`\((1, 3)\)`
+  },
+  {
+    q: String.raw`In what ratio does \((-4, 6)\) divide the join of \(A(-6, 10)\) and \(B(3, -8)\)?`,
+    fields: [{ label: 'Ratio', type: 'ratio', ans: [2, 7], ph: 'e.g. 3:4' }],
+    hint: String.raw`Take the ratio as \(k : 1\). Use only the x-part: \(\dfrac{3k + (-6)}{k + 1} = -4\).`,
+    steps: [
+      String.raw`Let the ratio be \(k : 1\).`,
+      String.raw`x-part: \(\dfrac{k(3) + 1(-6)}{k + 1} = -4\)`,
+      String.raw`\(3k - 6 = -4k - 4\)`,
+      String.raw`\(7k = 2\), so \(k = \dfrac{2}{7}\)`,
+      String.raw`\(\dfrac{2}{7} : 1 = 2 : 7\)`,
+      String.raw`Check y: \(\dfrac{\frac27(-8) + 10}{\frac27 + 1} = \dfrac{54/7}{9/7} = 6\). Correct.`
+    ],
+    answer: String.raw`\(2 : 7\)`
+  },
+  {
+    q: String.raw`In what ratio does the x-axis divide the join of \((1, -5)\) and \((-4, 5)\)? Also find the point.`,
+    fields: [
+      { label: 'Ratio', type: 'ratio', ans: [1, 1], ph: 'e.g. 3:4' },
+      { label: 'Point', type: 'point', ans: [-1.5, 0], ph: 'e.g. (2, 0)' }
+    ],
+    hint: String.raw`On the x-axis, \(y = 0\). Take the ratio \(k : 1\) and set the y-part equal to 0.`,
+    steps: [
+      String.raw`Let the ratio be \(k : 1\). The point is on the x-axis, so \(y = 0\).`,
+      String.raw`y-part: \(\dfrac{k(5) + 1(-5)}{k + 1} = 0\)`,
+      String.raw`\(5k - 5 = 0\), so \(k = 1\). Ratio \(1 : 1\).`,
+      String.raw`\(1 : 1\) is the midpoint. x: \(\dfrac{1 + (-4)}{2} = -\dfrac{3}{2}\)`
+    ],
+    answer: String.raw`\(1 : 1\), point \(\left(-\dfrac{3}{2}, 0\right)\)`
+  },
+  {
+    q: String.raw`Are the points \((1, 5)\), \((2, 3)\) and \((-2, -11)\) collinear?`,
+    fields: [{ label: 'Collinear?', type: 'select', ans: 'No', options: ['Yes', 'No'] }],
+    hint: String.raw`Find AB, BC and AC. If the two smaller ones add up to the biggest, they are collinear.`,
+    steps: [
+      String.raw`Let \(A(1, 5)\), \(B(2, 3)\), \(C(-2, -11)\).`,
+      String.raw`\(AB = \sqrt{1^2 + (-2)^2} = \sqrt{5}\)`,
+      String.raw`\(BC = \sqrt{(-4)^2 + (-14)^2} = \sqrt{16 + 196} = \sqrt{212} = 2\sqrt{53}\)`,
+      String.raw`\(AC = \sqrt{(-3)^2 + (-16)^2} = \sqrt{9 + 256} = \sqrt{265}\)`,
+      String.raw`\(AB + BC = \sqrt5 + 2\sqrt{53} \approx 2.24 + 14.56 = 16.80\)`,
+      String.raw`\(AC = \sqrt{265} \approx 16.28\). Not equal.`
+    ],
+    answer: String.raw`No. \(\sqrt5 + 2\sqrt{53} \neq \sqrt{265}\), so they are not collinear.`
+  },
+  {
+    q: String.raw`Find the points of trisection of the line joining \(A(2, -2)\) and \(B(-7, 4)\).`,
+    fields: [{ label: 'Both points', type: 'pointset', ans: [[-1, 0], [-4, 2]], ph: 'e.g. (1, 2) and (3, 4)' }],
+    hint: String.raw`Trisection = 3 equal parts. Use the section formula twice: ratio \(1 : 2\), then \(2 : 1\).`,
+    steps: [
+      String.raw`P at \(1 : 2\): x \(= \dfrac{1(-7) + 2(2)}{3} = \dfrac{-3}{3} = -1\)`,
+      String.raw`y \(= \dfrac{1(4) + 2(-2)}{3} = \dfrac{0}{3} = 0\). So \(P(-1, 0)\).`,
+      String.raw`Q at \(2 : 1\): x \(= \dfrac{2(-7) + 1(2)}{3} = \dfrac{-12}{3} = -4\)`,
+      String.raw`y \(= \dfrac{2(4) + 1(-2)}{3} = \dfrac{6}{3} = 2\). So \(Q(-4, 2)\).`
+    ],
+    answer: String.raw`\((-1, 0)\) and \((-4, 2)\)`
+  },
+  {
+    q: String.raw`Find \(x\) if the distance between \((x, -1)\) and \((3, 2)\) is 5.`,
+    fields: [{ label: 'Value(s) of x', type: 'numset', ans: [7, -1], ph: 'e.g. 2 or -5' }],
+    hint: String.raw`Write the distance formula, set it equal to 5, then square both sides. You will get two answers.`,
+    steps: [
+      String.raw`\(\sqrt{(3 - x)^2 + (2 - (-1))^2} = 5\)`,
+      String.raw`Square both sides: \((3 - x)^2 + 9 = 25\)`,
+      String.raw`\((3 - x)^2 = 16\)`,
+      String.raw`\(3 - x = 4\) or \(3 - x = -4\)`,
+      String.raw`\(x = -1\) or \(x = 7\)`
+    ],
+    answer: String.raw`\(x = 7\) or \(x = -1\)`
+  }
+];
+
+(function () {
+  var box = document.getElementById('questions');
+  var solved = store.get('cg-solved', {});
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
+  box.innerHTML = QUESTIONS.map(function (Q, qi) {
+    var fields = Q.fields.map(function (f, fi) {
+      var id = 'q' + qi + 'f' + fi;
+      var ctrl = f.type === 'select'
+        ? '<select id="' + id + '"><option value="">Choose…</option>' + f.options.map(function (o) { return '<option>' + o + '</option>'; }).join('') + '</select>'
+        : '<input id="' + id + '" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="' + esc(f.ph || '') + '">';
+      return '<div class="field"><label for="' + id + '">' + f.label + '</label>' + ctrl + '</div>';
+    }).join('');
+    return '<article class="q" id="q' + qi + '">' +
+      '<div class="q-top"><span class="q-n">' + (qi + 1) + '.</span><p class="q-text">' + Q.q + '</p></div>' +
+      '<div class="q-fields">' + fields + '</div>' +
+      '<div class="q-actions">' +
+        '<button class="btn primary" type="button" data-act="check">Check</button>' +
+        '<button class="btn" type="button" data-act="hint" aria-expanded="false" aria-controls="q' + qi + 'h">Hint</button>' +
+        '<button class="btn" type="button" data-act="sol" aria-expanded="false" aria-controls="q' + qi + 's">Show solution</button>' +
+      '</div>' +
+      '<p class="feedback" aria-live="polite"></p>' +
+      '<div class="reveal" id="q' + qi + 'h" hidden><p><b>Hint:</b> ' + Q.hint + '</p></div>' +
+      '<div class="reveal" id="q' + qi + 's" hidden><ol class="steps">' +
+        Q.steps.map(function (s) { return '<li>' + s + '</li>'; }).join('') +
+      '</ol><p><b>Answer:</b> ' + Q.answer + '</p></div>' +
+    '</article>';
+  }).join('');
+
+  function paintScore() {
+    var n = Object.keys(solved).length;
+    document.getElementById('score').innerHTML = n + '<small> / 10</small>';
+    document.getElementById('bar-score').textContent = n + '/10';
+    QUESTIONS.forEach(function (_, qi) { document.getElementById('q' + qi).classList.toggle('solved', !!solved[qi]); });
+  }
+
+  box.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    var card = btn.closest('.q');
+    var qi = +card.id.slice(1);
+    var Q = QUESTIONS[qi];
+    var act = btn.getAttribute('data-act');
+    if (act === 'hint' || act === 'sol') {
+      var panel = document.getElementById('q' + qi + (act === 'hint' ? 'h' : 's'));
+      var open = panel.hidden;
+      panel.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+      if (act === 'sol') btn.textContent = open ? 'Hide solution' : 'Show solution';
+      return;
+    }
+    var fb = card.querySelector('.feedback');
+    var results = Q.fields.map(function (f, fi) {
+      var el = document.getElementById('q' + qi + 'f' + fi);
+      var v = el.value.trim();
+      if (!v) { el.classList.remove('ok', 'no'); return null; }
+      var ok = checkers[f.type](v, f.ans);
+      el.classList.toggle('ok', ok); el.classList.toggle('no', !ok);
+      return ok;
+    });
+    if (results.some(function (r) { return r === null; })) {
+      fb.className = 'feedback no';
+      fb.textContent = Q.fields.length > 1 ? 'Fill in every box first.' : 'Type your answer first.';
+      return;
+    }
+    if (results.every(Boolean)) {
+      fb.className = 'feedback ok';
+      fb.textContent = 'Correct! Well done.';
+      if (!solved[qi]) { solved[qi] = true; store.set('cg-solved', solved); paintScore(); }
+    } else {
+      fb.className = 'feedback no';
+      fb.textContent = results.some(Boolean)
+        ? 'One part is right. Check the red box. Try the hint.'
+        : 'Not quite. Check your signs, then try again. The hint can help.';
+    }
+  });
+  box.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') e.target.closest('.q').querySelector('[data-act="check"]').click();
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    solved = {}; store.set('cg-solved', solved);
+    box.querySelectorAll('input, select').forEach(function (el) { el.value = ''; el.classList.remove('ok', 'no'); });
+    box.querySelectorAll('.feedback').forEach(function (el) { el.textContent = ''; el.className = 'feedback'; });
+    box.querySelectorAll('.reveal').forEach(function (el) { el.hidden = true; });
+    box.querySelectorAll('[data-act="hint"], [data-act="sol"]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    box.querySelectorAll('[data-act="sol"]').forEach(function (b) { b.textContent = 'Show solution'; });
+    paintScore();
+  });
+  paintScore();
+})();
+
+/* ---------- KaTeX ---------- */
+function renderMath() {
+  if (!window.renderMathInElement) return;
+  renderMathInElement(document.body, {
+    delimiters: [{ left: '\\[', right: '\\]', display: true }, { left: '\\(', right: '\\)', display: false }],
+    throwOnError: false
+  });
+}
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js" onload="renderMath()"></script>
+</body>
+</html>
