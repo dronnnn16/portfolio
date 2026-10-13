@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trigonometry Notebook</title>
+<meta name="description" content="NCERT Class 10 Maths, Chapters 8 and 9: Introduction to Trigonometry and Some Applications of Trigonometry. Short notes, a quiz and practice questions with hints.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root {
+  --paper: #fbfcfe;
+  --paper-2: #f1f5fb;
+  --rule: #dfe7f2;
+  --margin: #de4b55;
+  --ink: #1b2a4a;
+  --muted: #5a6478;
+  --pen: #2346c8;
+  --pen-soft: #e7ecfb;
+  --hl: #ffe45c;
+  --hl-text: #1b2a4a;
+  --side-p: #2346c8;
+  --side-b: #13824f;
+  --side-h: #d23a45;
+  --ok: #13824f;
+  --ok-soft: #e3f4ea;
+  --bad: #c22f3a;
+  --bad-soft: #fbe6e7;
+  --line: #cdd7e6;
+  --shadow: 0 1px 0 #d5deeb;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10151f;
+    --paper-2: #161d2a;
+    --rule: #1c2535;
+    --margin: #ff6b75;
+    --ink: #e5ebf6;
+    --muted: #9aa6bb;
+    --pen: #93a9ff;
+    --pen-soft: #1d2742;
+    --hl: #6b5a12;
+    --hl-text: #fff6c9;
+    --side-p: #93a9ff;
+    --side-b: #5fd39a;
+    --side-h: #ff7d86;
+    --ok: #5fd39a;
+    --ok-soft: #12291f;
+    --bad: #ff7d86;
+    --bad-soft: #2e161a;
+    --line: #2a3448;
+    --shadow: 0 1px 0 #070a10;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10151f;
+  --paper-2: #161d2a;
+  --rule: #1c2535;
+  --margin: #ff6b75;
+  --ink: #e5ebf6;
+  --muted: #9aa6bb;
+  --pen: #93a9ff;
+  --pen-soft: #1d2742;
+  --hl: #6b5a12;
+  --hl-text: #fff6c9;
+  --side-p: #93a9ff;
+  --side-b: #5fd39a;
+  --side-h: #ff7d86;
+  --ok: #5fd39a;
+  --ok-soft: #12291f;
+  --bad: #ff7d86;
+  --bad-soft: #2e161a;
+  --line: #2a3448;
+  --shadow: 0 1px 0 #070a10;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Lexend", system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 { line-height: 1.2; margin: 0; }
+p { margin: 0 0 0.9em; }
+a { color: var(--pen); }
+:focus-visible { outline: 3px solid var(--pen); outline-offset: 2px; border-radius: 4px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* side colours, used in text, KaTeX and SVG */
+.sP { color: var(--side-p); font-weight: 700; }
+.sB { color: var(--side-b); font-weight: 700; }
+.sH { color: var(--side-h); font-weight: 700; }
+
+/* ---------- sticky index ---------- */
+.index {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.index-inner {
+  max-width: 1040px; margin: 0 auto;
+  display: flex; align-items: center; gap: 12px 20px;
+  padding: 10px 16px;
+}
+.brand {
+  font-family: "Kalam", cursive; font-weight: 700; font-size: 1.25rem;
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+}
+.index nav { display: flex; gap: 8px 22px; min-width: 0; flex: 1; overflow-x: auto; scrollbar-width: none; }
+.index nav::-webkit-scrollbar { display: none; }
+.grp { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+.grp-l { font-size: 0.8rem; color: var(--muted); margin-right: 4px; }
+.grp a {
+  font-size: 0.95rem; text-decoration: none; color: var(--ink);
+  padding: 4px 10px; border-radius: 999px;
+}
+.grp a:hover { background: var(--pen-soft); }
+.grp a[aria-current="true"] { background: var(--pen); color: var(--paper); }
+.theme-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 6px;
+  font: inherit; font-size: 0.9rem; color: var(--ink);
+  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--pen); }
+.theme-btn svg { width: 16px; height: 16px; }
+@media (max-width: 720px) {
+  .index-inner { flex-wrap: wrap; padding: 8px 16px; }
+  .brand { order: 1; }
+  .theme-btn { order: 2; margin-left: auto; }
+  .index nav { order: 3; flex-basis: 100%; }
+}
+
+/* ---------- notebook sheet ---------- */
+.sheet {
+  --gutter: 76px;
+  max-width: 1040px; margin: 0 auto;
+  padding: 0 16px 0 calc(var(--gutter) + 28px);
+  background: linear-gradient(var(--margin), var(--margin)) calc(var(--gutter) + 4px) 0 / 2px 100% no-repeat;
+}
+@media (max-width: 720px) {
+  .sheet { padding: 0 16px; background: none; }
+}
+.content { max-width: 720px; }
+section[id], article[id] { scroll-margin-top: 112px; }
+
+/* hero */
+.hero {
+  padding: 56px 0 40px;
+}
+.hero h1 { font-size: clamp(2.3rem, 7vw, 4rem); letter-spacing: -0.03em; font-weight: 700; max-width: 14ch; }
+.hero .lede { font-size: 1.2rem; max-width: 52ch; margin-top: 18px; color: var(--muted); }
+.hero .lede b { color: var(--ink); }
+
+/* part dividers */
+.part {
+  display: flex; align-items: baseline; gap: 14px;
+  margin: 24px 0 8px; padding-top: 24px; border-top: 2px solid var(--ink);
+}
+.part h2 { font-size: 1rem; font-weight: 700; white-space: nowrap; }
+.part p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+/* chapter heads */
+.chapter { padding: 48px 0 8px; }
+.chapter .ch-no { font-family: "Kalam", cursive; font-size: 1.15rem; color: var(--margin); }
+.chapter h2 { font-size: clamp(1.8rem, 5vw, 2.6rem); letter-spacing: -0.015em; }
+.chapter .ch-sum { color: var(--muted); max-width: 60ch; margin-top: 10px; }
+
+/* topics with margin numbers */
+.topic { position: relative; padding: 36px 0 8px; }
+.topic h3 { font-size: 1.4rem; margin-bottom: 14px; }
+.num { color: var(--margin); font-weight: 700; font-variant-numeric: tabular-nums; }
+.topic > h3 .num, .qn h3 .num {
+  position: absolute; left: calc(-1 * (76px + 28px)); width: 76px; text-align: right;
+  font-size: 1.05rem; top: 40px;
+}
+.qn h3 .num { top: 4px; }
+@media (max-width: 720px) {
+  .topic > h3 .num, .qn h3 .num { position: static; width: auto; margin-right: 8px; font-size: inherit; }
+}
+h4 { font-size: 1.08rem; margin: 22px 0 8px; }
+
+/* memory trick: handwriting + highlighter */
+.trick {
+  font-family: "Kalam", cursive; font-size: 1.45rem; line-height: 1.5;
+  margin: 18px 0; transform: rotate(-0.6deg);
+}
+.trick mark {
+  color: var(--hl-text);
+  background: linear-gradient(100deg, transparent 0 1%, var(--hl) 2% 97%, transparent 99%);
+  padding: 0 6px; border-radius: 3px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.trick small { display: block; font-family: "Lexend", sans-serif; font-size: 0.95rem; color: var(--muted); transform: none; }
+
+.note { border-left: 3px solid var(--pen); padding: 4px 0 4px 14px; margin: 16px 0; color: var(--ink); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.98rem; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+thead th { background: var(--paper-2); font-weight: 700; }
+.values th, .values td { text-align: center; padding: 8px 6px; }
+.values tbody th { text-align: left; padding-left: 12px; }
+.values td.nd { color: var(--muted); font-size: 0.85rem; }
+.flip td:first-child { white-space: nowrap; }
+
+/* buttons */
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 3px; background: var(--paper-2); flex-wrap: wrap; }
+.seg button {
+  font: inherit; font-size: 0.95rem; border: 0; background: transparent; color: var(--ink);
+  padding: 6px 14px; border-radius: 7px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--pen); color: var(--paper); }
+.btn {
+  font: inherit; font-size: 0.95rem; cursor: pointer;
+  color: var(--pen); background: transparent;
+  border: 1.5px solid var(--pen); border-radius: 8px; padding: 6px 14px;
+}
+.btn:hover { background: var(--pen-soft); }
+.btn[aria-expanded="true"] { background: var(--pen); color: var(--paper); }
+.btn-solid { background: var(--pen); color: var(--paper); }
+.btn-solid:hover { background: var(--pen); filter: brightness(1.1); }
+
+/* triangle lab */
+.lab {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px;
+  align-items: center; margin: 8px 0 12px;
+}
+@media (max-width: 640px) { .lab { grid-template-columns: 1fr; } }
+.lab > svg { width: 100%; height: auto; display: block; }
+.ratios-live { display: grid; gap: 8px; font-size: 1.05rem; }
+.ratios-live div { padding: 6px 12px; border-radius: 8px; background: var(--paper-2); min-height: 2.6em; display: flex; align-items: center; }
+.lab-caption { color: var(--muted); font-size: 0.95rem; margin-top: 10px; }
+
+svg text { font-family: "Lexend", sans-serif; fill: var(--ink); }
+svg text.theta { font-family: "KaTeX_Math", "Times New Roman", serif; font-style: italic; }
+svg .t-p { fill: var(--side-p); font-weight: 700; }
+svg .t-b { fill: var(--side-b); font-weight: 700; }
+svg .t-h { fill: var(--side-h); font-weight: 700; }
+svg .t-muted { fill: var(--muted); }
+svg .k-p { stroke: var(--side-p); }
+svg .k-b { stroke: var(--side-b); }
+svg .k-h { stroke: var(--side-h); }
+svg .k-ink { stroke: var(--ink); }
+svg .k-muted { stroke: var(--muted); }
+svg .k-pen { stroke: var(--pen); }
+svg .f-ink { fill: var(--ink); }
+svg .f-paper { fill: var(--paper); }
+svg .f-soft { fill: var(--paper-2); }
+svg .side { stroke-width: 5; stroke-linecap: round; transition: stroke 0.3s; }
+svg text.lbl { transition: fill 0.3s; }
+
+/* heights scene */
+.scene { margin: 10px 0; }
+.scene > svg { width: 100%; height: auto; display: block; background: var(--paper-2); border-radius: 12px; }
+.scene .los { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.scene .los.draw { animation: draw 1s ease-out both; }
+.scene .arc.draw { animation: fadein 0.4s 0.8s ease-out both; }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .scene .los.draw, .scene .arc.draw { animation: none; }
+}
+
+/* worked examples */
+.worked {
+  border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin: 16px 0;
+  background: var(--paper);
+}
+.worked .w-q { font-weight: 700; }
+.worked .w-grid { display: grid; grid-template-columns: minmax(0,1fr) 220px; gap: 16px; align-items: start; }
+@media (max-width: 640px) { .worked .w-grid { grid-template-columns: 1fr; } .worked .w-grid > svg { max-width: 260px; } }
+.worked .w-grid > svg { width: 100%; height: auto; }
+ol.steps { padding-left: 1.3em; margin: 8px 0 10px; }
+ol.steps li { margin-bottom: 6px; }
+.ans { font-weight: 700; padding: 6px 12px; background: var(--ok-soft); border-radius: 8px; display: inline-block; margin-bottom: 10px; }
+
+/* rule table */
+.know td:last-child { font-weight: 700; }
+
+/* formula sheet */
+.sheet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 8px; }
+@media (max-width: 640px) { .sheet-grid { grid-template-columns: 1fr; } }
+.card { border: 1.5px solid var(--ink); border-radius: 14px; padding: 16px 18px; background: var(--paper); box-shadow: 4px 4px 0 var(--line); }
+.card h4 { margin-top: 0; }
+.card ul { margin: 0; padding-left: 1.1em; }
+.card li { margin: 6px 0; }
+.mistakes { border: 2px dashed var(--margin); border-radius: 14px; padding: 16px 18px; margin-top: 18px; }
+.mistakes h4 { margin-top: 0; color: var(--margin); }
+.mistakes ul { margin: 0; padding-left: 1.1em; }
+.mistakes li { margin: 8px 0; }
+
+/* ---------- practice (part B) ---------- */
+.practice-band { background: var(--paper-2); border-top: 1px solid var(--line); margin-top: 56px; padding-bottom: 72px;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px; background-position: -1px -1px; }
+.practice-band .sheet { background: linear-gradient(var(--margin), var(--margin)) calc(var(--gutter) + 4px) 0 / 2px 100% no-repeat; }
+@media (max-width: 720px) { .practice-band .sheet { background: none; } }
+.practice-band .part { border-top: 0; margin-top: 0; padding-top: 40px; }
+
+.quiz-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin: 6px 0 16px; color: var(--muted); }
+.q {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; margin: 12px 0; box-shadow: var(--shadow);
+}
+.q .q-text { font-weight: 700; margin-bottom: 10px; }
+.q .q-text .num { margin-right: 6px; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+@media (max-width: 480px) { .opts { grid-template-columns: 1fr; } }
+.opts button {
+  font: inherit; text-align: left; cursor: pointer;
+  background: var(--paper); color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 9px; padding: 9px 12px;
+  min-height: 46px;
+}
+.opts button:hover:not(:disabled) { border-color: var(--pen); }
+.opts button:disabled { cursor: default; }
+.opts button.right { border-color: var(--ok); background: var(--ok-soft); }
+.opts button.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opts button:disabled:not(.right):not(.wrong) { opacity: 0.55; }
+.feedback { margin: 12px 0 0; padding: 10px 12px; border-radius: 8px; font-size: 0.98rem; }
+.feedback.ok { background: var(--ok-soft); }
+.feedback.no { background: var(--bad-soft); }
+.feedback strong.ok { color: var(--ok); }
+.feedback strong.no { color: var(--bad); }
+
+.score {
+  margin: 20px 0; padding: 20px; border-radius: 14px; border: 2px solid var(--ink); background: var(--paper);
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.score .big { font-family: "Kalam", cursive; font-size: 2.6rem; line-height: 1; color: var(--margin); }
+.score p { margin: 0; flex: 1; min-width: 180px; }
+
+.qn {
+  position: relative; background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px; margin: 14px 0; box-shadow: var(--shadow);
+}
+.qn h3 { font-size: 1.08rem; font-weight: 700; line-height: 1.5; }
+.qn .tag { font-size: 0.8rem; color: var(--muted); font-weight: 400; margin-left: 6px; white-space: nowrap; }
+.qn .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.hint { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: var(--pen-soft); }
+.hint::before { content: "Hint: "; font-weight: 700; color: var(--pen); }
+.sol { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 10px; }
+
+footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.9rem; }
+
+.katex { font-size: 1.08em; }
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; margin: 0.6em 0; }
+</style>
+</head>
+<body>
+
+<header class="index">
+  <div class="index-inner">
+    <a class="brand" href="#top">Trig notebook</a>
+    <nav aria-label="Index">
+      <div class="grp"><span class="grp-l">Part A: Learn</span>
+        <a href="#ch8">Ch 8</a><a href="#ch9">Ch 9</a><a href="#formulas">Formula sheet</a>
+      </div>
+      <div class="grp"><span class="grp-l">Part B: Practice</span>
+        <a href="#quiz">Quiz</a><a href="#questions">Questions with hints</a>
+      </div>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+<div class="sheet">
+<div class="content">
+
+  <section class="hero">
+    <h1>Trigonometry, the short way</h1>
+    <p class="lede"><b>Chapter 8</b> teaches you six ratios of a right triangle. <b>Chapter 9</b> uses those ratios to find heights and distances you can't measure with a tape. Read Part A once, then test yourself in Part B.</p>
+  </section>
+
+  <div class="part"><h2>Part A: Learn</h2><p>NCERT Class 10, current syllabus</p></div>
+
+  <!-- ===================== CHAPTER 8 ===================== -->
+  <section id="ch8">
+    <div class="chapter">
+      <div class="ch-no">Chapter 8</div>
+      <h2>Introduction to Trigonometry</h2>
+      <p class="ch-sum">Every right triangle has three sides. Divide one side by another and you get a ratio. Those ratios depend only on the angle, not on how big the triangle is.</p>
+    </div>
+
+    <div class="topic" id="t81">
+      <h3><span class="num">8.1</span>Name the three sides</h3>
+      <p>The names change depending on <em>which angle you are standing at</em>. Tap an angle and watch.</p>
+      <div class="seg" role="group" aria-label="Choose the angle">
+        <button type="button" data-angle="A" aria-pressed="true">Stand at angle A</button>
+        <button type="button" data-angle="C" aria-pressed="false">Stand at angle C</button>
+      </div>
+      <div class="lab">
+        <svg viewBox="0 0 380 280" role="img" aria-labelledby="triTitle">
+          <title id="triTitle">Right triangle ABC with the right angle at B</title>
+          <line id="sideAB" class="side" x1="40" y1="225" x2="300" y2="225"/>
+          <line id="sideBC" class="side" x1="300" y1="225" x2="300" y2="30"/>
+          <line id="sideAC" class="side k-h" x1="40" y1="225" x2="300" y2="30"/>
+          <path d="M282,225 V207 H300" fill="none" class="k-muted" stroke-width="2"/>
+          <path id="arcA" d="M80,225 A40,40 0 0,0 72,201" fill="none" class="k-ink" stroke-width="3"/>
+          <path id="arcC" d="M300,70 A40,40 0 0,1 268,54" fill="none" class="k-ink" stroke-width="3" opacity="0"/>
+          <text x="22" y="236" font-size="18" font-weight="700">A</text>
+          <text x="308" y="244" font-size="18" font-weight="700">B</text>
+          <text x="308" y="28" font-size="18" font-weight="700">C</text>
+          <text id="thetaA" x="88" y="215" font-size="15" class="theta">θ</text>
+          <text id="thetaC" x="284" y="80" font-size="15" opacity="0" class="theta">θ</text>
+          <text id="lblAB" class="lbl" x="170" y="252" text-anchor="middle" font-size="15">Base (4)</text>
+          <text id="lblBC" class="lbl" x="314" y="132" font-size="15">Perp. (3)</text>
+          <text id="lblAC" class="lbl t-h" x="150" y="112" text-anchor="end" font-size="15">Hypotenuse (5)</text>
+        </svg>
+        <div>
+          <div class="ratios-live" aria-live="polite">
+            <div id="liveSin"></div>
+            <div id="liveCos"></div>
+            <div id="liveTan"></div>
+          </div>
+          <p class="lab-caption">Sides here are 3, 4 and 5. Notice how sin and cos swap when you switch angles.</p>
+        </div>
+      </div>
+      <ul>
+        <li><span class="sH">Hypotenuse</span>: the longest side, opposite the 90° angle. It never changes.</li>
+        <li><span class="sP">Perpendicular</span>: the side <em>facing</em> your angle.</li>
+        <li><span class="sB">Base</span>: the side <em>touching</em> your angle that isn't the hypotenuse.</li>
+      </ul>
+    </div>
+
+    <div class="topic" id="t82">
+      <h3><span class="num">8.2</span>The six ratios</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Ratio</th><th>Sides</th><th>Read it as</th></tr></thead>
+          <tbody>
+            <tr><td>\(\sin A\)</td><td>\(\dfrac{\cP}{\cH}\)</td><td>Perpendicular ÷ Hypotenuse</td></tr>
+            <tr><td>\(\cos A\)</td><td>\(\dfrac{\cB}{\cH}\)</td><td>Base ÷ Hypotenuse</td></tr>
+            <tr><td>\(\tan A\)</td><td>\(\dfrac{\cP}{\cB}\)</td><td>Perpendicular ÷ Base</td></tr>
+            <tr><td>\(\operatorname{cosec} A\)</td><td>\(\dfrac{\cH}{\cP}\)</td><td>sin turned upside down</td></tr>
+            <tr><td>\(\sec A\)</td><td>\(\dfrac{\cH}{\cB}\)</td><td>cos turned upside down</td></tr>
+            <tr><td>\(\cot A\)</td><td>\(\dfrac{\cB}{\cP}\)</td><td>tan turned upside down</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="trick"><mark>Pandit Badri Prasad</mark> / <mark>Har Har Bole</mark>
+        <small>Read the first letters downwards in pairs: P/H, B/H, P/B. That gives sin, cos, tan in order. Flip them for cosec, sec, cot.</small></p>
+    </div>
+
+    <div class="topic" id="t83">
+      <h3><span class="num">8.3</span>Flips and the tan shortcut</h3>
+      <div class="tbl-wrap">
+        <table class="flip">
+          <tbody>
+            <tr><td>\(\operatorname{cosec} A = \dfrac{1}{\sin A}\)</td><td>\(\sec A = \dfrac{1}{\cos A}\)</td><td>\(\cot A = \dfrac{1}{\tan A}\)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Divide sin by cos and the hypotenuse cancels out:</p>
+      \[\tan A = \frac{\sin A}{\cos A} \qquad \cot A = \frac{\cos A}{\sin A}\]
+      <p class="note">For an acute angle, \(\sin A\) and \(\cos A\) are always between 0 and 1, because the hypotenuse is the longest side.</p>
+    </div>
+
+    <div class="topic" id="t84">
+      <h3><span class="num">8.4</span>Values to remember</h3>
+      <div class="tbl-wrap">
+        <table class="values">
+          <thead><tr><th>∠A</th><th>0°</th><th>30°</th><th>45°</th><th>60°</th><th>90°</th></tr></thead>
+          <tbody>
+            <tr><th>\(\sin\)</th><td>\(0\)</td><td>\(\frac12\)</td><td>\(\frac{1}{\sqrt2}\)</td><td>\(\frac{\sqrt3}{2}\)</td><td>\(1\)</td></tr>
+            <tr><th>\(\cos\)</th><td>\(1\)</td><td>\(\frac{\sqrt3}{2}\)</td><td>\(\frac{1}{\sqrt2}\)</td><td>\(\frac12\)</td><td>\(0\)</td></tr>
+            <tr><th>\(\tan\)</th><td>\(0\)</td><td>\(\frac{1}{\sqrt3}\)</td><td>\(1\)</td><td>\(\sqrt3\)</td><td class="nd">ND</td></tr>
+            <tr><th>\(\operatorname{cosec}\)</th><td class="nd">ND</td><td>\(2\)</td><td>\(\sqrt2\)</td><td>\(\frac{2}{\sqrt3}\)</td><td>\(1\)</td></tr>
+            <tr><th>\(\sec\)</th><td>\(1\)</td><td>\(\frac{2}{\sqrt3}\)</td><td>\(\sqrt2\)</td><td>\(2\)</td><td class="nd">ND</td></tr>
+            <tr><th>\(\cot\)</th><td class="nd">ND</td><td>\(\sqrt3\)</td><td>\(1\)</td><td>\(\frac{1}{\sqrt3}\)</td><td>\(0\)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:var(--muted);font-size:.92rem">ND = not defined (you can't divide by 0).</p>
+      <p class="trick"><mark>Write 0, 1, 2, 3, 4. Put each over 4 and take the square root.</mark>
+        <small>That row is sin: \(\sqrt{\tfrac04}, \sqrt{\tfrac14}, \sqrt{\tfrac24}, \sqrt{\tfrac34}, \sqrt{\tfrac44}\) = \(0, \tfrac12, \tfrac1{\sqrt2}, \tfrac{\sqrt3}2, 1\). Read it backwards for cos. Then tan = sin ÷ cos, and the last three rows are just flips.</small></p>
+    </div>
+
+    <div class="topic" id="t85">
+      <h3><span class="num">8.5</span>Three identities</h3>
+      <p>Pythagoras says \(\cP^2 + \cB^2 = \cH^2\). Divide that by different sides and you get all three:</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Identity</th><th>How you get it</th></tr></thead>
+          <tbody>
+            <tr><td>\(\sin^2 A + \cos^2 A = 1\)</td><td>divide by \(\cH^2\)</td></tr>
+            <tr><td>\(1 + \tan^2 A = \sec^2 A\)</td><td>divide by \(\cB^2\)</td></tr>
+            <tr><td>\(1 + \cot^2 A = \operatorname{cosec}^2 A\)</td><td>divide by \(\cP^2\)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>You can move terms across too: \(\sin^2 A = 1 - \cos^2 A\) and \(\sec^2 A - \tan^2 A = 1\).</p>
+      <p class="note">\(\sin^2 A\) means \((\sin A)^2\). Square the answer, not the angle.</p>
+    </div>
+
+    <div class="topic" id="t86">
+      <h3><span class="num">8.6</span>Two worked examples</h3>
+
+      <div class="worked">
+        <p class="w-q">If \(\tan A = \frac43\), find all the other ratios.</p>
+        <ol class="steps">
+          <li>\(\tan A = \dfrac{\cP}{\cB} = \dfrac43\), so take \(\cP = 4k\), \(\cB = 3k\).</li>
+          <li>Pythagoras: \(\cH^2 = (4k)^2 + (3k)^2 = 25k^2\), so \(\cH = 5k\).</li>
+          <li>\(\sin A = \frac{4}{5},\; \cos A = \frac{3}{5},\; \operatorname{cosec} A = \frac{5}{4},\; \sec A = \frac{5}{3},\; \cot A = \frac{3}{4}\).</li>
+        </ol>
+        <p class="ans">\(\sin A = \frac45\), \(\cos A = \frac35\), the rest are flips</p>
+      </div>
+
+      <div class="worked">
+        <p class="w-q">Evaluate \(\dfrac{5\cos^2 60^\circ + 4\sec^2 30^\circ - \tan^2 45^\circ}{\sin^2 30^\circ + \cos^2 30^\circ}\)</p>
+        <ol class="steps">
+          <li>The bottom is \(\sin^2 30^\circ + \cos^2 30^\circ = 1\) (identity!).</li>
+          <li>Top: \(5\left(\tfrac12\right)^2 + 4\left(\tfrac{2}{\sqrt3}\right)^2 - 1^2 = \tfrac54 + \tfrac{16}{3} - 1\).</li>
+          <li>Common denominator 12: \(\tfrac{15}{12} + \tfrac{64}{12} - \tfrac{12}{12} = \tfrac{67}{12}\).</li>
+        </ol>
+        <p class="ans">\(\dfrac{67}{12}\)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CHAPTER 9 ===================== -->
+  <section id="ch9">
+    <div class="chapter">
+      <div class="ch-no">Chapter 9</div>
+      <h2>Some Applications of Trigonometry</h2>
+      <p class="ch-sum">Heights and distances. Draw a right triangle from the real picture, mark what you know, then use one ratio to find what you don't.</p>
+    </div>
+
+    <div class="topic" id="t91">
+      <h3><span class="num">9.1</span>Looking up, looking down</h3>
+      <div class="seg" role="group" aria-label="Choose the view">
+        <button type="button" data-scene="elev" aria-pressed="true">Angle of elevation</button>
+        <button type="button" data-scene="dep" aria-pressed="false">Angle of depression</button>
+      </div>
+      <div class="scene">
+        <svg viewBox="0 0 420 250" role="img" aria-labelledby="sceneTitle">
+          <title id="sceneTitle">A person's line of sight to an object, with the angle it makes with the horizontal</title>
+          <line x1="0" y1="220" x2="420" y2="220" class="k-muted" stroke-width="2"/>
+          <!-- elevation: person on ground looks up at tower top -->
+          <g id="sc-elev">
+            <rect x="320" y="50" width="36" height="170" class="f-paper k-ink" stroke-width="2"/>
+            <line x1="320" y1="90" x2="356" y2="90" class="k-muted" stroke-width="1"/>
+            <line x1="320" y1="130" x2="356" y2="130" class="k-muted" stroke-width="1"/>
+            <line x1="320" y1="170" x2="356" y2="170" class="k-muted" stroke-width="1"/>
+            <circle cx="70" cy="180" r="8" class="f-ink"/>
+            <line x1="70" y1="188" x2="70" y2="208" class="k-ink" stroke-width="3"/>
+            <line x1="70" y1="208" x2="62" y2="220" class="k-ink" stroke-width="3"/>
+            <line x1="70" y1="208" x2="78" y2="220" class="k-ink" stroke-width="3"/>
+            <line x1="74" y1="180" x2="320" y2="180" class="k-muted" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="200" y="198" text-anchor="middle" font-size="13" class="t-muted">horizontal (eye level)</text>
+            <path class="los k-pen" pathLength="1" d="M74,180 L320,50" stroke-width="3" fill="none"/>
+            <text x="190" y="104" text-anchor="middle" font-size="13" class="t-p" transform="rotate(-27.9 190 104)">line of sight</text>
+            <g class="arc">
+              <path d="M124,180 A50,50 0 0,0 118.2,156.6" fill="none" class="k-h" stroke-width="3"/>
+              <text x="130" y="174" font-size="15" class="theta t-h">θ</text>
+            </g>
+          </g>
+          <!-- depression: person on building looks down at car -->
+          <g id="sc-dep" hidden>
+            <rect x="40" y="70" width="50" height="150" class="f-paper k-ink" stroke-width="2"/>
+            <rect x="52" y="90" width="10" height="14" class="k-muted" fill="none"/>
+            <rect x="70" y="90" width="10" height="14" class="k-muted" fill="none"/>
+            <rect x="52" y="130" width="10" height="14" class="k-muted" fill="none"/>
+            <rect x="70" y="130" width="10" height="14" class="k-muted" fill="none"/>
+            <circle cx="70" cy="32" r="8" class="f-ink"/>
+            <line x1="70" y1="40" x2="70" y2="58" class="k-ink" stroke-width="3"/>
+            <line x1="70" y1="58" x2="63" y2="70" class="k-ink" stroke-width="3"/>
+            <line x1="70" y1="58" x2="77" y2="70" class="k-ink" stroke-width="3"/>
+            <line x1="74" y1="32" x2="390" y2="32" class="k-muted" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="250" y="24" text-anchor="middle" font-size="13" class="t-muted">horizontal (eye level)</text>
+            <rect x="322" y="198" width="50" height="14" rx="4" class="f-ink"/>
+            <rect x="332" y="188" width="28" height="12" rx="3" class="f-ink"/>
+            <circle cx="334" cy="214" r="5" class="f-ink"/>
+            <circle cx="362" cy="214" r="5" class="f-ink"/>
+            <path class="los k-pen" pathLength="1" d="M74,32 L330,205" stroke-width="3" fill="none"/>
+            <text x="214" y="114" text-anchor="middle" font-size="13" class="t-p" transform="rotate(34 214 114)">line of sight</text>
+            <g class="arc">
+              <path d="M124,32 A50,50 0 0,1 115.4,60" fill="none" class="k-h" stroke-width="3"/>
+              <text x="128" y="52" font-size="15" class="theta t-h">θ</text>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <ul>
+        <li><b>Line of sight</b>: the straight line from your eye to the object.</li>
+        <li><b>Angle of elevation</b>: you look <em>up</em>. The angle between the horizontal and the line of sight.</li>
+        <li><b>Angle of depression</b>: you look <em>down</em>. Still measured from the horizontal, never from the wall.</li>
+      </ul>
+      <p class="note">The angle of depression from the top equals the angle of elevation from the bottom. They're alternate angles between two parallel horizontal lines.</p>
+    </div>
+
+    <div class="topic" id="t92">
+      <h3><span class="num">9.2</span>Which ratio do I use?</h3>
+      <p>Look at the two things in the question: the one you <b>know</b> and the one you <b>want</b>. Pick the ratio that holds both.</p>
+      <div class="tbl-wrap">
+        <table class="know">
+          <thead><tr><th>Know and want</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sP">height</span> and <span class="sB">distance on the ground</span></td><td>\(\tan\theta = \dfrac{\cP}{\cB}\)</td></tr>
+            <tr><td><span class="sP">height</span> and <span class="sH">slant length</span> (string, ladder, rope)</td><td>\(\sin\theta = \dfrac{\cP}{\cH}\)</td></tr>
+            <tr><td><span class="sB">distance on the ground</span> and <span class="sH">slant length</span></td><td>\(\cos\theta = \dfrac{\cB}{\cH}\)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="trick"><mark>Most tower questions are tan questions.</mark>
+        <small>Height and ground distance show up far more often than slant lengths.</small></p>
+    </div>
+
+    <div class="topic" id="t93">
+      <h3><span class="num">9.3</span>Two worked examples</h3>
+
+      <div class="worked">
+        <div class="w-grid">
+          <div>
+            <p class="w-q">From a point 15 m away from the foot of a tower, the angle of elevation of its top is 60°. Find the height of the tower.</p>
+            <ol class="steps">
+              <li>Know: <span class="sB">ground distance</span> = 15 m. Want: <span class="sP">height</span> \(h\). That's tan.</li>
+              <li>\(\tan 60^\circ = \dfrac{h}{15}\)</li>
+              <li>\(\sqrt3 = \dfrac{h}{15} \Rightarrow h = 15\sqrt3\)</li>
+            </ol>
+            <p class="ans">\(h = 15\sqrt3\) m \(\approx 25.98\) m</p>
+          </div>
+          <svg viewBox="0 0 240 210" role="img" aria-label="Tower of height h, point 15 metres from its foot, angle 60 degrees">
+            <line x1="20" y1="185" x2="230" y2="185" class="k-muted" stroke-width="1.5"/>
+            <line x1="60" y1="180" x2="150" y2="180" class="k-b" stroke-width="4" stroke-linecap="round"/>
+            <line x1="150" y1="180" x2="150" y2="24" class="k-p" stroke-width="4" stroke-linecap="round"/>
+            <line x1="60" y1="180" x2="150" y2="24" class="k-h" stroke-width="2.5" stroke-dasharray="5 5"/>
+            <path d="M138,180 V168 H150" fill="none" class="k-muted" stroke-width="1.5"/>
+            <path d="M88,180 A28,28 0 0,0 74,155.8" fill="none" class="k-ink" stroke-width="2"/>
+            <text x="90" y="166" font-size="14">60°</text>
+            <text x="105" y="202" text-anchor="middle" font-size="14" class="t-b">15 m</text>
+            <text x="160" y="106" font-size="16" class="t-p">h</text>
+            <text x="48" y="198" font-size="13" class="t-muted">P</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="worked">
+        <div class="w-grid">
+          <div>
+            <p class="w-q">A 10 m ladder leans against a wall and makes 60° with the ground. How high up the wall does it reach?</p>
+            <ol class="steps">
+              <li>Know: <span class="sH">ladder (slant)</span> = 10 m. Want: <span class="sP">height</span> \(h\). That's sin.</li>
+              <li>\(\sin 60^\circ = \dfrac{h}{10}\)</li>
+              <li>\(\dfrac{\sqrt3}{2} = \dfrac{h}{10} \Rightarrow h = 5\sqrt3\)</li>
+            </ol>
+            <p class="ans">\(h = 5\sqrt3\) m \(\approx 8.66\) m</p>
+          </div>
+          <svg viewBox="0 0 240 210" role="img" aria-label="Ladder of 10 metres against a wall at 60 degrees, reaching height h">
+            <line x1="20" y1="185" x2="230" y2="185" class="k-muted" stroke-width="1.5"/>
+            <rect x="180" y="20" width="18" height="165" class="f-soft k-muted" stroke-width="1"/>
+            <line x1="180" y1="180" x2="180" y2="41" class="k-p" stroke-width="4" stroke-linecap="round"/>
+            <line x1="100" y1="180" x2="180" y2="41" class="k-h" stroke-width="5" stroke-linecap="round"/>
+            <path d="M168,180 V168 H180" fill="none" class="k-muted" stroke-width="1.5"/>
+            <path d="M128,180 A28,28 0 0,0 114,155.8" fill="none" class="k-ink" stroke-width="2"/>
+            <text x="128" y="167" font-size="14">60°</text>
+            <text x="118" y="104" font-size="14" text-anchor="end" class="t-h">10 m</text>
+            <text x="164" y="116" font-size="16" class="t-p" text-anchor="end">h</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FORMULA SHEET ===================== -->
+  <section id="formulas">
+    <div class="topic">
+      <h3><span class="num">✎</span>Formula sheet</h3>
+      <p>Everything from both chapters on one screen. Screenshot it before the exam.</p>
+      <div class="sheet-grid">
+        <div class="card">
+          <h4>Chapter 8</h4>
+          <ul>
+            <li>\(\sin = \frac{\cP}{\cH},\ \cos = \frac{\cB}{\cH},\ \tan = \frac{\cP}{\cB}\)</li>
+            <li>\(\operatorname{cosec} = \frac{1}{\sin},\ \sec = \frac{1}{\cos},\ \cot = \frac{1}{\tan}\)</li>
+            <li>\(\tan A = \frac{\sin A}{\cos A},\ \cot A = \frac{\cos A}{\sin A}\)</li>
+            <li>\(\sin^2 A + \cos^2 A = 1\)</li>
+            <li>\(1 + \tan^2 A = \sec^2 A\)</li>
+            <li>\(1 + \cot^2 A = \operatorname{cosec}^2 A\)</li>
+            <li>\(\sin\): \(0, \frac12, \frac1{\sqrt2}, \frac{\sqrt3}2, 1\) for 0°, 30°, 45°, 60°, 90°</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>Chapter 9</h4>
+          <ul>
+            <li>\(\tan\theta = \dfrac{\text{height}}{\text{ground distance}}\)</li>
+            <li>\(\sin\theta = \dfrac{\text{height}}{\text{slant}}\)</li>
+            <li>\(\cos\theta = \dfrac{\text{ground distance}}{\text{slant}}\)</li>
+            <li>Angle of depression from top = angle of elevation from bottom</li>
+            <li>\(\sqrt3 \approx 1.732,\ \sqrt2 \approx 1.414\)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mistakes">
+        <h4>Common mistakes</h4>
+        <ul>
+          <li>Swapping <span class="sP">perpendicular</span> and <span class="sB">base</span>. They depend on which angle you're at; check again for every new angle.</li>
+          <li>Reading \(\sin A\) as "sin × A". It's one value, the ratio for angle A.</li>
+          <li>Writing \(\sin^2 A\) as \(\sin (A^2)\). It means \((\sin A)^2\).</li>
+          <li>Saying \(\tan 90^\circ = 0\). It is <b>not defined</b>.</li>
+          <li>Getting \(\sin A\) or \(\cos A\) bigger than 1. Impossible, so recheck your sides.</li>
+          <li>Measuring the angle of depression from the vertical wall instead of the horizontal.</li>
+          <li>Forgetting units (m) in the final answer.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- ===================== PART B ===================== -->
+<div class="practice-band">
+<div class="sheet">
+<div class="content">
+
+  <div class="part"><h2>Part B: Practice</h2><p>Try first, then check</p></div>
+
+  <section id="quiz">
+    <div class="topic">
+      <h3><span class="num">Q</span>Quick quiz</h3>
+      <div class="quiz-meta">
+        <span id="quizProgress">0 of 8 answered</span>
+        <button class="btn" type="button" id="retryTop">Retry quiz</button>
+      </div>
+      <div id="quizList">
+
+        <div class="q" data-answer="0">
+          <p class="q-text"><span class="num">1</span>\(\sin 30^\circ = \)?</p>
+          <div class="opts"><button type="button">\(\frac12\)</button><button type="button">\(\frac{\sqrt3}2\)</button><button type="button">\(\frac1{\sqrt2}\)</button><button type="button">\(1\)</button></div>
+          <p class="feedback" hidden><span class="why">From the trick: \(\sqrt{\tfrac14} = \tfrac12\).</span></p>
+        </div>
+
+        <div class="q" data-answer="1">
+          <p class="q-text"><span class="num">2</span>If \(\tan A = 1\) and A is acute, then A = ?</p>
+          <div class="opts"><button type="button">30°</button><button type="button">45°</button><button type="button">60°</button><button type="button">90°</button></div>
+          <p class="feedback" hidden><span class="why">\(\tan 45^\circ = 1\): perpendicular and base are equal.</span></p>
+        </div>
+
+        <div class="q" data-answer="2">
+          <p class="q-text"><span class="num">3</span>\(\sec^2 A - \tan^2 A = \)?</p>
+          <div class="opts"><button type="button">\(0\)</button><button type="button">\(-1\)</button><button type="button">\(1\)</button><button type="button">\(2\)</button></div>
+          <p class="feedback" hidden><span class="why">From \(1 + \tan^2 A = \sec^2 A\), move \(\tan^2 A\) across.</span></p>
+        </div>
+
+        <div class="q" data-answer="1">
+          <p class="q-text"><span class="num">4</span>In \(\triangle ABC\) right-angled at B, which side is the perpendicular for angle A?</p>
+          <div class="opts"><button type="button">AB</button><button type="button">BC</button><button type="button">AC</button><button type="button">None of these</button></div>
+          <p class="feedback" hidden><span class="why">BC faces angle A. AB touches A (base), AC is the hypotenuse.</span></p>
+        </div>
+
+        <div class="q" data-answer="3">
+          <p class="q-text"><span class="num">5</span>If \(\sin A = \frac{5}{13}\), then \(\cos A = \)?</p>
+          <div class="opts"><button type="button">\(\frac{13}{5}\)</button><button type="button">\(\frac{5}{12}\)</button><button type="button">\(\frac{8}{13}\)</button><button type="button">\(\frac{12}{13}\)</button></div>
+          <p class="feedback" hidden><span class="why">P = 5, H = 13, so B = \(\sqrt{169 - 25} = 12\). \(\cos A = \tfrac{12}{13}\).</span></p>
+        </div>
+
+        <div class="q" data-answer="1">
+          <p class="q-text"><span class="num">6</span>As the sun rises higher (elevation increases), a tower's shadow…</p>
+          <div class="opts"><button type="button">gets longer</button><button type="button">gets shorter</button><button type="button">stays the same</button><button type="button">disappears at 45°</button></div>
+          <p class="feedback" hidden><span class="why">Shadow = height ÷ \(\tan\theta\). Bigger angle, bigger tan, shorter shadow.</span></p>
+        </div>
+
+        <div class="q" data-answer="0">
+          <p class="q-text"><span class="num">7</span>The angle of depression of a boat from a cliff top is 40°. The angle of elevation of the cliff top from the boat is…</p>
+          <div class="opts"><button type="button">40°</button><button type="button">50°</button><button type="button">80°</button><button type="button">Can't be found</button></div>
+          <p class="feedback" hidden><span class="why">They're alternate angles between parallel horizontals, so they're equal.</span></p>
+        </div>
+
+        <div class="q" data-answer="1">
+          <p class="q-text"><span class="num">8</span>A 20 m pole casts a 20 m shadow. The sun's angle of elevation is…</p>
+          <div class="opts"><button type="button">30°</button><button type="button">45°</button><button type="button">60°</button><button type="button">90°</button></div>
+          <p class="feedback" hidden><span class="why">\(\tan\theta = \tfrac{20}{20} = 1\), so \(\theta = 45^\circ\).</span></p>
+        </div>
+
+      </div>
+      <div class="score" id="score" hidden>
+        <span class="big" id="scoreNum">0/8</span>
+        <p id="scoreMsg"></p>
+        <button class="btn btn-solid" type="button" id="retry">Retry quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="questions">
+    <div class="topic">
+      <h3><span class="num">✍</span>Questions with hints</h3>
+      <p>Solve in your notebook first. Open the hint only if you're stuck, and the solution only to check.</p>
+
+      <article class="qn">
+        <h3><span class="num">Q1</span>If \(\sin A = \frac34\), find \(\cos A\) and \(\tan A\).<span class="tag">Ch 8</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h1" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s1" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h1" hidden>Take \(\cP = 3k\) and \(\cH = 4k\). Find the base with Pythagoras.</div>
+        <div class="sol" id="s1" hidden>
+          <ol class="steps">
+            <li>\(\sin A = \frac{\cP}{\cH} = \frac34\), so \(\cP = 3k,\ \cH = 4k\).</li>
+            <li>\(\cB^2 = (4k)^2 - (3k)^2 = 16k^2 - 9k^2 = 7k^2\), so \(\cB = \sqrt7\,k\).</li>
+            <li>\(\cos A = \frac{\cB}{\cH} = \frac{\sqrt7}{4}\), \(\tan A = \frac{\cP}{\cB} = \frac{3}{\sqrt7} = \frac{3\sqrt7}{7}\).</li>
+          </ol>
+          <p class="ans">\(\cos A = \frac{\sqrt7}{4}\), \(\tan A = \frac{3}{\sqrt7}\)</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q2</span>Evaluate \(2\tan^2 45^\circ + \cos^2 30^\circ - \sin^2 60^\circ\).<span class="tag">Ch 8</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h2" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s2" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h2" hidden>\(\cos 30^\circ\) and \(\sin 60^\circ\) are the same number. What happens to the last two terms?</div>
+        <div class="sol" id="s2" hidden>
+          <ol class="steps">
+            <li>\(\tan 45^\circ = 1\), \(\cos 30^\circ = \frac{\sqrt3}{2}\), \(\sin 60^\circ = \frac{\sqrt3}{2}\).</li>
+            <li>\(2(1)^2 + \left(\frac{\sqrt3}{2}\right)^2 - \left(\frac{\sqrt3}{2}\right)^2 = 2 + \frac34 - \frac34\).</li>
+          </ol>
+          <p class="ans">\(= 2\)</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q3</span>Evaluate \(\sin 60^\circ \cos 30^\circ + \sin 30^\circ \cos 60^\circ\).<span class="tag">Ch 8</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h3" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s3" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h3" hidden>Put in the values from the table and multiply each pair first.</div>
+        <div class="sol" id="s3" hidden>
+          <ol class="steps">
+            <li>\(\frac{\sqrt3}{2}\cdot\frac{\sqrt3}{2} + \frac12\cdot\frac12\)</li>
+            <li>\(= \frac34 + \frac14\)</li>
+          </ol>
+          <p class="ans">\(= 1\)</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q4</span>Using \(\sin^2 A + \cos^2 A = 1\), prove that \(1 + \tan^2 A = \sec^2 A\).<span class="tag">Ch 8</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h4" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s4" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h4" hidden>Divide every term by \(\cos^2 A\).</div>
+        <div class="sol" id="s4" hidden>
+          <ol class="steps">
+            <li>Start with \(\sin^2 A + \cos^2 A = 1\).</li>
+            <li>Divide each term by \(\cos^2 A\) (allowed when \(\cos A \ne 0\), i.e. \(A \ne 90^\circ\)): \(\dfrac{\sin^2 A}{\cos^2 A} + \dfrac{\cos^2 A}{\cos^2 A} = \dfrac{1}{\cos^2 A}\).</li>
+            <li>\(\dfrac{\sin A}{\cos A} = \tan A\) and \(\dfrac{1}{\cos A} = \sec A\), so \(\tan^2 A + 1 = \sec^2 A\).</li>
+          </ol>
+          <p class="ans">\(1 + \tan^2 A = \sec^2 A\). Hence proved.</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q5</span>If \(15\cot A = 8\), find \(\sin A\) and \(\sec A\).<span class="tag">Ch 8</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h5" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s5" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h5" hidden>\(\cot A = \frac{8}{15} = \frac{\cB}{\cP}\). Find the hypotenuse; 8, 15, 17 is a Pythagorean triple.</div>
+        <div class="sol" id="s5" hidden>
+          <ol class="steps">
+            <li>\(\cot A = \frac{8}{15}\), so \(\cB = 8k,\ \cP = 15k\).</li>
+            <li>\(\cH^2 = 64k^2 + 225k^2 = 289k^2\), so \(\cH = 17k\).</li>
+            <li>\(\sin A = \frac{\cP}{\cH} = \frac{15}{17}\), \(\sec A = \frac{\cH}{\cB} = \frac{17}{8}\).</li>
+          </ol>
+          <p class="ans">\(\sin A = \frac{15}{17}\), \(\sec A = \frac{17}{8}\)</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q6</span>A kite is flying at a height of 60 m. Its string makes 60° with the ground. Find the length of the string (assume it is straight).<span class="tag">Ch 9</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h6" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s6" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h6" hidden>You know the <span class="sP">height</span> and want the <span class="sH">string (slant)</span>. Which ratio has P and H?</div>
+        <div class="sol" id="s6" hidden>
+          <ol class="steps">
+            <li>Let the string be \(L\). \(\sin 60^\circ = \dfrac{60}{L}\).</li>
+            <li>\(\dfrac{\sqrt3}{2} = \dfrac{60}{L} \Rightarrow L = \dfrac{120}{\sqrt3}\).</li>
+            <li>Rationalise: \(\dfrac{120}{\sqrt3}\cdot\dfrac{\sqrt3}{\sqrt3} = \dfrac{120\sqrt3}{3} = 40\sqrt3\).</li>
+          </ol>
+          <p class="ans">\(L = 40\sqrt3\) m \(\approx 69.28\) m</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q7</span>From a point 30 m from the foot of a tower, the angle of elevation of its top is 30°. Find the height of the tower.<span class="tag">Ch 9</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h7" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s7" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h7" hidden>Height and ground distance: that's tan. \(\tan 30^\circ = \frac{1}{\sqrt3}\).</div>
+        <div class="sol" id="s7" hidden>
+          <ol class="steps">
+            <li>\(\tan 30^\circ = \dfrac{h}{30}\)</li>
+            <li>\(\dfrac{1}{\sqrt3} = \dfrac{h}{30} \Rightarrow h = \dfrac{30}{\sqrt3}\).</li>
+            <li>Rationalise: \(\dfrac{30\sqrt3}{3} = 10\sqrt3\).</li>
+          </ol>
+          <p class="ans">\(h = 10\sqrt3\) m \(\approx 17.32\) m</p>
+        </div>
+      </article>
+
+      <article class="qn">
+        <h3><span class="num">Q8</span>From the top of a 75 m high lighthouse, the angle of depression of a ship is 30°. How far is the ship from the foot of the lighthouse?<span class="tag">Ch 9</span></h3>
+        <div class="actions"><button class="btn" type="button" aria-expanded="false" aria-controls="h8" data-label="hint">Show hint</button><button class="btn" type="button" aria-expanded="false" aria-controls="s8" data-label="solution">Show solution</button></div>
+        <div class="hint" id="h8" hidden>The angle of elevation of the lighthouse top from the ship is also 30°. Now it's a normal tan question.</div>
+        <div class="sol" id="s8" hidden>
+          <ol class="steps">
+            <li>Angle of depression = angle of elevation from the ship = 30° (alternate angles).</li>
+            <li>Let the distance be \(d\). \(\tan 30^\circ = \dfrac{75}{d}\).</li>
+            <li>\(\dfrac{1}{\sqrt3} = \dfrac{75}{d} \Rightarrow d = 75\sqrt3\).</li>
+          </ol>
+          <p class="ans">\(d = 75\sqrt3\) m \(\approx 129.9\) m</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>Based on NCERT Class 10 Mathematics, Chapters 8 and 9 (rationalised syllabus). Ratios of complementary angles are no longer in the syllabus and are left out.</footer>
+
+</div>
+</div>
+</div>
+</main>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  /* ---------- theme ---------- */
+  var themeBtn = document.getElementById('themeBtn');
+  var themeLabel = document.getElementById('themeLabel');
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function syncThemeBtn() {
+    var dark = isDark();
+    themeBtn.setAttribute('aria-pressed', String(dark));
+    themeLabel.textContent = dark ? 'Light' : 'Dark';
+    themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+  var saved = load('trig-theme');
+  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  syncThemeBtn();
+  themeBtn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    store('trig-theme', next);
+    syncThemeBtn();
+  });
+
+  /* ---------- KaTeX ---------- */
+  var katexOpts = {
+    throwOnError: false,
+    trust: function (ctx) { return ctx.command === '\\htmlClass'; },
+    strict: false,
+    macros: {
+      '\\cP': '\\htmlClass{sP}{P}',
+      '\\cB': '\\htmlClass{sB}{B}',
+      '\\cH': '\\htmlClass{sH}{H}'
+    }
+  };
+  function tex(el, s) {
+    if (window.katex) katex.render(s, el, katexOpts);
+    else el.textContent = s.replace(/\\htmlClass\{s.\}\{([^}]*)\}/g, '$1').replace(/\\[a-z]+/g, '').replace(/[{}]/g, '');
+  }
+
+  /* ---------- triangle lab ---------- */
+  var sides = { AB: 4, BC: 3, AC: 5 };
+  var sideEls = { AB: byId('sideAB'), BC: byId('sideBC') };
+  var lblEls = { AB: byId('lblAB'), BC: byId('lblBC') };
+  function byId(id) { return document.getElementById(id); }
+  function setAngle(a) {
+    var perp = a === 'A' ? 'BC' : 'AB';
+    var base = a === 'A' ? 'AB' : 'BC';
+    sideEls[perp].setAttribute('class', 'side k-p');
+    sideEls[base].setAttribute('class', 'side k-b');
+    lblEls[perp].setAttribute('class', 'lbl t-p');
+    lblEls[base].setAttribute('class', 'lbl t-b');
+    lblEls[perp].textContent = (perp === 'BC' ? 'Perp. ' : 'Perpendicular ') + '(' + sides[perp] + ')';
+    lblEls[base].textContent = 'Base (' + sides[base] + ')';
+    byId('arcA').setAttribute('opacity', a === 'A' ? 1 : 0);
+    byId('thetaA').setAttribute('opacity', a === 'A' ? 1 : 0);
+    byId('arcC').setAttribute('opacity', a === 'C' ? 1 : 0);
+    byId('thetaC').setAttribute('opacity', a === 'C' ? 1 : 0);
+    var P = sides[perp], B = sides[base], H = sides.AC;
+    function col(c, s) { return '\\htmlClass{' + c + '}{' + s + '}'; }
+    tex(byId('liveSin'), '\\sin ' + a + ' = \\dfrac{' + col('sP', perp) + '}{' + col('sH', 'AC') + '} = \\dfrac{' + P + '}{' + H + '}');
+    tex(byId('liveCos'), '\\cos ' + a + ' = \\dfrac{' + col('sB', base) + '}{' + col('sH', 'AC') + '} = \\dfrac{' + B + '}{' + H + '}');
+    tex(byId('liveTan'), '\\tan ' + a + ' = \\dfrac{' + col('sP', perp) + '}{' + col('sB', base) + '} = \\dfrac{' + P + '}{' + B + '}');
+  }
+  var angleBtns = document.querySelectorAll('[data-angle]');
+  angleBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      angleBtns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      setAngle(b.dataset.angle);
+    });
+  });
+
+  /* ---------- elevation / depression scene ---------- */
+  function playScene(id) {
+    var g = byId(id);
+    g.querySelectorAll('.los, .arc').forEach(function (el) {
+      el.classList.remove('draw');
+      void el.getBoundingClientRect();
+      el.classList.add('draw');
+    });
+  }
+  var sceneBtns = document.querySelectorAll('[data-scene]');
+  sceneBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var s = b.dataset.scene;
+      sceneBtns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      byId('sc-elev').toggleAttribute('hidden', s !== 'elev');
+      byId('sc-dep').toggleAttribute('hidden', s !== 'dep');
+      playScene('sc-' + s);
+    });
+  });
+  if ('IntersectionObserver' in window) {
+    var played = false;
+    new IntersectionObserver(function (es, obs) {
+      if (es[0].isIntersecting && !played) { played = true; playScene('sc-elev'); obs.disconnect(); }
+    }, { threshold: 0.5 }).observe(document.querySelector('.scene'));
+  }
+
+  /* ---------- quiz ---------- */
+  var qs = Array.prototype.slice.call(document.querySelectorAll('.q'));
+  var answered = 0, correct = 0;
+  var progress = byId('quizProgress');
+  var scoreBox = byId('score');
+  qs.forEach(function (q) {
+    var opts = q.querySelectorAll('.opts button');
+    var ans = Number(q.dataset.answer);
+    opts.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        if (q.dataset.done) return;
+        q.dataset.done = '1';
+        answered++;
+        var ok = i === ans;
+        if (ok) correct++;
+        opts.forEach(function (o, j) {
+          o.disabled = true;
+          if (j === ans) o.classList.add('right');
+          else if (j === i) o.classList.add('wrong');
+        });
+        var fb = q.querySelector('.feedback');
+        var head = document.createElement('strong');
+        head.className = 'verdict ' + (ok ? 'ok' : 'no');
+        head.textContent = ok ? 'Correct. ' : 'Not quite. ';
+        fb.insertBefore(head, fb.firstChild);
+        fb.className = 'feedback ' + (ok ? 'ok' : 'no');
+        fb.hidden = false;
+        updateQuiz();
+      });
+    });
+  });
+  function updateQuiz() {
+    progress.textContent = answered + ' of ' + qs.length + ' answered, ' + correct + ' correct';
+    if (answered === qs.length) {
+      byId('scoreNum').textContent = correct + '/' + qs.length;
+      byId('scoreMsg').textContent =
+        correct === qs.length ? 'Full marks. You know both chapters well.' :
+        correct >= 6 ? 'Good work. Read the explanations for the ones you missed.' :
+        correct >= 4 ? 'Halfway there. Revisit the values table and section 9.2, then retry.' :
+        'Go through Part A once more, then retry. It gets easier the second time.';
+      scoreBox.hidden = false;
+    }
+  }
+  function resetQuiz() {
+    answered = 0; correct = 0;
+    qs.forEach(function (q) {
+      delete q.dataset.done;
+      q.querySelectorAll('.opts button').forEach(function (o) { o.disabled = false; o.classList.remove('right', 'wrong'); });
+      var fb = q.querySelector('.feedback');
+      var v = fb.querySelector('.verdict');
+      if (v) v.remove();
+      fb.className = 'feedback';
+      fb.hidden = true;
+    });
+    scoreBox.hidden = true;
+    progress.textContent = '0 of ' + qs.length + ' answered';
+    byId('quiz').scrollIntoView();
+  }
+  byId('retry').addEventListener('click', resetQuiz);
+  byId('retryTop').addEventListener('click', resetQuiz);
+
+  /* ---------- hints & solutions ---------- */
+  document.querySelectorAll('.qn .actions .btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = byId(btn.getAttribute('aria-controls'));
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      btn.textContent = (open ? 'Hide ' : 'Show ') + btn.dataset.label;
+    });
+  });
+
+  /* ---------- index highlight ---------- */
+  var links = document.querySelectorAll('.index nav a');
+  var map = {};
+  links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var visible = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      var current = null;
+      ['ch8', 'ch9', 'formulas', 'quiz', 'questions'].forEach(function (id) { if (visible[id] && !current) current = id; });
+      links.forEach(function (a) { a.removeAttribute('aria-current'); });
+      if (current) {
+        map[current].setAttribute('aria-current', 'true');
+        if (map[current].scrollIntoView && window.innerWidth <= 720) {
+          var nav = map[current].closest('nav');
+          nav.scrollTo({ left: map[current].offsetLeft - 16, behavior: 'smooth' });
+        }
+      }
+    }, { rootMargin: '-120px 0px -55% 0px' });
+    Object.keys(map).forEach(function (id) { var el = byId(id); if (el) io.observe(el); });
+  }
+
+  /* ---------- render maths once KaTeX has loaded ---------- */
+  function renderAll() {
+    renderMathInElement(document.body, Object.assign({
+      delimiters: [
+        { left: '\\[', right: '\\]', display: true },
+        { left: '\\(', right: '\\)', display: false }
+      ]
+    }, katexOpts));
+    setAngle('A');
+  }
+  setAngle('A');
+  window.addEventListener('load', function () {
+    if (window.renderMathInElement) renderAll();
+  });
+})();
+</script>
+</body>
+</html>
