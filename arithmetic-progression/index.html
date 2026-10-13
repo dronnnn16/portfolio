@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arithmetic Progressions, Step by Step</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Baloo+2:wght@600;700;800&family=Kalam:wght@400&display=swap">
+<style>
+/* Layout: a sticky "staircase" contents list on the left (each item indented by the same amount, so the
+   menu itself is an AP), one readable lesson column on the right. Colour is meaning: blue is always a
+   (the first term), pink is always d (the jump), green is always n (the position). */
+:root {
+  --paper: #F3F5FB;
+  --surface: #FFFFFF;
+  --ink: #1C2340;
+  --muted: #535D84;
+  --line: #D6DCEC;
+  --a: #2B59C3;
+  --a-soft: #DEE7FB;
+  --d: #C2255C;
+  --d-soft: #FBE1EB;
+  --n: #17734A;
+  --n-soft: #DCF2E6;
+  --block: #F1B12D;
+  --bad: #B93E0C;
+
+  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --font-hand: "Kalam", "Segoe Print", "Comic Sans MS", cursive;
+
+  --step-1: 0.875rem;
+  --step0: 1.125rem;
+  --step1: 1.375rem;
+  --step2: 1.75rem;
+  --step3: 2.25rem;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11152A; --surface: #1A1F3D; --ink: #ECEFFA; --muted: #A5ADCD; --line: #2E365F;
+    --a: #85A6FF; --a-soft: #233163; --d: #FF7BAC; --d-soft: #48203D; --n: #52D49A; --n-soft: #173E31;
+    --block: #E6A931; --bad: #FF905F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11152A; --surface: #1A1F3D; --ink: #ECEFFA; --muted: #A5ADCD; --line: #2E365F;
+  --a: #85A6FF; --a-soft: #233163; --d: #FF7BAC; --d-soft: #48203D; --n: #52D49A; --n-soft: #173E31;
+  --block: #E6A931; --bad: #FF905F; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; }
+[hidden] { display: none !important; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p, ol, ul, dl { margin: 0; }
+a { color: var(--a); }
+:focus-visible { outline: 3px solid var(--a); outline-offset: 3px; border-radius: 6px; }
+.va { color: var(--a); font-weight: 700; }
+.vd { color: var(--d); font-weight: 700; }
+.vn { color: var(--n); font-weight: 700; }
+.num-t { font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1140px; margin: 0 auto; padding-inline: 20px; }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: 48px 40px; display: grid; gap: 28px; }
+.hero-text { display: grid; gap: 14px; max-width: 46rem; }
+.crumb { color: var(--muted); font-size: var(--step-1); font-weight: 700; }
+.title {
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.02;
+  padding-top: 0.35em;
+}
+.climb { display: inline-block; white-space: nowrap; }
+.climb span {
+  display: inline-block;
+  color: var(--a);
+  transform: translateY(calc(var(--k) * -0.032em));
+  animation: rise 700ms cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: calc(var(--k) * 55ms);
+}
+@keyframes rise { from { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .climb span { animation: none; } }
+.lede { font-size: var(--step1); max-width: 36rem; }
+.hand { font-family: var(--font-hand); color: var(--muted); font-size: 1.05rem; line-height: 1.45; }
+
+.play {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+.play-fig { min-width: 0; }
+.play-fig svg { display: block; width: 100%; height: auto; }
+.play-side { display: grid; gap: 16px; min-width: 0; }
+.play-side h2 { font-size: var(--step2); }
+.slider { display: grid; gap: 4px; }
+.slider-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.slider label { font-weight: 700; }
+.slider output { font-family: var(--font-display); font-size: var(--step2); line-height: 1; font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--a); height: 28px; }
+#dRange, #sumD { accent-color: var(--d); }
+#sumN { accent-color: var(--n); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: var(--step-1); color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.sw-a { background: var(--a); }
+.sw-d { background: var(--d); }
+.sw-gone { border: 2px dashed var(--d); }
+.readout { font-size: var(--step0); }
+
+/* SVG classes */
+.blk-a { fill: var(--a); }
+.blk-d { fill: var(--d); }
+.blk-gone { fill: none; stroke: var(--d); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.blk-neg { fill: var(--d); opacity: .45; }
+.blk-y { fill: var(--block); stroke: var(--ink); stroke-width: 1; }
+.blk-copy { fill: var(--d-soft); stroke: var(--d); stroke-width: 1; stroke-dasharray: 3 2; }
+.svg-base { stroke: var(--ink); stroke-width: 2; }
+.svg-faint { stroke: var(--line); stroke-width: 1.5; }
+.svg-label { fill: var(--muted); font-family: var(--font-body); font-size: 14px; }
+.svg-val { fill: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 17px; }
+.svg-arc { fill: none; stroke: var(--d); stroke-width: 2; stroke-dasharray: 5 4; }
+.svg-jump { fill: var(--d); font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.svg-tick { stroke: var(--muted); stroke-width: 1.5; }
+.svg-hit { fill: var(--a); }
+.frog-body { fill: var(--n); }
+.frog-eye { fill: var(--surface); stroke: var(--ink); stroke-width: 1.2; }
+.frog-pupil { fill: var(--ink); }
+.svg-outline { fill: none; stroke: var(--ink); stroke-width: 2; }
+
+/* ---------- Layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 56px;
+  padding-block: 24px 80px;
+}
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; }
+.toc p { font-family: var(--font-display); font-weight: 700; font-size: var(--step1); margin-bottom: 10px; }
+.toc ol { list-style: none; padding: 0; display: grid; }
+.toc li { padding-left: calc(var(--i) * 9px); }
+.toc a {
+  display: flex; gap: 8px; align-items: baseline;
+  padding: 6px 10px;
+  border-left: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.toc a b { font-family: var(--font-display); color: var(--ink); min-width: 1ch; }
+.toc a:hover { color: var(--ink); }
+.toc a[aria-current="true"] { background: var(--a-soft); color: var(--ink); border-color: var(--a); }
+
+main { display: flex; flex-direction: column; gap: 88px; max-width: 44rem; min-width: 0; }
+
+/* ---------- Steps ---------- */
+.step { display: grid; gap: 20px; scroll-margin-top: 24px; }
+.step-head { display: flex; align-items: center; gap: 14px; }
+.step-no {
+  flex: none;
+  width: 2.6rem; height: 2.6rem;
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 800; font-size: 1.5rem;
+  background: var(--a-soft); color: var(--a);
+  border-radius: 10px;
+}
+.step h2 { font-size: var(--step3); }
+.step h3 { font-size: var(--step1); }
+.step > p, .step li { max-width: 40rem; }
+.step ul, .step ol.plain { padding-left: 1.3em; display: grid; gap: 6px; }
+
+.define {
+  font-size: var(--step1);
+  line-height: 1.5;
+  padding: 18px 20px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.words { display: grid; gap: 12px; }
+.words div { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 12px; }
+.words dt { font-weight: 700; }
+.words dd { margin: 0; }
+
+.formula {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  line-height: 1.2;
+  text-align: center;
+  padding: 22px 16px 16px;
+  background: var(--surface);
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  display: grid; gap: 6px;
+}
+.formula small { font-family: var(--font-body); font-weight: 400; font-size: var(--step-1); color: var(--muted); }
+.formula sub, .working sub, .answer sub { font-size: 0.6em; }
+
+/* Number sequences with jump arcs between them */
+.seq { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 2px; padding-top: 6px; }
+.num {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; line-height: 1;
+  padding: 10px 12px 7px;
+  min-width: 2.8rem; text-align: center;
+  background: var(--surface);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.num.more { border-style: dashed; border-color: var(--line); color: var(--muted); }
+.jump {
+  display: inline-flex; flex-direction: column; align-items: center;
+  align-self: flex-start;
+  min-width: 2.6rem;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; line-height: 1;
+  color: var(--d);
+}
+.jump::after {
+  content: ""; display: block; width: 34px; height: 9px; margin-top: 3px;
+  border: 2px solid var(--d); border-bottom: 0; border-radius: 17px 17px 0 0;
+}
+.jump.blank { color: transparent; }
+.jump.blank::after { border-color: var(--line); }
+.jump.off { color: var(--bad); }
+.jump.off::after { border-color: var(--bad); }
+
+.patterns { display: grid; gap: 18px; }
+.pattern { display: grid; gap: 4px; }
+.pattern p { color: var(--muted); }
+
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.trio > div { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+.trio h3 { font-size: 1.15rem; }
+.trio .num { font-size: 1.05rem; padding: 8px 8px 5px; min-width: 2.2rem; }
+.trio .jump { min-width: 1.9rem; font-size: 0.8rem; }
+.trio .jump::after { width: 24px; }
+
+.example {
+  display: grid; gap: 12px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.example h3 { font-size: var(--step1); }
+.example .kicker { font-size: var(--step-1); color: var(--muted); font-weight: 700; }
+.working { list-style: none; padding: 0; display: grid; gap: 4px; font-variant-numeric: tabular-nums; }
+.working li { padding-left: 1.4em; position: relative; }
+.working li::before { content: ""; position: absolute; left: 0.25em; top: 0.75em; width: 0.5em; height: 2px; background: var(--line); }
+.answer { font-weight: 700; color: var(--n); }
+.answer.no { color: var(--bad); }
+
+.tip { font-family: var(--font-hand); font-size: 1.2rem; line-height: 1.45; color: var(--d); max-width: 36rem; transform: rotate(-0.6deg); }
+
+/* Controls shared by the little tools */
+.tool { display: grid; gap: 16px; padding: 20px; background: var(--surface); border: 2px solid var(--ink); border-radius: 18px; }
+.tool h3 { font-size: var(--step1); }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; }
+button {
+  font: inherit; font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+button.ghost { background: transparent; color: var(--ink); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button:hover:not(:disabled) { transform: translateY(-1px); }
+.fields { display: flex; flex-wrap: wrap; gap: 14px; }
+.field { display: grid; gap: 4px; }
+.field label { font-weight: 700; font-size: var(--step-1); }
+.field input {
+  font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
+  width: 6.5rem; padding: 8px 10px;
+  border: 2px solid var(--line); border-radius: 10px;
+  background: var(--paper); color: var(--ink);
+}
+.field input:focus-visible { border-color: var(--a); outline-offset: 1px; }
+.feedback { min-height: 1.6em; font-weight: 700; }
+.feedback.good { color: var(--n); }
+.feedback.bad { color: var(--bad); }
+.score { font-family: var(--font-display); font-weight: 700; color: var(--muted); }
+
+.fig-scroll { overflow-x: auto; }
+.fig-scroll svg { display: block; width: 100%; min-width: 320px; height: auto; }
+
+/* Formula sheet */
+.sheet-wrap { overflow-x: auto; border: 2px solid var(--ink); border-radius: var(--radius); background: var(--surface); }
+.sheet { width: 100%; border-collapse: collapse; min-width: 30rem; }
+.sheet th, .sheet td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.sheet tr:last-child td { border-bottom: 0; }
+.sheet th { font-family: var(--font-display); font-size: 1.05rem; color: var(--muted); font-weight: 700; }
+.sheet td:nth-child(2) { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; white-space: nowrap; }
+.sheet sub { font-size: 0.6em; }
+
+.mistakes { display: grid; gap: 12px; padding: 0; list-style: none; }
+.mistakes li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4px 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--line); }
+.mistakes .wrong { color: var(--bad); }
+.mistakes .wrong::before { content: "Wrong: "; font-weight: 700; }
+.mistakes .right { color: var(--n); }
+.mistakes .right::before { content: "Right: "; font-weight: 700; }
+
+.quiz { display: grid; gap: 16px; padding: 0; list-style: none; counter-reset: q; }
+.q { display: grid; gap: 10px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.q.done { border-color: var(--n); }
+.q-text { font-weight: 700; }
+.q form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.q input {
+  font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem;
+  width: 8rem; padding: 7px 10px;
+  border: 2px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink);
+}
+.q .work { color: var(--muted); }
+
+footer { color: var(--muted); font-size: var(--step-1); padding-block: 24px 48px; border-top: 1px solid var(--line); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .toc { position: static; }
+  .toc ol { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; }
+  .toc li { padding-left: 0; flex: none; }
+  .toc a { border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+  .play { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .trio { grid-template-columns: minmax(0, 1fr); }
+  .words div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .mistakes li { grid-template-columns: minmax(0, 1fr); }
+  .play, .tool, .example, .q { padding: 16px; }
+  main { gap: 64px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-text">
+      <p class="crumb">Class 10 Maths, NCERT Chapter 5</p>
+      <h1 class="title" aria-label="Arithmetic Progressions"><span aria-hidden="true">Arithmetic</span> <span class="climb" id="climb" aria-hidden="true">Progressions</span></h1>
+      <p class="lede">A list of numbers where you add the same amount every time. That one idea is the whole chapter. We will climb it one step at a time.</p>
+      <p class="hand">Look closely: every letter of “Progressions” sits a tiny bit higher than the one before, by the same amount each time. Even the title is an AP.</p>
+    </div>
+
+    <section class="play" aria-labelledby="play-title">
+      <div class="play-fig">
+        <svg id="towers" viewBox="0 0 480 300" role="img" aria-labelledby="towers-desc"><desc id="towers-desc">Six towers of blocks. Each tower is taller than the one before by the same number of blocks.</desc></svg>
+      </div>
+      <div class="play-side">
+        <h2 id="play-title">Build an AP with blocks</h2>
+        <div class="slider">
+          <div class="slider-top"><label for="aRange">Start with <span class="va">a</span> blocks</label><output id="aOut" for="aRange" class="va">2</output></div>
+          <input type="range" id="aRange" min="0" max="10" value="2">
+        </div>
+        <div class="slider">
+          <div class="slider-top"><label for="dRange">Add <span class="vd">d</span> blocks each step</label><output id="dOut" for="dRange" class="vd">3</output></div>
+          <input type="range" id="dRange" min="-3" max="5" value="3">
+        </div>
+        <div class="legend">
+          <span><i class="sw sw-a"></i>the a blocks you start with</span>
+          <span><i class="sw sw-d"></i>d blocks added each step</span>
+          <span><i class="sw sw-gone"></i>blocks taken away</span>
+        </div>
+        <div class="seq" id="heroSeq" aria-live="polite"></div>
+        <p class="readout" id="heroRead"></p>
+      </div>
+    </section>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Steps in this chapter">
+      <p>The staircase</p>
+      <ol>
+        <li style="--i:0"><a href="#s1"><b>1</b>Spot the pattern</a></li>
+        <li style="--i:1"><a href="#s2"><b>2</b>What an AP is</a></li>
+        <li style="--i:2"><a href="#s3"><b>3</b>Find the jump</a></li>
+        <li style="--i:3"><a href="#s4"><b>4</b>Write an AP</a></li>
+        <li style="--i:4"><a href="#s5"><b>5</b>Any term, fast</a></li>
+        <li style="--i:5"><a href="#s6"><b>6</b>Count from the end</a></li>
+        <li style="--i:6"><a href="#s7"><b>7</b>Add them all up</a></li>
+        <li style="--i:7"><a href="#s8"><b>8</b>Formula sheet</a></li>
+        <li style="--i:8"><a href="#s9"><b>9</b>Try it yourself</a></li>
+      </ol>
+    </nav>
+
+    <main>
+      <!-- STEP 1 -->
+      <section class="step" id="s1" aria-labelledby="h1s">
+        <div class="step-head"><span class="step-no">1</span><h2 id="h1s">Spot the pattern</h2></div>
+        <p>Before any maths words, just look. In each list below, how do you get from one number to the next?</p>
+        <div class="patterns">
+          <div class="pattern">
+            <h3>Riya's piggy bank</h3>
+            <p>She starts with ₹50 and puts in ₹10 every week.</p>
+            <div class="seq" data-seq="50,60,70,80,90" data-prefix="₹" data-more></div>
+          </div>
+          <div class="pattern">
+            <h3>Taxi fare</h3>
+            <p>₹30 for the first km, then ₹12 for every extra km.</p>
+            <div class="seq" data-seq="30,42,54,66,78" data-prefix="₹" data-more></div>
+          </div>
+          <div class="pattern">
+            <h3>Rocket countdown</h3>
+            <p>Each second, the number goes down by one.</p>
+            <div class="seq" data-seq="10,9,8,7,6" data-more></div>
+          </div>
+        </div>
+        <p>Did you see it? In every list, you get the next number by <b>adding the same amount</b> each time. In the countdown, the amount you add is −1, which is the same as taking away 1.</p>
+        <p class="tip">That “same amount every time” is the secret of the whole chapter. Hold on to it.</p>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="step" id="s2" aria-labelledby="h2s">
+        <div class="step-head"><span class="step-no">2</span><h2 id="h2s">What an AP is</h2></div>
+        <p class="define">An <b>arithmetic progression</b> (AP) is a list of numbers where each number is made by adding the <b>same fixed number</b> to the one before it.</p>
+        <dl class="words">
+          <div><dt>Term</dt><dd>Each number in the list. We call them a<sub>1</sub>, a<sub>2</sub>, a<sub>3</sub> and so on. The small number tells you its place in the line.</dd></div>
+          <div><dt>First term, <span class="va">a</span></dt><dd>The number you start from.</dd></div>
+          <div><dt>Common difference, <span class="vd">d</span></dt><dd>The fixed amount you add every time. “Common” means shared: every pair of neighbours has this same difference.</dd></div>
+        </dl>
+        <p><span class="vd">d</span> can be any number. It decides which way the staircase goes:</p>
+        <div class="trio">
+          <div><h3>Going up</h3><div class="seq" data-seq="3,7,11,15"></div><p><span class="vd">d</span> = 4, a positive number</p></div>
+          <div><h3>Going down</h3><div class="seq" data-seq="20,15,10,5"></div><p><span class="vd">d</span> = −5, a negative number</p></div>
+          <div><h3>Staying flat</h3><div class="seq" data-seq="6,6,6,6"></div><p><span class="vd">d</span> = 0, nothing changes</p></div>
+        </div>
+        <p>Fractions and decimals are fine too. 1.5, 2, 2.5, 3 is an AP with <span class="vd">d</span> = 0.5.</p>
+
+        <div class="tool" id="apGame">
+          <h3>Game: is it an AP?</h3>
+          <p id="gameCount" class="score">Question 1 of 6</p>
+          <div class="seq" id="gameSeq"></div>
+          <div class="btns">
+            <button type="button" id="gameYes">Yes, it's an AP</button>
+            <button type="button" id="gameNo" class="ghost">No, it isn't</button>
+          </div>
+          <p class="feedback" id="gameFeedback" aria-live="polite"></p>
+          <div class="btns"><button type="button" class="ghost" id="gameNext" hidden>Next list</button></div>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="step" id="s3" aria-labelledby="h3s">
+        <div class="step-head"><span class="step-no">3</span><h2 id="h3s">Find the jump</h2></div>
+        <p>To find <span class="vd">d</span>, take any term and subtract the term just before it.</p>
+        <p class="formula"><span><span class="vd">d</span> = a<sub>2</sub> − a<sub>1</sub> = a<sub>3</sub> − a<sub>2</sub> = …</span><small>later term minus the earlier term</small></p>
+        <p>Always do <b>later minus earlier</b>. If you subtract the other way round, you get the right size but the wrong sign.</p>
+
+        <div class="example">
+          <h3>Find d for 4, 10, 16, 22, …</h3>
+          <ol class="working">
+            <li><span class="vd">d</span> = 10 − 4 = 6</li>
+            <li>Check another pair: 16 − 10 = 6. Same answer, good.</li>
+          </ol>
+          <p class="answer">d = 6</p>
+        </div>
+        <div class="example">
+          <h3>Find d for −1, −3, −5, −7, …</h3>
+          <ol class="working">
+            <li><span class="vd">d</span> = (−3) − (−1)</li>
+            <li>= −3 + 1 &nbsp;(minus a minus becomes plus)</li>
+            <li>= −2</li>
+          </ol>
+          <p class="answer">d = −2. The numbers are going down, so d had to be negative.</p>
+        </div>
+        <p class="tip">Check at least two pairs. If you get different answers, the list is not an AP.</p>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="step" id="s4" aria-labelledby="h4s">
+        <div class="step-head"><span class="step-no">4</span><h2 id="h4s">Write an AP</h2></div>
+        <p>If you know where to start (<span class="va">a</span>) and how big each jump is (<span class="vd">d</span>), you can write the whole AP:</p>
+        <p class="formula"><span><span class="va">a</span>, &nbsp;<span class="va">a</span> + <span class="vd">d</span>, &nbsp;<span class="va">a</span> + 2<span class="vd">d</span>, &nbsp;<span class="va">a</span> + 3<span class="vd">d</span>, …</span></p>
+        <p>Think of a frog on a number line. It starts on <span class="va">a</span>, and every hop is exactly <span class="vd">d</span> long. Press the button and count the hops.</p>
+
+        <div class="tool">
+          <h3>The frog: a = 3, d = 4</h3>
+          <div class="fig-scroll"><svg id="frog" viewBox="0 0 520 150" role="img" aria-labelledby="frog-desc"><desc id="frog-desc">A number line from 0 to 23. A frog starts at 3 and hops 4 units at a time.</desc></svg></div>
+          <p id="frogText" aria-live="polite"></p>
+          <div class="btns">
+            <button type="button" id="frogJump">Hop</button>
+            <button type="button" class="ghost" id="frogReset">Start over</button>
+          </div>
+        </div>
+
+        <p>Here is the big idea. To land on term 5, the frog made <b>4</b> hops, not 5. The first term needs no hops at all, because the frog starts there. So:</p>
+        <p class="tip">The number of jumps is always one less than the term number. Term <span class="vn">n</span> needs (<span class="vn">n</span> − 1) jumps.</p>
+
+        <div class="example">
+          <h3>Write the first four terms when a = 4 and d = −3</h3>
+          <ol class="working">
+            <li>a<sub>1</sub> = 4</li>
+            <li>a<sub>2</sub> = 4 + (−3) = 1</li>
+            <li>a<sub>3</sub> = 1 + (−3) = −2</li>
+            <li>a<sub>4</sub> = −2 + (−3) = −5</li>
+          </ol>
+          <p class="answer">4, 1, −2, −5</p>
+        </div>
+      </section>
+
+      <!-- STEP 5 -->
+      <section class="step" id="s5" aria-labelledby="h5s">
+        <div class="step-head"><span class="step-no">5</span><h2 id="h5s">Any term, fast</h2></div>
+        <p>What if you want the 100th term? Hopping 99 times is boring. Use the jump rule from Step 4 instead: start at <span class="va">a</span>, then add (<span class="vn">n</span> − 1) jumps of size <span class="vd">d</span>.</p>
+        <p class="formula"><span>a<sub class="vn">n</sub> = <span class="va">a</span> + (<span class="vn">n</span> − 1)<span class="vd">d</span></span><small>this is called the nth term or general term</small></p>
+
+        <div class="tool">
+          <h3>Try the formula</h3>
+          <div class="fields">
+            <div class="field"><label for="cA">First term, a</label><input id="cA" type="text" inputmode="decimal" value="2"></div>
+            <div class="field"><label for="cD">Jump, d</label><input id="cD" type="text" inputmode="decimal" value="5"></div>
+            <div class="field"><label for="cN">Term number, n</label><input id="cN" type="text" inputmode="numeric" value="10"></div>
+          </div>
+          <ol class="working" id="calcOut" aria-live="polite"></ol>
+        </div>
+
+        <div class="example">
+          <p class="kicker">Finding a term</p>
+          <h3>Find the 10th term of 2, 7, 12, …</h3>
+          <ol class="working">
+            <li><span class="va">a</span> = 2, &nbsp;<span class="vd">d</span> = 7 − 2 = 5, &nbsp;<span class="vn">n</span> = 10</li>
+            <li>a<sub>10</sub> = 2 + (10 − 1) × 5</li>
+            <li>= 2 + 9 × 5 = 2 + 45</li>
+          </ol>
+          <p class="answer">a<sub>10</sub> = 47</p>
+        </div>
+
+        <div class="example">
+          <p class="kicker">Finding which term</p>
+          <h3>Which term of 21, 18, 15, … is −81?</h3>
+          <ol class="working">
+            <li><span class="va">a</span> = 21, &nbsp;<span class="vd">d</span> = −3, and we want a<sub>n</sub> = −81</li>
+            <li>−81 = 21 + (n − 1)(−3)</li>
+            <li>−81 − 21 = (n − 1)(−3), so −102 = (n − 1)(−3)</li>
+            <li>n − 1 = −102 ÷ −3 = 34</li>
+          </ol>
+          <p class="answer">n = 35, so −81 is the 35th term.</p>
+        </div>
+
+        <div class="example">
+          <p class="kicker">Checking if a number belongs</p>
+          <h3>Is 301 a term of 5, 11, 17, 23, …?</h3>
+          <ol class="working">
+            <li><span class="va">a</span> = 5, &nbsp;<span class="vd">d</span> = 6</li>
+            <li>301 = 5 + (n − 1) × 6, so 296 = (n − 1) × 6</li>
+            <li>n − 1 = 296 ÷ 6 = 49.33…</li>
+          </ol>
+          <p class="answer no">n is not a whole number, so 301 is not a term.</p>
+          <p>A term's place in the line is always a counting number: 1st, 2nd, 3rd… There is no “50.33rd” term.</p>
+        </div>
+
+        <div class="example">
+          <p class="kicker">Counting how many</p>
+          <h3>How many two-digit numbers can be divided by 3?</h3>
+          <ol class="working">
+            <li>They are 12, 15, 18, …, 99. This is an AP with <span class="va">a</span> = 12, <span class="vd">d</span> = 3.</li>
+            <li>The last one is 99, so 99 = 12 + (n − 1) × 3</li>
+            <li>87 = (n − 1) × 3, so n − 1 = 29</li>
+          </ol>
+          <p class="answer">n = 30 numbers</p>
+        </div>
+
+        <div class="example">
+          <p class="kicker">When two terms are given</p>
+          <h3>The 11th term is 38 and the 16th term is 73. Find the 31st term.</h3>
+          <ol class="working">
+            <li>a + 10d = 38 &nbsp;and&nbsp; a + 15d = 73</li>
+            <li>Subtract the first from the second. The a's cancel: 5d = 35, so <span class="vd">d</span> = 7</li>
+            <li>Put d back: a + 70 = 38, so <span class="va">a</span> = −32</li>
+            <li>a<sub>31</sub> = −32 + 30 × 7 = −32 + 210</li>
+          </ol>
+          <p class="answer">a<sub>31</sub> = 178</p>
+        </div>
+      </section>
+
+      <!-- STEP 6 -->
+      <section class="step" id="s6" aria-labelledby="h6s">
+        <div class="step-head"><span class="step-no">6</span><h2 id="h6s">Count from the end</h2></div>
+        <p>Sometimes a question asks for a term counted from the <b>last</b> one. Easy: turn around. Start on the last term <b>l</b> and jump backwards, which means taking away <span class="vd">d</span> each time.</p>
+        <p class="formula"><span><span class="vn">n</span>th term from the end = l − (<span class="vn">n</span> − 1)<span class="vd">d</span></span><small>l is the last term</small></p>
+        <div class="example">
+          <h3>Find the 20th term from the last of 3, 8, 13, …, 253</h3>
+          <ol class="working">
+            <li>l = 253, &nbsp;<span class="vd">d</span> = 5, &nbsp;<span class="vn">n</span> = 20</li>
+            <li>253 − (20 − 1) × 5 = 253 − 95</li>
+          </ol>
+          <p class="answer">158</p>
+        </div>
+      </section>
+
+      <!-- STEP 7 -->
+      <section class="step" id="s7" aria-labelledby="h7s">
+        <div class="step-head"><span class="step-no">7</span><h2 id="h7s">Add them all up</h2></div>
+        <p>About 250 years ago, a teacher wanted to keep his class busy. He said, “Add up every number from 1 to 100.” A small boy named <b>Carl Friedrich Gauss</b> gave the answer almost at once: <b>5050</b>.</p>
+        <p>His trick was to pair the numbers from both ends:</p>
+        <ol class="plain">
+          <li>1 + 100 = 101</li>
+          <li>2 + 99 = 101</li>
+          <li>3 + 98 = 101, and so on.</li>
+        </ol>
+        <p>Every pair makes 101. 100 numbers make 50 pairs. So the total is 50 × 101 = 5050.</p>
+
+        <div class="tool">
+          <h3>See why it works</h3>
+          <p>The yellow blocks are the AP, drawn as a staircase. The pink blocks are a second copy, turned upside down. Together they make a perfect rectangle.</p>
+          <div class="fig-scroll"><svg id="sumFig" viewBox="0 0 480 270" role="img" aria-labelledby="sum-desc"><desc id="sum-desc">A staircase of blocks and an upside-down copy fitting together into a rectangle.</desc></svg></div>
+          <div class="fields">
+            <div class="slider" style="flex:1 1 12rem"><div class="slider-top"><label for="sumA">First term, a</label><output id="sumAOut" class="va">1</output></div><input type="range" id="sumA" min="1" max="4" value="1"></div>
+            <div class="slider" style="flex:1 1 12rem"><div class="slider-top"><label for="sumD">Jump, d</label><output id="sumDOut" class="vd">1</output></div><input type="range" id="sumD" min="0" max="3" value="1"></div>
+            <div class="slider" style="flex:1 1 12rem"><div class="slider-top"><label for="sumN">How many terms, n</label><output id="sumNOut" class="vn">6</output></div><input type="range" id="sumN" min="2" max="10" value="6"></div>
+          </div>
+          <ol class="working" id="sumText" aria-live="polite"></ol>
+        </div>
+
+        <p>The rectangle is <span class="vn">n</span> columns wide and (first + last) tall. Two copies of the sum fill it, so one sum is half the rectangle:</p>
+        <p class="formula"><span>S<sub class="vn">n</sub> = <span class="vn">n</span>⁄2 (<span class="va">a</span> + l)</span><small>use this when you know the last term l</small></p>
+        <p>If you don't know <b>l</b>, swap it for the nth term formula, l = <span class="va">a</span> + (<span class="vn">n</span> − 1)<span class="vd">d</span>:</p>
+        <p class="formula"><span>S<sub class="vn">n</sub> = <span class="vn">n</span>⁄2 [2<span class="va">a</span> + (<span class="vn">n</span> − 1)<span class="vd">d</span>]</span><small>the sum of the first n terms</small></p>
+
+        <div class="example">
+          <h3>Find the sum of the first 22 terms of 8, 3, −2, …</h3>
+          <ol class="working">
+            <li><span class="va">a</span> = 8, &nbsp;<span class="vd">d</span> = −5, &nbsp;<span class="vn">n</span> = 22</li>
+            <li>S<sub>22</sub> = 22⁄2 [2 × 8 + (22 − 1)(−5)]</li>
+            <li>= 11 [16 − 105] = 11 × (−89)</li>
+          </ol>
+          <p class="answer">S<sub>22</sub> = −979</p>
+        </div>
+        <div class="example">
+          <h3>Find the sum of the first 1000 positive whole numbers</h3>
+          <ol class="working">
+            <li>1, 2, 3, …, 1000. Here a = 1, l = 1000, n = 1000</li>
+            <li>S = 1000⁄2 × (1 + 1000) = 500 × 1001</li>
+          </ol>
+          <p class="answer">S = 500500</p>
+        </div>
+        <div class="example">
+          <p class="kicker">A harder one</p>
+          <h3>How many terms of 24, 21, 18, … add up to 78?</h3>
+          <ol class="working">
+            <li><span class="va">a</span> = 24, <span class="vd">d</span> = −3. We want S<sub>n</sub> = 78</li>
+            <li>78 = n⁄2 [48 + (n − 1)(−3)] = n⁄2 [51 − 3n]</li>
+            <li>156 = 51n − 3n², so 3n² − 51n + 156 = 0</li>
+            <li>Divide by 3: n² − 17n + 52 = 0, which factors as (n − 4)(n − 13) = 0</li>
+          </ol>
+          <p class="answer">n = 4 or n = 13. Both are correct.</p>
+          <p>Why two answers? Terms 5 to 13 are 12, 9, 6, 3, 0, −3, −6, −9, −12, and they add up to zero. So adding them doesn't change the total.</p>
+        </div>
+
+        <h3>A handy trick: a term from two sums</h3>
+        <p>The sum of 5 terms minus the sum of 4 terms leaves only the 5th term. So:</p>
+        <p class="formula"><span>a<sub class="vn">n</sub> = S<sub class="vn">n</sub> − S<sub class="vn">n−1</sub></span></p>
+        <div class="example">
+          <h3>If S<sub>n</sub> = 4n − n², find the AP</h3>
+          <ol class="working">
+            <li>S<sub>1</sub> = 4 − 1 = 3, so a<sub>1</sub> = 3</li>
+            <li>S<sub>2</sub> = 8 − 4 = 4, so a<sub>2</sub> = S<sub>2</sub> − S<sub>1</sub> = 1</li>
+            <li>d = 1 − 3 = −2</li>
+          </ol>
+          <p class="answer">The AP is 3, 1, −1, −3, …</p>
+        </div>
+      </section>
+
+      <!-- STEP 8 -->
+      <section class="step" id="s8" aria-labelledby="h8s">
+        <div class="step-head"><span class="step-no">8</span><h2 id="h8s">Formula sheet</h2></div>
+        <p>Everything from the chapter in one place. Learn the left column first; the formulas follow from it.</p>
+        <div class="sheet-wrap">
+          <table class="sheet">
+            <thead><tr><th scope="col">What you want</th><th scope="col">Formula</th></tr></thead>
+            <tbody>
+              <tr><td>The jump</td><td><span class="vd">d</span> = a<sub>n</sub> − a<sub>n−1</sub></td></tr>
+              <tr><td>The nth term</td><td>a<sub>n</sub> = <span class="va">a</span> + (<span class="vn">n</span> − 1)<span class="vd">d</span></td></tr>
+              <tr><td>nth term from the end</td><td>l − (<span class="vn">n</span> − 1)<span class="vd">d</span></td></tr>
+              <tr><td>Sum of first n terms</td><td>S<sub>n</sub> = <span class="vn">n</span>⁄2 [2<span class="va">a</span> + (<span class="vn">n</span> − 1)<span class="vd">d</span>]</td></tr>
+              <tr><td>Sum when you know the last term</td><td>S<sub>n</sub> = <span class="vn">n</span>⁄2 (<span class="va">a</span> + l)</td></tr>
+              <tr><td>A term from two sums</td><td>a<sub>n</sub> = S<sub>n</sub> − S<sub>n−1</sub></td></tr>
+              <tr><td>If a, b, c are in AP</td><td>2b = a + c</td></tr>
+              <tr><td>Three unknown numbers in AP</td><td>a − d, &nbsp;a, &nbsp;a + d</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tip">The last two rows are shortcuts. For “three numbers in AP add up to 24”, call them a − d, a, a + d. Adding them gives 3a = 24, so the d's vanish and a = 8 straight away.</p>
+
+        <h3>Mistakes to avoid</h3>
+        <ul class="mistakes">
+          <li><span class="wrong">a<sub>10</sub> = a + 10d</span><span class="right">a<sub>10</sub> = a + 9d. Ten terms need only nine jumps.</span></li>
+          <li><span class="wrong">For 10, 7, 4: d = 10 − 7 = 3</span><span class="right">d = 7 − 10 = −3. Later minus earlier.</span></li>
+          <li><span class="wrong">21 + 34 × −3 = 21 + 102</span><span class="right">21 + 34 × (−3) = 21 − 102 = −81. Keep negative d in brackets.</span></li>
+          <li><span class="wrong">n = 49.33, so it's roughly the 49th term</span><span class="right">n must be a whole, positive number. If not, the number isn't in the AP.</span></li>
+          <li><span class="wrong">Using a<sub>n</sub> when the question says “sum”</span><span class="right">a<sub>n</sub> is one term. S<sub>n</sub> is the total of the first n terms.</span></li>
+        </ul>
+      </section>
+
+      <!-- STEP 9 -->
+      <section class="step" id="s9" aria-labelledby="h9s">
+        <div class="step-head"><span class="step-no">9</span><h2 id="h9s">Try it yourself</h2></div>
+        <p>Type a number and press Check. If you get stuck, you'll get a hint first, then the full working.</p>
+        <p class="score" id="quizScore" aria-live="polite">0 of 6 correct</p>
+        <ol class="quiz" id="quiz"></ol>
+      </section>
+    </main>
+  </div>
+
+  <footer>Made for Class 10 CBSE students working through NCERT Chapter 5, Arithmetic Progressions.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function round(x) { return Math.round(x * 1e6) / 1e6; }
+  function fmt(x) {
+    x = round(x);
+    var s = String(Math.abs(x));
+    return x < 0 ? "−" + s : s;
+  }
+  function signed(x) { x = round(x); return x < 0 ? "−" + fmt(-x) : "+" + fmt(x); }
+  function br(x) { return x < 0 ? "(" + fmt(x) + ")" : fmt(x); }
+  function parseNum(s) {
+    s = String(s).trim().replace(/−/g, "-");
+    if (s === "" || !/^-?\d*\.?\d+$/.test(s)) return NaN;
+    return Number(s);
+  }
+  function svgEl(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function svgText(parent, x, y, txt, cls, anchor) {
+    var t = svgEl("text", { x: x, y: y, "class": cls, "text-anchor": anchor || "middle" }, parent);
+    t.textContent = txt;
+    return t;
+  }
+
+  /* ---------- Title letters climb (an AP of heights) ---------- */
+  var climb = document.getElementById("climb");
+  climb.innerHTML = Array.prototype.map.call(climb.textContent, function (c, i) {
+    return '<span style="--k:' + i + '">' + c + "</span>";
+  }).join("");
+
+  /* ---------- Number sequences with jump arcs ---------- */
+  function renderSeq(el, nums, opts) {
+    opts = opts || {};
+    el.innerHTML = "";
+    var prefix = opts.prefix || "";
+    nums.forEach(function (v, i) {
+      if (i > 0) {
+        var j = document.createElement("span");
+        var diff = round(v - nums[i - 1]);
+        j.className = "jump";
+        if (opts.hideJumps) { j.className += " blank"; j.textContent = "?"; }
+        else {
+          j.textContent = signed(diff);
+          if (opts.firstJump !== undefined && diff !== opts.firstJump) j.className += " off";
+        }
+        el.appendChild(j);
+      }
+      var c = document.createElement("span");
+      c.className = "num";
+      c.textContent = prefix + fmt(v);
+      el.appendChild(c);
+    });
+    if (opts.more) {
+      var gap = document.createElement("span");
+      gap.className = "jump blank"; gap.textContent = "?";
+      el.appendChild(gap);
+      var m = document.createElement("span");
+      m.className = "num more"; m.textContent = "…";
+      el.appendChild(m);
+    }
+  }
+  document.querySelectorAll(".seq[data-seq]").forEach(function (el) {
+    renderSeq(el, el.dataset.seq.split(",").map(Number), { prefix: el.dataset.prefix, more: el.hasAttribute("data-more") });
+  });
+
+  /* ---------- Hero: block towers ---------- */
+  var towers = document.getElementById("towers");
+  var aRange = document.getElementById("aRange"), dRange = document.getElementById("dRange");
+  var COUNT = 6;
+  function drawTowers() {
+    var a = Number(aRange.value), d = Number(dRange.value);
+    document.getElementById("aOut").textContent = fmt(a);
+    document.getElementById("dOut").textContent = fmt(d);
+    var vals = [];
+    for (var k = 0; k < COUNT; k++) vals.push(a + k * d);
+    var top = Math.max(1, a, Math.max.apply(null, vals));
+    var bottom = Math.min(0, Math.min.apply(null, vals));
+    var W = 480, H = 300, padTop = 30, padBottom = 34, left = 8, right = 8;
+    var unit = Math.min(26, (H - padTop - padBottom) / (top - bottom));
+    var y0 = padTop + top * unit;
+    var colW = (W - left - right) / COUNT;
+    var bw = Math.min(colW * 0.64, 54);
+    var gap = unit > 8 ? 2 : 1;
+    var rx = Math.min(4, unit / 4);
+
+    var desc = towers.querySelector("desc");
+    while (towers.lastChild !== desc) towers.removeChild(towers.lastChild);
+    svgEl("line", { x1: 0, y1: y0, x2: W, y2: y0, "class": "svg-base" }, towers);
+
+    vals.forEach(function (v, k) {
+      var x = left + colW * k + (colW - bw) / 2;
+      var g = svgEl("g", {}, towers);
+      function block(i, cls) {
+        var y = i >= 0 ? y0 - (i + 1) * unit : y0 + (-i - 1) * unit;
+        svgEl("rect", { x: x, y: y + gap / 2, width: bw, height: Math.max(unit - gap, 1), rx: rx, "class": cls }, g);
+      }
+      var i;
+      if (d >= 0) {
+        for (i = 0; i < a; i++) block(i, "blk-a");
+        for (i = a; i < v; i++) block(i, "blk-d");
+      } else {
+        for (i = 0; i < Math.min(a, Math.max(v, 0)); i++) block(i, "blk-a");
+        for (i = Math.max(v, 0); i < a; i++) block(i, "blk-gone");
+        for (i = 0; i < -v; i++) block(-(i + 1), "blk-neg");
+      }
+      var labelH = Math.max(a, v, 0);
+      svgText(towers, x + bw / 2, y0 - labelH * unit - 8, fmt(v), "svg-val");
+      svgText(towers, x + bw / 2, H - 10, "term " + (k + 1), "svg-label");
+    });
+
+    renderSeq(document.getElementById("heroSeq"), vals, { more: true });
+    var last = vals[COUNT - 1];
+    document.getElementById("heroRead").innerHTML =
+      "Tower 6 = <span class='va'>" + fmt(a) + "</span> + 5 × <span class='vd'>" + br(d) + "</span> = <b>" + fmt(last) + "</b>. " +
+      (d > 0 ? "Each tower grows by the same " + d + " block" + (d === 1 ? "" : "s") + "." :
+       d < 0 ? "Each tower loses the same " + (-d) + " block" + (d === -1 ? "" : "s") + "." :
+       "With d = 0, every tower stays the same.");
+  }
+  aRange.addEventListener("input", drawTowers);
+  dRange.addEventListener("input", drawTowers);
+  drawTowers();
+
+  /* ---------- Step 2: is it an AP? ---------- */
+  var game = [
+    { seq: [2, 4, 6, 8], ap: true, why: "Every jump is +2, so d = 2." },
+    { seq: [1, 4, 9, 16], ap: false, why: "The jumps are +3, +5, +7. They keep changing." },
+    { seq: [10, 7, 4, 1], ap: true, why: "Every jump is −3, so d = −3. Going down still counts." },
+    { seq: [3, 6, 12, 24], ap: false, why: "Each number doubles, so the jumps grow: +3, +6, +12." },
+    { seq: [-1, -1, -1, -1], ap: true, why: "Every jump is +0. A flat list is an AP with d = 0." },
+    { seq: [0.2, 0.22, 0.222, 0.2222], ap: false, why: "The jumps are +0.02, +0.002, +0.0002. Not the same." }
+  ];
+  var gi = 0, gScore = 0, gAnswered = false;
+  var gSeq = document.getElementById("gameSeq"), gFb = document.getElementById("gameFeedback");
+  var gYes = document.getElementById("gameYes"), gNo = document.getElementById("gameNo"), gNext = document.getElementById("gameNext");
+  function showGame() {
+    var item = game[gi];
+    gAnswered = false;
+    document.getElementById("gameCount").textContent = "List " + (gi + 1) + " of " + game.length;
+    renderSeq(gSeq, item.seq, { hideJumps: true });
+    gFb.textContent = ""; gFb.className = "feedback";
+    gYes.disabled = gNo.disabled = false;
+    gNext.hidden = true;
+  }
+  function answerGame(said) {
+    if (gAnswered) return;
+    gAnswered = true;
+    var item = game[gi];
+    var right = said === item.ap;
+    if (right) gScore++;
+    renderSeq(gSeq, item.seq, { firstJump: round(item.seq[1] - item.seq[0]) });
+    gFb.className = "feedback " + (right ? "good" : "bad");
+    gFb.textContent = (right ? "Right! " : "Not quite. ") + item.why;
+    gYes.disabled = gNo.disabled = true;
+    if (gi < game.length - 1) { gNext.textContent = "Next list"; }
+    else { gNext.textContent = "Play again"; gFb.textContent += " You got " + gScore + " of " + game.length + "."; }
+    gNext.hidden = false;
+    gNext.focus();
+  }
+  gYes.addEventListener("click", function () { answerGame(true); });
+  gNo.addEventListener("click", function () { answerGame(false); });
+  gNext.addEventListener("click", function () {
+    if (gi < game.length - 1) gi++; else { gi = 0; gScore = 0; }
+    showGame();
+    gYes.focus();
+  });
+  showGame();
+
+  /* ---------- Step 4: the frog ---------- */
+  var frogSvg = document.getElementById("frog");
+  var FA = 3, FD = 4, FMAX = 5, LO = 0, HI = 24;
+  var FW = 520, LINE_Y = 112, FL = 20, FR = 20;
+  function fx(v) { return FL + (v - LO) / (HI - LO) * (FW - FL - FR); }
+  var hops = 0, frogG, arcsG, animating = false;
+  (function buildFrog() {
+    svgEl("line", { x1: fx(LO), y1: LINE_Y, x2: fx(HI), y2: LINE_Y, "class": "svg-base" }, frogSvg);
+    for (var v = LO; v <= HI; v++) {
+      var isTerm = v >= FA && (v - FA) % FD === 0;
+      svgEl("line", { x1: fx(v), y1: LINE_Y - (isTerm ? 7 : 4), x2: fx(v), y2: LINE_Y + (isTerm ? 7 : 4), "class": "svg-tick" }, frogSvg);
+      if (v === 0 || isTerm) svgText(frogSvg, fx(v), LINE_Y + 26, String(v), isTerm ? "svg-val" : "svg-label");
+    }
+    arcsG = svgEl("g", {}, frogSvg);
+    frogG = svgEl("g", {}, frogSvg);
+    svgEl("ellipse", { cx: 0, cy: -9, rx: 13, ry: 9, "class": "frog-body" }, frogG);
+    svgEl("circle", { cx: -6, cy: -18, r: 4.5, "class": "frog-eye" }, frogG);
+    svgEl("circle", { cx: 6, cy: -18, r: 4.5, "class": "frog-eye" }, frogG);
+    svgEl("circle", { cx: -5, cy: -18, r: 1.8, "class": "frog-pupil" }, frogG);
+    svgEl("circle", { cx: 7, cy: -18, r: 1.8, "class": "frog-pupil" }, frogG);
+  })();
+  function placeFrog(x, y) { frogG.setAttribute("transform", "translate(" + x + "," + y + ")"); }
+  function frogText() {
+    var term = hops + 1, val = FA + hops * FD;
+    var t = document.getElementById("frogText");
+    if (hops === 0) t.innerHTML = "The frog sits on term 1, which is <span class='va'>3</span>. It has made <b>0</b> hops.";
+    else t.innerHTML = "Term " + term + " = <span class='va'>3</span> + " + hops + " × <span class='vd'>4</span> = <b>" + val + "</b>. The frog made <b>" + hops + "</b> hop" + (hops === 1 ? "" : "s") + " to reach term " + term + ".";
+    document.getElementById("frogJump").disabled = hops >= FMAX;
+  }
+  function addArc(from, to) {
+    var x1 = fx(from), x2 = fx(to), mx = (x1 + x2) / 2;
+    svgEl("path", { d: "M" + x1 + " " + (LINE_Y - 4) + " Q" + mx + " " + (LINE_Y - 80) + " " + x2 + " " + (LINE_Y - 4), "class": "svg-arc" }, arcsG);
+    svgText(arcsG, mx, LINE_Y - 48, "+4", "svg-jump");
+  }
+  function resetFrog() {
+    hops = 0; animating = false;
+    while (arcsG.firstChild) arcsG.removeChild(arcsG.firstChild);
+    placeFrog(fx(FA), LINE_Y - 2);
+    frogText();
+  }
+  document.getElementById("frogJump").addEventListener("click", function () {
+    if (hops >= FMAX || animating) return;
+    var from = FA + hops * FD, to = from + FD;
+    hops++;
+    addArc(from, to);
+    var x1 = fx(from), x2 = fx(to), cy = LINE_Y - 80, y = LINE_Y - 2;
+    if (reduceMotion) { placeFrog(x2, y); frogText(); return; }
+    animating = true;
+    var start = null, dur = 450;
+    function step(ts) {
+      if (!animating) return;
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / dur), u = 1 - t;
+      var px = u * u * x1 + 2 * u * t * ((x1 + x2) / 2) + t * t * x2;
+      var py = u * u * y + 2 * u * t * cy + t * t * y;
+      placeFrog(px, py);
+      if (t < 1) requestAnimationFrame(step); else { animating = false; frogText(); }
+    }
+    requestAnimationFrame(step);
+  });
+  document.getElementById("frogReset").addEventListener("click", resetFrog);
+  resetFrog();
+
+  /* ---------- Step 5: nth term calculator ---------- */
+  var cA = document.getElementById("cA"), cD = document.getElementById("cD"), cN = document.getElementById("cN"), calcOut = document.getElementById("calcOut");
+  function calc() {
+    var a = parseNum(cA.value), d = parseNum(cD.value), n = parseNum(cN.value);
+    if (isNaN(a) || isNaN(d)) { calcOut.innerHTML = "<li class='answer no'>Type a number for a and d, like 2 or −3.</li>"; return; }
+    if (isNaN(n) || n < 1 || n !== Math.floor(n)) { calcOut.innerHTML = "<li class='answer no'>n is a position in the line, so use a counting number: 1, 2, 3 …</li>"; return; }
+    if (n > 100000) { calcOut.innerHTML = "<li class='answer no'>Try a smaller n, up to 100000.</li>"; return; }
+    var an = round(a + (n - 1) * d);
+    var sum = round(n / 2 * (a + an));
+    calcOut.innerHTML =
+      "<li>a<sub>" + n + "</sub> = <span class='va'>" + fmt(a) + "</span> + (<span class='vn'>" + n + "</span> − 1) × <span class='vd'>" + br(d) + "</span></li>" +
+      "<li>= " + fmt(a) + " + " + (n - 1) + " × " + br(d) + "</li>" +
+      "<li>= " + fmt(a) + " + " + br(round((n - 1) * d)) + "</li>" +
+      "<li class='answer'>a<sub>" + n + "</sub> = " + fmt(an) + "</li>" +
+      "<li>Bonus: the first " + n + " term" + (n === 1 ? "" : "s") + " add up to " + n + "⁄2 × (" + fmt(a) + " + " + br(an) + ") = <b>" + fmt(sum) + "</b> (see Step 7).</li>";
+  }
+  [cA, cD, cN].forEach(function (i) { i.addEventListener("input", calc); });
+  calc();
+
+  /* ---------- Step 7: staircase + flipped copy ---------- */
+  var sumSvg = document.getElementById("sumFig");
+  var sA = document.getElementById("sumA"), sD = document.getElementById("sumD"), sN = document.getElementById("sumN");
+  function drawSum() {
+    var a = Number(sA.value), d = Number(sD.value), n = Number(sN.value);
+    document.getElementById("sumAOut").textContent = a;
+    document.getElementById("sumDOut").textContent = d;
+    document.getElementById("sumNOut").textContent = n;
+    var vals = []; for (var k = 0; k < n; k++) vals.push(a + k * d);
+    var l = vals[n - 1], tall = a + l;
+    var W = 480, padL = 70, padR = 10, padT = 12, padB = 34;
+    var unit = Math.min(22, 210 / tall);
+    var H = padT + tall * unit + padB;
+    sumSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    var colW = Math.min(40, (W - padL - padR) / n);
+    var gx = padL + ((W - padL - padR) - colW * n) / 2;
+    var base = padT + tall * unit;
+    var desc = sumSvg.querySelector("desc");
+    while (sumSvg.lastChild !== desc) sumSvg.removeChild(sumSvg.lastChild);
+    vals.forEach(function (v, k) {
+      var x = gx + k * colW;
+      var copy = vals[n - 1 - k];
+      for (var i = 0; i < v; i++) svgEl("rect", { x: x + 1, y: base - (i + 1) * unit + 1, width: colW - 2, height: unit - 2, rx: 2, "class": "blk-y" }, sumSvg);
+      for (var j = 0; j < copy; j++) svgEl("rect", { x: x + 1, y: base - (v + j + 1) * unit + 1, width: colW - 2, height: unit - 2, rx: 2, "class": "blk-copy" }, sumSvg);
+    });
+    svgEl("rect", { x: gx, y: base - tall * unit, width: colW * n, height: tall * unit, "class": "svg-outline" }, sumSvg);
+    svgText(sumSvg, gx - 10, base - tall * unit / 2 + 5, "a + l = " + tall, "svg-label", "end");
+    svgText(sumSvg, gx + colW * n / 2, base + 24, "n = " + n + " columns", "svg-label");
+    var S = vals.reduce(function (s, v) { return s + v; }, 0);
+    document.getElementById("sumText").innerHTML =
+      "<li>The AP: " + vals.join(", ") + "</li>" +
+      "<li>Rectangle = <span class='vn'>" + n + "</span> columns × (" + "<span class='va'>" + a + "</span> + " + l + ") = " + n + " × " + tall + " = " + (n * tall) + " blocks</li>" +
+      "<li>That rectangle holds the sum twice, so one sum = " + (n * tall) + " ÷ 2</li>" +
+      "<li class='answer'>S<sub>" + n + "</sub> = " + S + ". Add them by hand and you'll get " + S + " too.</li>";
+  }
+  [sA, sD, sN].forEach(function (i) { i.addEventListener("input", drawSum); });
+  drawSum();
+
+  /* ---------- Step 9: quiz ---------- */
+  var quiz = [
+    { q: "What is the common difference of 3, 1, −1, −3, …?", a: -2,
+      hint: "Do later minus earlier: 1 − 3.",
+      work: "d = 1 − 3 = −2. The numbers go down, so d is negative." },
+    { q: "Find the 8th term of 5, 9, 13, …", a: 33,
+      hint: "a = 5 and d = 4. The 8th term needs 7 jumps.",
+      work: "a₈ = 5 + (8 − 1) × 4 = 5 + 28 = 33." },
+    { q: "Which term of 3, 8, 13, 18, … is 78? Type the term number.", a: 16,
+      hint: "Solve 78 = 3 + (n − 1) × 5 for n.",
+      work: "78 − 3 = 75 = (n − 1) × 5, so n − 1 = 15 and n = 16." },
+    { q: "How many terms are there in 7, 13, 19, …, 205?", a: 34,
+      hint: "The last term is 205. Use 205 = 7 + (n − 1) × 6.",
+      work: "205 − 7 = 198 = (n − 1) × 6, so n − 1 = 33 and n = 34." },
+    { q: "Find the sum of the first 10 terms of 2, 4, 6, …", a: 110,
+      hint: "The 10th term is 20. Use S = n⁄2 (a + l).",
+      work: "S₁₀ = 10⁄2 × (2 + 20) = 5 × 22 = 110." },
+    { q: "Find the sum of the first 15 multiples of 8.", a: 960,
+      hint: "The AP is 8, 16, 24, … and the 15th multiple is 15 × 8 = 120.",
+      work: "S₁₅ = 15⁄2 × (8 + 120) = 15 × 64 = 960." }
+  ];
+  var quizEl = document.getElementById("quiz"), solved = 0;
+  function updateScore() { document.getElementById("quizScore").textContent = solved + " of " + quiz.length + " correct"; }
+  quiz.forEach(function (item, i) {
+    var li = document.createElement("li");
+    li.className = "q";
+    var id = "q" + (i + 1);
+    li.innerHTML =
+      "<label class='q-text' for='" + id + "'>" + (i + 1) + ". " + item.q + "</label>" +
+      "<form novalidate><input id='" + id + "' type='text' inputmode='decimal' autocomplete='off' aria-describedby='" + id + "fb'>" +
+      "<button type='submit'>Check</button></form>" +
+      "<p class='feedback' id='" + id + "fb' aria-live='polite'></p>" +
+      "<p class='work' hidden></p>";
+    var form = li.querySelector("form"), input = li.querySelector("input"), fb = li.querySelector(".feedback"), work = li.querySelector(".work");
+    var tries = 0, done = false;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (done) return;
+      var v = parseNum(input.value);
+      if (isNaN(v)) { fb.className = "feedback bad"; fb.textContent = "Type a number first, like 12 or −3."; return; }
+      if (round(v) === item.a) {
+        done = true; solved++; updateScore();
+        li.classList.add("done");
+        fb.className = "feedback good"; fb.textContent = "Correct!";
+        work.textContent = item.work; work.hidden = false;
+        input.readOnly = true;
+        form.querySelector("button").disabled = true;
+        return;
+      }
+      tries++;
+      fb.className = "feedback bad";
+      if (tries === 1) { fb.textContent = "Not yet. Hint: " + item.hint; }
+      else { fb.textContent = "Not yet. Here is the working, then try typing the answer."; work.textContent = item.work; work.hidden = false; }
+    });
+    quizEl.appendChild(li);
+  });
+  updateScore();
+
+  /* ---------- Highlight the current step in the staircase ---------- */
+  var links = document.querySelectorAll(".toc a");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (l) { l.setAttribute("aria-current", l.getAttribute("href") === "#" + en.target.id ? "true" : "false"); });
+      });
+    }, { rootMargin: "-35% 0px -60% 0px" });
+    document.querySelectorAll(".step").forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
