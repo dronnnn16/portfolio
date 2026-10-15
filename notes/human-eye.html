@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RBSE Human Eye Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Class 10 Science (RBSE) notes on the Human Eye and the Colourful World in simple language, with diagrams, Hindi terms, solved numericals and exam questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hind:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: eye-clinic chart as the opener, a sticky contents rail with a revision tracker, one calm reading column */
+:root {
+  --paper: #f4f7f9;
+  --card: #ffffff;
+  --ink: #132029;
+  --muted: #52636e;
+  --line: #d3dde3;
+  --iris: #1d6a86;
+  --iris-soft: #e2eef3;
+  --amber: #9a5c06;
+  --amber-soft: #fbf0dc;
+  --retina: #b8325f;
+  --nerve: #e9c98c;
+  --ok: #2f7d4f;
+  --display: "Bricolage Grotesque", "Hind", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Hind", system-ui, sans-serif;
+  --hindi: "Hind", "Nirmala UI", "Mangal", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1519; --card: #141e24; --ink: #e3ebf0; --muted: #97a9b4; --line: #27353d;
+    --iris: #62b8d4; --iris-soft: #13303b; --amber: #f0b24a; --amber-soft: #2b2110;
+    --retina: #f07ca0; --nerve: #6b5426; --ok: #6cc792;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1519; --card: #141e24; --ink: #e3ebf0; --muted: #97a9b4; --line: #27353d;
+  --iris: #62b8d4; --iris-soft: #13303b; --amber: #f0b24a; --amber-soft: #2b2110;
+  --retina: #f07ca0; --nerve: #6b5426; --ok: #6cc792;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.65 var(--body);
+}
+a { color: var(--iris); }
+a:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--iris); outline-offset: 2px; border-radius: 3px; }
+.hi { font-family: var(--hindi); font-weight: 400; color: var(--muted); }
+strong { font-weight: 700; }
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Hero */
+.hero { background: var(--card); border-bottom: 1px solid var(--line); }
+.hero .wrap { padding-block: 48px 40px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 48px; align-items: center; }
+.eyebrow {
+  font: 600 13px/1.2 var(--body);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--iris);
+  margin: 0 0 12px;
+}
+h1 {
+  font: 800 clamp(44px, 8vw, 84px)/0.95 var(--display);
+  letter-spacing: -0.03em;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+h1 .hi { display: block; font: 600 clamp(22px, 3.4vw, 30px)/1.3 var(--hindi); color: var(--muted); letter-spacing: 0; margin-top: 10px; }
+.lede { font-size: 19px; max-width: 34rem; margin: 0 0 24px; color: var(--ink); }
+.key-nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 40rem; }
+.key-nums div { border-top: 2px solid var(--ink); padding-top: 8px; }
+.key-nums b { display: block; font: 800 30px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.key-nums span { font-size: 14px; color: var(--muted); line-height: 1.35; display: block; }
+
+.snellen {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 18px 20px 14px;
+  width: 250px;
+  font-family: var(--display);
+  font-weight: 800;
+}
+.snellen .row { display: grid; grid-template-columns: 1fr 3.2em; align-items: center; gap: 8px; }
+.snellen .l { text-align: center; letter-spacing: 0.18em; padding-left: 0.18em; line-height: 1.15; }
+.snellen .v { font: 500 11px var(--mono); color: var(--muted); text-align: right; }
+.snellen .row:nth-child(5) { border-bottom: 2px solid var(--retina); }
+.snellen p { margin: 10px 0 0; font: 400 12px/1.4 var(--body); color: var(--muted); }
+
+/* Main layout */
+.layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 56px; padding-block: 40px 96px; }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; }
+.toc h2 { font: 600 13px/1.2 var(--body); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 0 0 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc li { display: flex; align-items: center; gap: 10px; }
+.toc input { width: 18px; height: 18px; accent-color: var(--ok); flex: none; margin: 0; }
+.toc a { color: var(--ink); text-decoration: none; padding: 5px 0; font-size: 15px; line-height: 1.3; }
+.toc a:hover { color: var(--iris); }
+.toc li.done a { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--ok); }
+.progress { margin-top: 14px; font-size: 14px; color: var(--muted); }
+.bar { height: 6px; background: var(--line); border-radius: 3px; margin-top: 6px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); transition: width 0.3s; }
+
+article { min-width: 0; max-width: 46rem; }
+section { padding-bottom: 56px; margin-bottom: 56px; border-bottom: 1px solid var(--line); scroll-margin-top: 16px; }
+section:last-child { border-bottom: 0; margin-bottom: 0; }
+h2 {
+  font: 800 clamp(28px, 4vw, 38px)/1.1 var(--display);
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+.sec-hi { font: 600 17px/1.3 var(--hindi); color: var(--muted); margin: 0 0 20px; }
+h3 { font: 600 22px/1.25 var(--display); margin: 32px 0 8px; text-wrap: balance; }
+p { margin: 0 0 14px; }
+ul.points, ol.steps { margin: 0 0 16px; padding-left: 1.3em; }
+ul.points li, ol.steps li { margin-bottom: 6px; }
+ol.steps li::marker { font-family: var(--display); font-weight: 800; color: var(--iris); }
+
+.def, .tip {
+  padding: 14px 18px;
+  border-radius: 6px;
+  margin: 18px 0;
+}
+.def { background: var(--iris-soft); }
+.tip { background: var(--amber-soft); }
+.def > b:first-child, .tip > b:first-child {
+  display: block;
+  font: 700 12px/1.2 var(--body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.def > b:first-child { color: var(--iris); }
+.tip > b:first-child { color: var(--amber); }
+.def p:last-child, .tip p:last-child, .tip ul:last-child { margin-bottom: 0; }
+.tip ul { margin: 0; padding-left: 1.2em; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--line); border-radius: 6px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; line-height: 1.5; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+thead th { background: var(--paper); font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+td .hi { display: block; font-size: 14px; }
+
+/* Figures */
+figure { margin: 22px 0; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
+figure svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pair > div { min-width: 0; }
+.pair h4 { margin: 0 0 4px; font: 700 13px/1.2 var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+svg .eyeball { fill: var(--card); stroke: var(--ink); stroke-width: 2; }
+svg .cornea { fill: var(--iris-soft); stroke: var(--ink); stroke-width: 2; }
+svg .iris-part { stroke: var(--iris); stroke-width: 6; stroke-linecap: round; }
+svg .lens { fill: var(--iris-soft); stroke: var(--iris); stroke-width: 2; }
+svg .ciliary { fill: var(--iris); }
+svg .susp { stroke: var(--iris); stroke-width: 1.5; }
+svg .retina { fill: none; stroke: var(--retina); stroke-width: 5; stroke-linecap: round; }
+svg .nerve { fill: var(--nerve); stroke: var(--ink); stroke-width: 1.5; }
+svg .ray { fill: none; stroke: var(--amber); stroke-width: 2; }
+svg .ray-dash { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 5 4; }
+svg .dot { fill: var(--retina); }
+svg .lead { stroke: var(--muted); stroke-width: 1; fill: none; }
+svg .lbl { fill: var(--ink); font: 700 13px var(--body); }
+svg .lbl-soft { fill: var(--muted); font: 400 12px var(--body); }
+svg .glasslens { fill: var(--iris-soft); stroke: var(--iris); stroke-width: 2; }
+svg .prism { fill: var(--iris-soft); stroke: var(--ink); stroke-width: 2; }
+svg .white-ray { stroke: var(--ink); stroke-width: 2.5; fill: none; }
+svg .screen { fill: var(--muted); }
+
+/* Formula */
+.formula {
+  font: 500 18px/1.5 var(--mono);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.solved { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; margin: 18px 0; }
+.solved .q { font-weight: 700; margin-bottom: 10px; }
+.solved .work { font: 500 15.5px/1.75 var(--mono); overflow-x: auto; }
+.solved .ans { margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed var(--line); }
+.solved .ans b { color: var(--ok); }
+
+/* Compare cards */
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+.compare > div { min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+.compare h4 { margin: 0 0 6px; font: 700 17px/1.3 var(--display); }
+.compare p { margin: 0; font-size: 15.5px; }
+
+.vibgyor { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 16px; }
+.vibgyor span { font: 700 14px/1 var(--body); padding: 8px 10px; border-radius: 4px; color: #fff; }
+
+/* Q&A */
+.qa { display: grid; gap: 8px; margin: 14px 0 24px; }
+details { background: var(--card); border: 1px solid var(--line); border-radius: 6px; }
+summary { cursor: pointer; padding: 12px 16px; font-weight: 700; list-style: none; display: flex; gap: 12px; align-items: baseline; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "+"; font: 800 18px/1 var(--display); color: var(--iris); flex: none; width: 1ch; }
+details[open] summary::before { content: "\2212"; }
+summary .marks { margin-left: auto; font: 500 12px var(--mono); color: var(--muted); white-space: nowrap; }
+details .a { padding: 0 16px 14px 42px; }
+details .a p:last-child, details .a ul:last-child { margin-bottom: 0; }
+
+.mistakes { display: grid; gap: 10px; margin: 14px 0; padding: 0; list-style: none; }
+.mistakes li { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 15.5px; }
+.mistakes li > span { min-width: 0; }
+.mistakes .wrong::before, .mistakes .right::before { display: block; font: 700 11px/1.2 var(--body); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.mistakes .wrong::before { content: "Don't write"; color: var(--retina); }
+.mistakes .right::before { content: "Write this"; color: var(--ok); }
+
+footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer .wrap { padding-block: 24px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .toc { position: static; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px; }
+  .toc ol { grid-template-columns: 1fr 1fr; column-gap: 16px; }
+}
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .snellen { width: 100%; max-width: 320px; }
+  .key-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .pair, .compare, .mistakes li { grid-template-columns: minmax(0, 1fr); }
+  .toc ol { grid-template-columns: minmax(0, 1fr); }
+  details .a { padding-left: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">RBSE Class 10 · Science · Board exam notes</p>
+      <h1>The Human Eye <span class="hi">मानव नेत्र तथा रंगबिरंगा संसार</span></h1>
+      <p class="lede">Short, simple notes for the chapter <em>The Human Eye and the Colourful World</em>. Every key term has its Hindi name, every diagram you may be asked to draw is here, and the exam corner at the end lists the questions that come again and again.</p>
+      <div class="key-nums">
+        <div><b>25 cm</b><span>Near point of a normal eye</span></div>
+        <div><b>∞</b><span>Far point of a normal eye</span></div>
+        <div><b>~2 min</b><span>Sun seen early at sunrise, late at sunset</span></div>
+        <div><b>7</b><span>Colours in white light (VIBGYOR)</span></div>
+      </div>
+    </div>
+    <div class="snellen" aria-label="Eye test chart">
+      <div class="row"><span class="l" style="font-size:64px">E</span><span class="v">6/60</span></div>
+      <div class="row"><span class="l" style="font-size:38px">F P</span><span class="v">6/36</span></div>
+      <div class="row"><span class="l" style="font-size:27px">T O Z</span><span class="v">6/24</span></div>
+      <div class="row"><span class="l" style="font-size:20px">L P E D</span><span class="v">6/18</span></div>
+      <div class="row"><span class="l" style="font-size:15px">P E C F D</span><span class="v">6/12</span></div>
+      <div class="row"><span class="l" style="font-size:11px">E D F C Z P</span><span class="v">6/6</span></div>
+      <p>An eye doctor's chart. Normal vision reads the 6/6 line from 6 metres.</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents · tick when revised</h2>
+    <ol id="toc">
+      <li><input type="checkbox" id="chk-parts" data-sec="parts" aria-label="Mark Parts of the eye as revised"><a href="#parts">Parts of the eye</a></li>
+      <li><input type="checkbox" id="chk-working" data-sec="working" aria-label="Mark How we see as revised"><a href="#working">How we see</a></li>
+      <li><input type="checkbox" id="chk-accommodation" data-sec="accommodation" aria-label="Mark Power of accommodation as revised"><a href="#accommodation">Power of accommodation</a></li>
+      <li><input type="checkbox" id="chk-defects" data-sec="defects" aria-label="Mark Defects of vision as revised"><a href="#defects">Defects of vision</a></li>
+      <li><input type="checkbox" id="chk-numericals" data-sec="numericals" aria-label="Mark Numericals as revised"><a href="#numericals">Numericals</a></li>
+      <li><input type="checkbox" id="chk-prism" data-sec="prism" aria-label="Mark Prism and dispersion as revised"><a href="#prism">Prism &amp; dispersion</a></li>
+      <li><input type="checkbox" id="chk-atmosphere" data-sec="atmosphere" aria-label="Mark Atmospheric refraction as revised"><a href="#atmosphere">Atmospheric refraction</a></li>
+      <li><input type="checkbox" id="chk-scattering" data-sec="scattering" aria-label="Mark Scattering of light as revised"><a href="#scattering">Scattering of light</a></li>
+      <li><input type="checkbox" id="chk-exam" data-sec="exam" aria-label="Mark Exam corner as revised"><a href="#exam">Exam corner</a></li>
+    </ol>
+    <div class="progress"><span id="prog-text">0 of 9 topics revised</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </nav>
+
+  <article>
+
+    <!-- 1. Parts -->
+    <section id="parts">
+      <h2>Parts of the human eye</h2>
+      <p class="sec-hi">मानव नेत्र के भाग</p>
+      <p>The human eye works like a camera. It is a ball about <strong>2.3 cm</strong> across. Light enters from the front, and a clear image forms on a screen at the back called the <strong>retina</strong>.</p>
+
+      <figure>
+        <svg viewBox="0 0 520 310" role="img" aria-label="Labelled diagram of the human eye">
+          <circle class="eyeball" cx="300" cy="150" r="110"/>
+          <path class="cornea" d="M201 102 Q165 150 201 198"/>
+          <path class="retina" d="M352 60 A104 104 0 0 1 352 240"/>
+          <path class="nerve" d="M404 140 L505 134 L505 166 L404 160 Z"/>
+          <line class="iris-part" x1="214" y1="96" x2="214" y2="134"/>
+          <line class="iris-part" x1="214" y1="166" x2="214" y2="204"/>
+          <ellipse class="ciliary" cx="232" cy="80" rx="7" ry="12"/>
+          <ellipse class="ciliary" cx="232" cy="220" rx="7" ry="12"/>
+          <line class="susp" x1="232" y1="92" x2="232" y2="114"/>
+          <line class="susp" x1="232" y1="186" x2="232" y2="208"/>
+          <ellipse class="lens" cx="232" cy="150" rx="13" ry="36"/>
+          <path class="ray" d="M10 136 L188 136 L404 150"/>
+          <path class="ray" d="M10 164 L188 164 L404 150"/>
+          <circle class="dot" cx="404" cy="150" r="4"/>
+
+          <line class="lead" x1="140" y1="66" x2="190" y2="116"/>
+          <text class="lbl" x="88" y="62">Cornea</text>
+          <line class="lead" x1="126" y1="252" x2="212" y2="200"/>
+          <text class="lbl" x="88" y="266">Iris</text>
+          <line class="lead" x1="104" y1="150" x2="208" y2="150"/>
+          <text class="lbl" x="58" y="155">Pupil</text>
+          <line class="lead" x1="232" y1="28" x2="232" y2="66"/>
+          <text class="lbl" x="232" y="22" text-anchor="middle">Ciliary muscles</text>
+          <line class="lead" x1="252" y1="122" x2="242" y2="132"/>
+          <text class="lbl" x="254" y="119">Eye lens</text>
+          <line class="lead" x1="370" y1="28" x2="352" y2="53"/>
+          <text class="lbl" x="360" y="22">Sclera</text>
+          <line class="lead" x1="436" y1="70" x2="370" y2="74"/>
+          <text class="lbl" x="440" y="74">Retina</text>
+          <line class="lead" x1="420" y1="118" x2="406" y2="144"/>
+          <text class="lbl" x="414" y="112">Blind spot</text>
+          <line class="lead" x1="462" y1="184" x2="462" y2="164"/>
+          <text class="lbl" x="462" y="200" text-anchor="middle">Optic nerve</text>
+          <text class="lbl-soft" x="315" y="200" text-anchor="middle">Vitreous humour</text>
+          <line class="lead" x1="232" y1="286" x2="204" y2="184"/>
+          <text class="lbl" x="232" y="302" text-anchor="middle">Aqueous humour</text>
+        </svg>
+        <figcaption>Parallel light from a far object is focused onto the retina. In the exam, label at least: cornea, iris, pupil, eye lens, ciliary muscles, retina, optic nerve.</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Part</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Cornea <span class="hi">कॉर्निया / स्वच्छ मंडल</span></td><td>Thin, clear skin at the front of the eye. Light enters here. <strong>Most of the bending (refraction) of light happens at the cornea.</strong></td></tr>
+            <tr><td>Iris <span class="hi">परितारिका</span></td><td>Dark muscle ring behind the cornea. It controls the size of the pupil. It also gives the eye its colour (black, brown, blue).</td></tr>
+            <tr><td>Pupil <span class="hi">पुतली</span></td><td>Small hole in the centre of the iris. It controls how much light enters the eye.</td></tr>
+            <tr><td>Eye lens <span class="hi">अभिनेत्र लेंस</span></td><td>A <strong>convex lens</strong> made of soft, jelly-like material. It does the fine adjustment of focus so the image falls exactly on the retina.</td></tr>
+            <tr><td>Ciliary muscles <span class="hi">पक्ष्माभी पेशियाँ</span></td><td>Hold the eye lens. They change the thickness of the lens, which changes its focal length.</td></tr>
+            <tr><td>Retina <span class="hi">दृष्टिपटल / रेटिना</span></td><td>Light-sensitive screen at the back. The image forms here. It has <strong>rods</strong> (work in dim light) and <strong>cones</strong> (see colour and bright light).</td></tr>
+            <tr><td>Optic nerve <span class="hi">दृक् तंत्रिका</span></td><td>Carries electrical signals from the retina to the brain.</td></tr>
+            <tr><td>Aqueous humour <span class="hi">जलीय द्रव</span></td><td>Watery liquid between the cornea and the lens.</td></tr>
+            <tr><td>Vitreous humour <span class="hi">काचाभ द्रव</span></td><td>Clear jelly that fills the space between the lens and the retina. Keeps the eyeball round.</td></tr>
+            <tr><td>Sclera <span class="hi">श्वेत पटल</span></td><td>Tough white outer cover. Protects the eye.</td></tr>
+            <tr><td>Blind spot <span class="hi">अंध बिंदु</span></td><td>Point where the optic nerve leaves the eye. It has no rods or cones, so nothing is seen there.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Eye and camera: the easy way to remember</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Camera</th><th>Human eye</th></tr></thead>
+          <tbody>
+            <tr><td>Lens</td><td>Eye lens (with cornea)</td></tr>
+            <tr><td>Aperture / diaphragm</td><td>Pupil and iris</td></tr>
+            <tr><td>Film / sensor</td><td>Retina</td></tr>
+            <tr><td>Camera body (dark box)</td><td>Eyeball with sclera</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. Working -->
+    <section id="working">
+      <h2>How we see</h2>
+      <p class="sec-hi">हम कैसे देखते हैं</p>
+      <ol class="steps">
+        <li>Light from an object enters the eye through the <strong>cornea</strong>.</li>
+        <li>The <strong>pupil</strong> lets in the right amount of light.</li>
+        <li>The <strong>eye lens</strong> focuses the light on the retina.</li>
+        <li>A <strong>real and inverted</strong> (उल्टा) image forms on the <strong>retina</strong>.</li>
+        <li>Cells of the retina change light into <strong>electrical signals</strong>.</li>
+        <li>The <strong>optic nerve</strong> carries these signals to the <strong>brain</strong>.</li>
+        <li>The brain reads the signals and we see the object <strong>upright</strong>.</li>
+      </ol>
+
+      <h3>Pupil in bright and dim light</h3>
+      <div class="compare">
+        <div><h4>Bright light</h4><p>The iris makes the pupil <strong>small</strong>, so less light enters and the eye is protected.</p></div>
+        <div><h4>Dim light</h4><p>The iris makes the pupil <strong>large</strong>, so more light enters and we can see better.</p></div>
+      </div>
+      <div class="tip"><b>Board tip</b><p>"Which part controls the amount of light entering the eye?" Write <strong>pupil</strong> (its size is controlled by the <strong>iris</strong>). Writing both names gets full marks safely.</p></div>
+    </section>
+
+    <!-- 3. Accommodation -->
+    <section id="accommodation">
+      <h2>Power of accommodation</h2>
+      <p class="sec-hi">समंजन क्षमता</p>
+      <div class="def"><b>Definition</b><p>The ability of the eye lens to change its focal length, so that we can see both near and far objects clearly, is called the <strong>power of accommodation</strong>.</p></div>
+      <p>The ciliary muscles do this job by changing the thickness of the eye lens.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Looking at</th><th>Ciliary muscles</th><th>Eye lens</th><th>Focal length</th></tr></thead>
+          <tbody>
+            <tr><td>Far object</td><td>Relax</td><td>Becomes <strong>thin</strong></td><td><strong>Increases</strong></td></tr>
+            <tr><td>Near object</td><td>Contract</td><td>Becomes <strong>thick</strong></td><td><strong>Decreases</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Near point and far point</h3>
+      <div class="compare">
+        <div><h4>Near point <span class="hi">निकट बिंदु</span></h4><p>The nearest point at which the eye sees clearly without strain. For a normal adult eye it is <strong>25 cm</strong>. Also called the <em>least distance of distinct vision</em> (स्पष्ट दर्शन की न्यूनतम दूरी).</p></div>
+        <div><h4>Far point <span class="hi">दूर बिंदु</span></h4><p>The farthest point up to which the eye sees clearly. For a normal eye it is <strong>infinity (∞)</strong>.</p></div>
+      </div>
+      <p>So a normal eye sees clearly from <strong>25 cm to infinity</strong>. This is its <em>range of vision</em>.</p>
+      <div class="tip"><b>Board tip</b><p>"Why can't we read a book held very close to the eyes?" Because the focal length of the eye lens cannot be decreased below a certain limit. Objects closer than 25 cm cannot be focused on the retina.</p></div>
+    </section>
+
+    <!-- 4. Defects -->
+    <section id="defects">
+      <h2>Defects of vision and their correction</h2>
+      <p class="sec-hi">दृष्टि दोष तथा उनका संशोधन</p>
+      <p>Sometimes the eye cannot focus properly. There are three common <em>refractive defects</em>: myopia, hypermetropia and presbyopia. They are corrected with spectacle lenses. Cataract is a separate problem.</p>
+
+      <h3>1. Myopia (near-sightedness) <span class="hi">निकट दृष्टि दोष</span></h3>
+      <ul class="points">
+        <li><strong>Problem:</strong> Near objects are clear, but <strong>far objects look blurred</strong>.</li>
+        <li>The far point comes closer than infinity (for example, only up to 2 m).</li>
+        <li><strong>Image forms in front of the retina.</strong></li>
+        <li><strong>Causes:</strong> (i) too much curvature of the eye lens (lens too thick), (ii) the eyeball becomes longer than normal.</li>
+        <li><strong>Correction:</strong> a <strong>concave lens</strong> of suitable power. Its power is <strong>negative</strong>.</li>
+      </ul>
+      <figure>
+        <div class="pair">
+          <div>
+            <h4>(a) Myopic eye</h4>
+            <svg viewBox="0 0 300 170" role="img" aria-label="Myopic eye: parallel rays focus in front of the retina">
+              <circle class="eyeball" cx="190" cy="80" r="60"/>
+              <path class="cornea" d="M140 47 Q118 80 140 113"/>
+              <path class="retina" d="M220 28 A60 60 0 0 1 220 132"/>
+              <ellipse class="lens" cx="147" cy="80" rx="7" ry="22"/>
+              <path class="ray" d="M4 62 L145 62 L215 80"/>
+              <path class="ray" d="M4 98 L145 98 L215 80"/>
+              <path class="ray-dash" d="M215 80 L250 89 M215 80 L250 71"/>
+              <circle class="dot" cx="215" cy="80" r="4"/>
+              <text class="lbl-soft" x="4" y="52">From far object</text>
+              <text class="lbl" x="150" y="160" text-anchor="middle">Image in front of retina</text>
+            </svg>
+          </div>
+          <div>
+            <h4>(b) Corrected with concave lens</h4>
+            <svg viewBox="0 0 300 170" role="img" aria-label="Myopia corrected: a concave lens spreads the rays so they focus on the retina">
+              <circle class="eyeball" cx="190" cy="80" r="60"/>
+              <path class="cornea" d="M140 47 Q118 80 140 113"/>
+              <path class="retina" d="M220 28 A60 60 0 0 1 220 132"/>
+              <ellipse class="lens" cx="147" cy="80" rx="7" ry="22"/>
+              <path class="glasslens" d="M60 46 L80 46 Q70 80 80 114 L60 114 Q70 80 60 46 Z"/>
+              <path class="ray" d="M4 62 L70 62 L145 56 L250 80"/>
+              <path class="ray" d="M4 98 L70 98 L145 104 L250 80"/>
+              <circle class="dot" cx="250" cy="80" r="4"/>
+              <text class="lbl-soft" x="70" y="36" text-anchor="middle">Concave lens</text>
+              <text class="lbl" x="150" y="160" text-anchor="middle">Image on retina</text>
+            </svg>
+          </div>
+        </div>
+        <figcaption>Myopia: rays from a far object meet before the retina. A concave (diverging) lens spreads them a little so they meet on the retina.</figcaption>
+      </figure>
+
+      <h3>2. Hypermetropia (far-sightedness) <span class="hi">दीर्घ दृष्टि दोष</span></h3>
+      <ul class="points">
+        <li><strong>Problem:</strong> Far objects are clear, but <strong>near objects look blurred</strong>.</li>
+        <li>The near point moves farther than 25 cm (for example, to 1 m).</li>
+        <li><strong>Image forms behind the retina.</strong></li>
+        <li><strong>Causes:</strong> (i) focal length of the eye lens is too long (lens too thin), (ii) the eyeball becomes too small.</li>
+        <li><strong>Correction:</strong> a <strong>convex lens</strong> of suitable power. Its power is <strong>positive</strong>.</li>
+      </ul>
+      <figure>
+        <div class="pair">
+          <div>
+            <h4>(a) Hypermetropic eye</h4>
+            <svg viewBox="0 0 300 170" role="img" aria-label="Hypermetropic eye: rays from a near object would focus behind the retina">
+              <circle class="eyeball" cx="190" cy="80" r="60"/>
+              <path class="cornea" d="M140 47 Q118 80 140 113"/>
+              <path class="retina" d="M220 28 A60 60 0 0 1 220 132"/>
+              <ellipse class="lens" cx="147" cy="80" rx="7" ry="22"/>
+              <path class="ray" d="M20 80 L145 58 L250 74.5"/>
+              <path class="ray" d="M20 80 L145 102 L250 85.5"/>
+              <path class="ray-dash" d="M250 74.5 L285 80 M250 85.5 L285 80"/>
+              <circle class="dot" cx="20" cy="80" r="3.5"/>
+              <circle class="dot" cx="285" cy="80" r="4"/>
+              <text class="lbl-soft" x="6" y="66">Near object</text>
+              <text class="lbl" x="150" y="160" text-anchor="middle">Image behind retina</text>
+            </svg>
+          </div>
+          <div>
+            <h4>(b) Corrected with convex lens</h4>
+            <svg viewBox="0 0 300 170" role="img" aria-label="Hypermetropia corrected: a convex lens bends the rays so they focus on the retina">
+              <circle class="eyeball" cx="190" cy="80" r="60"/>
+              <path class="cornea" d="M140 47 Q118 80 140 113"/>
+              <path class="retina" d="M220 28 A60 60 0 0 1 220 132"/>
+              <ellipse class="lens" cx="147" cy="80" rx="7" ry="22"/>
+              <path class="glasslens" d="M85 46 Q99 80 85 114 Q71 80 85 46 Z"/>
+              <path class="ray" d="M20 80 L85 64 L145 60 L250 80"/>
+              <path class="ray" d="M20 80 L85 96 L145 100 L250 80"/>
+              <circle class="dot" cx="20" cy="80" r="3.5"/>
+              <circle class="dot" cx="250" cy="80" r="4"/>
+              <text class="lbl-soft" x="85" y="36" text-anchor="middle">Convex lens</text>
+              <text class="lbl" x="150" y="160" text-anchor="middle">Image on retina</text>
+            </svg>
+          </div>
+        </div>
+        <figcaption>Hypermetropia: rays from a near object would meet behind the retina. A convex (converging) lens bends them more so they meet on the retina.</figcaption>
+      </figure>
+
+      <h3>Myopia vs hypermetropia at a glance</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Point</th><th>Myopia</th><th>Hypermetropia</th></tr></thead>
+          <tbody>
+            <tr><td>Other name</td><td>Near-sightedness</td><td>Far-sightedness</td></tr>
+            <tr><td>Sees clearly</td><td>Near objects</td><td>Far objects</td></tr>
+            <tr><td>Cannot see</td><td>Far objects</td><td>Near objects</td></tr>
+            <tr><td>Which point shifts</td><td>Far point comes closer than ∞</td><td>Near point goes beyond 25 cm</td></tr>
+            <tr><td>Image forms</td><td>In front of retina</td><td>Behind retina</td></tr>
+            <tr><td>Eyeball</td><td>Too long</td><td>Too short</td></tr>
+            <tr><td>Eye lens</td><td>Too curved (short focal length)</td><td>Too flat (long focal length)</td></tr>
+            <tr><td>Corrective lens</td><td>Concave, power <strong>−</strong></td><td>Convex, power <strong>+</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3. Presbyopia <span class="hi">जरा-दूरदृष्टिता</span></h3>
+      <ul class="points">
+        <li>An <strong>old-age</strong> defect. The near point slowly moves away, so reading becomes hard.</li>
+        <li><strong>Cause:</strong> the ciliary muscles become weak and the eye lens loses its flexibility, so the power of accommodation decreases.</li>
+        <li><strong>Correction:</strong> convex lens. If a person has <strong>both</strong> myopia and hypermetropia, they use <strong>bifocal lenses</strong> (द्विफोकसी लेंस): the <strong>upper part is concave</strong> for far vision and the <strong>lower part is convex</strong> for reading.</li>
+      </ul>
+
+      <h3>4. Cataract <span class="hi">मोतियाबिंद</span></h3>
+      <ul class="points">
+        <li>In old age, the eye lens can become <strong>milky and cloudy</strong>.</li>
+        <li>This causes partial or complete loss of vision.</li>
+        <li>It is treated by <strong>cataract surgery</strong>, where the cloudy lens is replaced.</li>
+      </ul>
+      <p>Today, refractive defects can also be corrected with <strong>contact lenses</strong> or <strong>surgery</strong>.</p>
+
+      <div class="tip"><b>Memory trick</b><ul>
+        <li><strong>M</strong>yopia → <strong>M</strong>inus power → concave lens.</li>
+        <li><strong>H</strong>ypermetropia → plus power → convex lens.</li>
+        <li>The Hindi name tells what you <em>can</em> see: निकट दृष्टि = sees near; दीर्घ दृष्टि = sees far.</li>
+      </ul></div>
+    </section>
+
+    <!-- 5. Numericals -->
+    <section id="numericals">
+      <h2>Numericals made easy</h2>
+      <p class="sec-hi">आंकिक प्रश्न</p>
+      <p>Only two formulas are needed.</p>
+      <div class="formula">Power of lens:&nbsp;&nbsp;P = 1 / f (f in metres)&nbsp;&nbsp;→ unit: dioptre (D)</div>
+      <div class="formula">Lens formula:&nbsp;&nbsp;1/f = 1/v − 1/u</div>
+      <ul class="points">
+        <li>If f is in cm, use <strong>P = 100 / f</strong>.</li>
+        <li>Object distance <strong>u is always negative</strong> (object is on the left of the lens).</li>
+        <li>Concave lens → f and P are negative. Convex lens → f and P are positive.</li>
+      </ul>
+
+      <h3>For myopia</h3>
+      <p>The concave lens must make a far object (at ∞) appear at the person's far point. So simply: <strong>f = − (far point distance)</strong>.</p>
+      <div class="solved">
+        <div class="q">Q1. A person with a myopic eye cannot see objects beyond 1.2 m clearly. What type of lens is needed, and what is its power?</div>
+        <div class="work">
+          Far point = 1.2 m<br>
+          f = −1.2 m<br>
+          P = 1/f = 1/(−1.2) = −0.83 D
+        </div>
+        <p class="ans"><b>Answer:</b> Concave lens of power <strong>−0.83 D</strong>.</p>
+      </div>
+
+      <h3>For hypermetropia</h3>
+      <p>The convex lens must make an object at 25 cm appear at the person's near point. So <strong>u = −25 cm</strong> and <strong>v = −(defective near point)</strong>.</p>
+      <div class="solved">
+        <div class="q">Q2. The near point of a hypermetropic eye is 1 m. What is the power of the lens needed to correct it? (Normal near point = 25 cm.)</div>
+        <div class="work">
+          u = −25 cm, v = −100 cm<br>
+          1/f = 1/v − 1/u<br>
+          1/f = 1/(−100) − 1/(−25)<br>
+          1/f = −1/100 + 4/100 = 3/100<br>
+          f = 100/3 = 33.3 cm = 0.333 m<br>
+          P = 100/f = 100/33.3 = +3.0 D
+        </div>
+        <p class="ans"><b>Answer:</b> Convex lens of power <strong>+3.0 D</strong>.</p>
+      </div>
+
+      <div class="solved">
+        <div class="q">Q3. A doctor prescribes −5.5 D for distant vision and +1.5 D for near vision. Find the focal lengths.</div>
+        <div class="work">
+          Distant vision: f = 1/P = 1/(−5.5) = −0.182 m = −18.2 cm<br>
+          Near vision:&nbsp;&nbsp;&nbsp;f = 1/P = 1/(+1.5) = +0.667 m = +66.7 cm
+        </div>
+        <p class="ans"><b>Answer:</b> <strong>−18.2 cm</strong> (concave) and <strong>+66.7 cm</strong> (convex).</p>
+      </div>
+      <div class="tip"><b>Board tip</b><p>Always write the sign (+ or −) with the power and say which lens it is. Marks are cut for a missing sign.</p></div>
+    </section>
+
+    <!-- 6. Prism -->
+    <section id="prism">
+      <h2>Prism and dispersion of light</h2>
+      <p class="sec-hi">प्रिज़्म तथा प्रकाश का वर्ण विक्षेपण</p>
+      <p>A <strong>glass prism</strong> has two slanted faces. Light bends (refracts) twice: once when it enters and once when it leaves. The angle by which the light turns from its original path is the <strong>angle of deviation</strong>.</p>
+      <div class="def"><b>Definition</b><p>The splitting of white light into its seven colours is called <strong>dispersion</strong> (वर्ण विक्षेपण). The band of colours is called a <strong>spectrum</strong>.</p></div>
+      <div class="vibgyor" aria-label="Colours of the spectrum">
+        <span style="background:#7c3aed">Violet</span>
+        <span style="background:#4338ca">Indigo</span>
+        <span style="background:#1d4ed8">Blue</span>
+        <span style="background:#15803d">Green</span>
+        <span style="background:#a16207">Yellow</span>
+        <span style="background:#c2410c">Orange</span>
+        <span style="background:#b91c1c">Red</span>
+      </div>
+      <figure>
+        <svg viewBox="0 0 370 215" role="img" aria-label="White light splits into seven colours through a glass prism">
+          <polygon class="prism" points="150,25 85,165 215,165"/>
+          <path class="white-ray" d="M10 150 L111 109"/>
+          <g fill="none" stroke-width="2">
+            <path stroke="#dc2626" d="M111 109 L179.3 88 L335 105"/>
+            <path stroke="#ea580c" d="M111 109 L181.6 93.1 L335 120"/>
+            <path stroke="#ca8a04" d="M111 109 L184 98.3 L335 135"/>
+            <path stroke="#16a34a" d="M111 109 L186.4 103.4 L335 150"/>
+            <path stroke="#2563eb" d="M111 109 L188.8 108.5 L335 165"/>
+            <path stroke="#4f46e5" d="M111 109 L191.2 113.7 L335 180"/>
+            <path stroke="#8b5cf6" d="M111 109 L193.6 118.8 L335 195"/>
+          </g>
+          <rect class="screen" x="335" y="96" width="4" height="108"/>
+          <g class="lbl">
+            <text x="346" y="109">R</text><text x="346" y="124">O</text><text x="346" y="139">Y</text><text x="346" y="154">G</text><text x="346" y="169">B</text><text x="346" y="184">I</text><text x="346" y="199">V</text>
+          </g>
+          <text class="lbl" x="12" y="174">White light</text>
+          <text class="lbl-soft" x="150" y="152" text-anchor="middle">Glass prism</text>
+        </svg>
+        <figcaption>Red bends the least and stays on top. Violet bends the most and goes to the bottom.</figcaption>
+      </figure>
+      <h3>Why does white light split?</h3>
+      <p>Each colour travels at a different speed inside glass, so each colour bends by a different angle. <strong>Red bends least, violet bends most.</strong></p>
+      <h3>Newton's experiment: recombination</h3>
+      <p>Isaac Newton placed a second, identical prism <strong>upside down</strong> after the first. The seven colours joined again and <strong>white light</strong> came out. This proved that white light is made of seven colours.</p>
+      <h3>Rainbow <span class="hi">इंद्रधनुष</span></h3>
+      <ul class="points">
+        <li>A natural spectrum seen in the sky after rain.</li>
+        <li>Tiny water drops in the air act like small prisms.</li>
+        <li>Inside each drop, light goes through <strong>refraction and dispersion</strong>, then <strong>internal reflection</strong>, then <strong>refraction again</strong> as it comes out.</li>
+        <li>A rainbow is always seen in the direction <strong>opposite to the Sun</strong> (Sun behind you).</li>
+      </ul>
+    </section>
+
+    <!-- 7. Atmospheric refraction -->
+    <section id="atmosphere">
+      <h2>Atmospheric refraction</h2>
+      <p class="sec-hi">वायुमंडलीय अपवर्तन</p>
+      <p>Air is not the same everywhere. Hot air is lighter (rarer) and cool air is denser. Light bends as it passes through these different layers. This bending of light by the Earth's atmosphere is called <strong>atmospheric refraction</strong>.</p>
+      <p><strong>Example:</strong> Objects seen through the hot air above a fire or a hot road seem to shake or waver.</p>
+
+      <h3>Twinkling of stars <span class="hi">तारों का टिमटिमाना</span></h3>
+      <ul class="points">
+        <li>Starlight bends again and again as it enters the atmosphere.</li>
+        <li>Air keeps moving, so the amount of bending keeps changing.</li>
+        <li>The star's apparent position and brightness keep changing, so the star seems to <strong>twinkle</strong>.</li>
+        <li>Because of refraction, a star also looks <strong>slightly higher</strong> than its real position.</li>
+      </ul>
+      <div class="tip"><b>Board tip</b><p><strong>Why don't planets twinkle?</strong> Planets are much closer, so they look like a small disc (many points of light), not a single point. The changes from all these points cancel out, so the light looks steady.</p></div>
+
+      <h3>Early sunrise and late sunset</h3>
+      <ul class="points">
+        <li>We see the Sun about <strong>2 minutes before</strong> it actually rises above the horizon.</li>
+        <li>We keep seeing it for about <strong>2 minutes after</strong> it actually sets.</li>
+        <li>Reason: atmospheric refraction bends sunlight towards us even when the Sun is just below the horizon.</li>
+        <li>So the day becomes about <strong>4 minutes longer</strong>.</li>
+      </ul>
+    </section>
+
+    <!-- 8. Scattering -->
+    <section id="scattering">
+      <h2>Scattering of light</h2>
+      <p class="sec-hi">प्रकाश का प्रकीर्णन</p>
+      <p>When light hits tiny particles (dust, smoke, water drops, air molecules), it spreads out in many directions. This is <strong>scattering</strong>.</p>
+      <div class="def"><b>Tyndall effect · टिंडल प्रभाव</b><p>When a beam of light passes through a medium with tiny particles, its path becomes visible because the particles scatter the light. Examples: sunlight entering a dense forest through gaps, or a beam of light in a smoky or dusty room.</p></div>
+      <p>The colour we see depends on the <strong>size of the particles</strong>:</p>
+      <ul class="points">
+        <li>Very small particles scatter mostly <strong>blue</strong> light (short wavelength).</li>
+        <li>Bigger particles scatter longer wavelengths (red side).</li>
+        <li>Very large particles scatter all colours equally, so the light looks <strong>white</strong>.</li>
+      </ul>
+
+      <h3>Everyday questions</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Question</th><th>Simple reason</th></tr></thead>
+          <tbody>
+            <tr><td>Why is the sky blue?</td><td>Air molecules are very small. They scatter blue light much more than red. This scattered blue light reaches our eyes from all directions.</td></tr>
+            <tr><td>Why does the sky look dark to astronauts?</td><td>At very high altitude there is almost no air, so there is no scattering.</td></tr>
+            <tr><td>Why is the Sun red at sunrise and sunset?</td><td>Sunlight travels a longer path through air. Most blue light gets scattered away on the way. Mainly red light reaches our eyes.</td></tr>
+            <tr><td>Why are danger signals red?</td><td>Red light is scattered the least by fog and smoke, so it can be seen from far away.</td></tr>
+            <tr><td>Why are clouds white?</td><td>Water drops in clouds are large. They scatter all colours equally, which together look white.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9. Exam corner -->
+    <section id="exam">
+      <h2>Exam corner</h2>
+      <p class="sec-hi">परीक्षा की तैयारी</p>
+      <p>Tap a question to see a model answer. Try answering in your head first.</p>
+
+      <h3>Very short answer</h3>
+      <div class="qa">
+        <details><summary>What is the near point of a normal eye?<span class="marks">1 mark</span></summary><div class="a"><p>25 cm.</p></div></details>
+        <details><summary>What is the far point of a normal eye?<span class="marks">1 mark</span></summary><div class="a"><p>Infinity.</p></div></details>
+        <details><summary>Which part of the eye forms the image?<span class="marks">1 mark</span></summary><div class="a"><p>Retina. The image is real and inverted.</p></div></details>
+        <details><summary>Which lens is used to correct myopia?<span class="marks">1 mark</span></summary><div class="a"><p>Concave lens (negative power).</p></div></details>
+        <details><summary>Which colour bends the least through a prism?<span class="marks">1 mark</span></summary><div class="a"><p>Red. Violet bends the most.</p></div></details>
+        <details><summary>What is the SI unit of power of a lens?<span class="marks">1 mark</span></summary><div class="a"><p>Dioptre (D). 1 D = 1 m<sup>−1</sup>.</p></div></details>
+      </div>
+
+      <h3>Short answer</h3>
+      <div class="qa">
+        <details><summary>What is meant by power of accommodation of the eye?<span class="marks">2 marks</span></summary><div class="a"><p>The ability of the eye lens to adjust its focal length to see near and far objects clearly. For far objects the ciliary muscles relax and the lens becomes thin. For near objects they contract and the lens becomes thick.</p></div></details>
+        <details><summary>Why do stars twinkle?<span class="marks">2 marks</span></summary><div class="a"><p>Starlight is refracted again and again by the moving layers of the atmosphere. Its apparent position and brightness keep changing, so the star seems to twinkle.</p></div></details>
+        <details><summary>Why is the colour of the clear sky blue?<span class="marks">2 marks</span></summary><div class="a"><p>Air molecules are smaller than the wavelength of visible light. They scatter blue light (short wavelength) much more than red, so blue light reaches our eyes from all over the sky.</p></div></details>
+        <details><summary>Why is red colour used for danger signals?<span class="marks">2 marks</span></summary><div class="a"><p>Red light has the longest wavelength and is scattered the least by fog, smoke and dust. So it can be seen clearly from a long distance.</p></div></details>
+        <details><summary>What is presbyopia? How is it corrected?<span class="marks">2 marks</span></summary><div class="a"><p>An old-age defect in which the near point moves away because the ciliary muscles weaken and the lens loses flexibility. It is corrected by a convex lens, or by bifocal lenses if the person also has myopia.</p></div></details>
+      </div>
+
+      <h3>Long answer (draw diagrams)</h3>
+      <div class="qa">
+        <details><summary>Draw a labelled diagram of the human eye and give the function of any four parts.<span class="marks">4 marks</span></summary><div class="a"><p>Draw the diagram from <a href="#parts">Parts of the eye</a>. Functions: cornea (light enters, most refraction), iris (controls pupil size), pupil (controls light entering), eye lens (focuses image on retina), retina (image forms), optic nerve (carries signals to brain).</p></div></details>
+        <details><summary>What is myopia? Give its two causes and show its correction with diagrams.<span class="marks">4 marks</span></summary><div class="a"><ul><li>Near objects clear, far objects blurred. Image forms in front of retina.</li><li>Causes: excessive curvature of eye lens; elongation of eyeball.</li><li>Correction: concave lens of suitable power.</li><li>Draw: (a) myopic eye, (b) far point, (c) corrected eye. See <a href="#defects">Defects of vision</a>.</li></ul></div></details>
+        <details><summary>What is hypermetropia? Give its two causes and show its correction with diagrams.<span class="marks">4 marks</span></summary><div class="a"><ul><li>Far objects clear, near objects blurred. Image forms behind retina.</li><li>Causes: focal length of eye lens too long; eyeball too small.</li><li>Correction: convex lens of suitable power.</li><li>Draw: (a) near point of hypermetropic eye, (b) normal near point, (c) corrected eye.</li></ul></div></details>
+        <details><summary>Explain the formation of a rainbow with a diagram.<span class="marks">3 marks</span></summary><div class="a"><p>Water drops act like tiny prisms. Sunlight entering a drop is refracted and dispersed, reflected inside the drop, and refracted again on leaving. The colours spread out and reach our eyes as a rainbow. It is seen opposite to the Sun.</p></div></details>
+      </div>
+
+      <h3>Common mistakes</h3>
+      <ul class="mistakes">
+        <li><span class="wrong">The image on the retina is erect.</span><span class="right">The image on the retina is real and inverted.</span></li>
+        <li><span class="wrong">P = 1/f with f = 50 cm gives 0.02 D.</span><span class="right">Change f to metres: 0.5 m, so P = +2 D.</span></li>
+        <li><span class="wrong">Power is 2.5 D (no sign).</span><span class="right">Power is −2.5 D, concave lens.</span></li>
+        <li><span class="wrong">Myopia image is behind the retina.</span><span class="right">Myopia: in front of retina. Hypermetropia: behind retina.</span></li>
+        <li><span class="wrong">Violet bends the least.</span><span class="right">Red bends the least, violet the most.</span></li>
+      </ul>
+    </section>
+
+  </article>
+</div>
+
+<footer>
+  <div class="wrap">Based on the Class 10 Science textbook (NCERT, followed by RBSE): The Human Eye and the Colourful World. Check your latest RBSE syllabus for any topics removed this year.</div>
+</footer>
+
+<script>
+(function () {
+  var KEY = "rbse-human-eye-revised";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#toc input[type=checkbox]"));
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { done = {}; }
+
+  function render() {
+    var count = 0;
+    boxes.forEach(function (b) {
+      var on = !!done[b.dataset.sec];
+      b.checked = on;
+      b.parentNode.classList.toggle("done", on);
+      if (on) count++;
+    });
+    document.getElementById("prog-text").textContent = count + " of " + boxes.length + " topics revised";
+    document.getElementById("prog-bar").style.width = (count / boxes.length * 100) + "%";
+  }
+
+  boxes.forEach(function (b) {
+    b.addEventListener("change", function () {
+      done[b.dataset.sec] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {}
+      render();
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>
