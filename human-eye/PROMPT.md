@@ -30,6 +30,7 @@ Help the student revise every exam-relevant point of the chapter, practise the q
 10. Formula sheet and a glossary of key terms with a live search filter.
 11. "Mark as revised" on every section, progress bar, sidebar contents with scroll highlighting; progress stored in localStorage with safe fallbacks.
 12. Light and dark theme toggle that also respects the system setting.
+13. Interactive 3D eye model (three.js): drag to rotate 360°, scroll or pinch to zoom, arrow keys, Front/Side/Back/Top/Reset views, cut-away cross-section, clickable parts and labels that dim when hidden, a light slider that resizes the pupil, a near/far slider that thickens the lens and contracts the ciliary muscles, auto-rotate and full screen, with a fallback message when WebGL or the library is unavailable.
 
 ## Design direction
 - Draw from the optometrist's world: the hero is a Snellen eye-test chart whose shrinking lines spell the chapter title, with real acuity notation (6/60 down to 6/6).
@@ -41,7 +42,7 @@ Help the student revise every exam-relevant point of the chapter, practise the q
 - English only. Do not include any Hindi text.
 
 ## Quality bar
-- Single HTML file, no build step, only Google Fonts as an external resource.
+- Single HTML file, no build step. External resources: Google Fonts and three.js r128 from jsDelivr.
 - Works at 360 px phone width with no horizontal page scroll; diagrams scale.
 - Keyboard accessible (focus states, buttons not divs), respects reduced motion.
 - All content accurate to the NCERT text; no invented marks weightage.

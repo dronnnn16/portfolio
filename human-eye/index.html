@@ -61,6 +61,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
 body {
@@ -212,6 +213,39 @@ svg text { font-family: var(--f-body); }
 .part-info { display: grid; gap: var(--s3); }
 .part-info h3 { font-size: 1.5rem; }
 .part-info .tip { font-size: 0.95rem; }
+
+/* 3D model */
+.viewer { position: relative; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border-radius: var(--r-sm); overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #16303C 0%, #0A1820 55%, #050C10 100%); }
+@media (max-width: 640px) { .viewer { aspect-ratio: 1 / 1.05; } }
+.viewer canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+.viewer canvas:active { cursor: grabbing; }
+.viewer canvas:focus-visible { outline: 3px solid #7FC4DA; outline-offset: -3px; }
+.viewer:fullscreen { aspect-ratio: auto; width: 100%; height: 100%; border-radius: 0; }
+.v3-labels { position: absolute; inset: 0; pointer-events: none; }
+.v3-labels.off { display: none; }
+.v3-lbl { position: absolute; left: 0; top: 0; pointer-events: auto; display: inline-flex; align-items: center; gap: 5px; font: 600 12px/1 var(--f-body); color: #E3EDF1; background: rgba(6, 16, 21, .78); border: 1px solid rgba(127, 196, 218, .45); border-radius: 99px; padding: 4px 8px 4px 5px; cursor: pointer; white-space: nowrap; transition: opacity .2s; }
+.v3-lbl::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #7FC4DA; box-shadow: 0 0 0 2px rgba(127,196,218,.3); }
+.v3-lbl:hover { border-color: #7FC4DA; }
+.v3-lbl.hid { opacity: .28; }
+.v3-lbl.sel { background: #F1C04E; color: #1C1405; border-color: #F1C04E; opacity: 1; }
+.v3-lbl.sel::before { background: #1C1405; box-shadow: none; }
+.v3-views { position: absolute; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; max-width: calc(100% - 20px); }
+.room .v3-views .btn { background: rgba(6, 16, 21, .8); padding: 0.35rem 0.65rem; font-size: 0.85rem; }
+@media (max-width: 640px) { .v3-views { left: 6px; bottom: 6px; gap: 4px; flex-wrap: nowrap; } .room .v3-views .btn { padding: 0.3rem 0.45rem; font-size: 0.78rem; } .v3-lbl { font-size: 11px; padding: 3px 6px 3px 4px; } }
+.v3-fallback { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: #D8E3E8; margin: 0; }
+.viewer.failed .v3-views, .viewer.failed canvas { display: none; }
+.v3-controls { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: var(--s4) var(--s6); align-items: start; }
+@media (max-width: 860px) { .v3-controls { grid-template-columns: 1fr; } }
+.v3-toggles { display: grid; gap: var(--s3); }
+.room .switch { color: #D8E3E8; }
+.room .switch input { background: #2B3B44; }
+.room .switch input:checked { background: #7FC4DA; }
+.v3-slider { display: grid; gap: 4px; min-width: 0; }
+.v3-slider label { font-weight: 700; color: #FFFFFF; font-size: 0.95rem; }
+.v3-ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: #93A8B2; }
+.v3-slider p { font-size: 0.9rem; color: #B9CAD2; min-height: 2.8em; }
+.v3-info { border-top: 1px solid var(--room-line); padding-top: var(--s3); color: var(--room-ink); }
+.v3-info strong { color: #F1C04E; margin-right: 0.3rem; }
 
 /* Simulator */
 .sim { display: grid; gap: var(--s4); }
@@ -433,6 +467,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     </ul>
     <div class="hero-actions">
       <a class="btn primary" href="#eye">Start revising</a>
+      <a class="btn" href="#model3d">Explore the 3D eye</a>
       <a class="btn" href="#quiz">Take the 18-question quiz</a>
     </div>
   </div>
@@ -530,6 +565,46 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
           <p id="partText"></p>
           <p class="note tip" id="partTip"></p>
         </div>
+      </div>
+
+      <div class="room viewer-room" id="model3d">
+        <div class="toolbar">
+          <h3 class="grow">3D eye model</h3>
+          <button class="btn" type="button" id="v3Full">Full screen</button>
+        </div>
+        <p class="muted">Drag to turn the eye all the way round. Scroll or pinch to zoom. Click a part or a label to read about it. After clicking the model, arrow keys rotate it and + or − zooms.</p>
+        <div class="viewer" id="eye3d">
+          <canvas id="eye3dCanvas" tabindex="0" role="img" aria-label="Interactive 3D model of the human eye"></canvas>
+          <div class="v3-labels" id="v3Labels"></div>
+          <p class="v3-fallback" id="eye3dFallback" hidden></p>
+          <div class="v3-views" role="group" aria-label="Camera views">
+            <button type="button" class="btn" data-view="front">Front</button>
+            <button type="button" class="btn" data-view="side">Side</button>
+            <button type="button" class="btn" data-view="back">Back</button>
+            <button type="button" class="btn" data-view="top">Top</button>
+            <button type="button" class="btn" data-view="reset">Reset</button>
+          </div>
+        </div>
+        <div class="v3-controls">
+          <div class="v3-toggles">
+            <label class="switch" for="v3Cut"><input type="checkbox" id="v3Cut" checked> Cut-away view</label>
+            <label class="switch" for="v3Lbl"><input type="checkbox" id="v3Lbl" checked> Labels</label>
+            <label class="switch" for="v3Spin"><input type="checkbox" id="v3Spin"> Auto-rotate</label>
+          </div>
+          <div class="v3-slider">
+            <label for="v3Light">Light falling on the eye</label>
+            <input type="range" id="v3Light" min="0" max="100" value="50">
+            <div class="v3-ends"><span>Dim</span><span>Bright</span></div>
+            <p id="v3LightCap"></p>
+          </div>
+          <div class="v3-slider">
+            <label for="v3Focus">Looking at</label>
+            <input type="range" id="v3Focus" min="0" max="100" value="0">
+            <div class="v3-ends"><span>Far object</span><span>Near object (25 cm)</span></div>
+            <p id="v3FocusCap"></p>
+          </div>
+        </div>
+        <div class="v3-info" aria-live="polite"><strong id="v3Name">Retina</strong> <span id="v3Text"></span></div>
       </div>
 
       <div class="cols">
@@ -1138,9 +1213,10 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
     nerve: { n: "Optic nerve", t: "Carries the electrical signals from the retina to the brain, which interprets them as images.", tip: "The point where it leaves the retina has no light-sensitive cells: the blind spot." },
     blind: { n: "Blind spot", t: "The point where the optic nerve joins the retina. It has no rods or cones, so no image is seen when light falls here.", tip: "A one-mark favourite: 'Which point of the retina has no light-sensitive cells?'" },
     aqueous: { n: "Aqueous humour", t: "A clear, watery fluid filling the space between the cornea and the eye lens. It keeps the front of the eye in shape and nourishes the cornea.", tip: "Aqueous is in front of the lens; vitreous is behind it." },
-    vitreous: { n: "Vitreous humour", t: "A transparent, jelly-like fluid filling the space between the eye lens and the retina. It keeps the eyeball in shape.", tip: "Remember: vitreous fills the large chamber behind the lens." }
+    vitreous: { n: "Vitreous humour", t: "A transparent, jelly-like fluid filling the space between the eye lens and the retina. It keeps the eyeball in shape.", tip: "Remember: vitreous fills the large chamber behind the lens." },
+    sclera: { n: "Sclera", t: "The tough, white outer coat of the eyeball, seen as the white of the eye. It protects the delicate parts inside and holds the eye's shape. At the front it continues as the transparent cornea.", tip: "It is not labelled in the NCERT diagram, but it helps to know where the cornea ends." }
   };
-  var partOrder = ["cornea", "iris", "pupil", "lens", "ciliary", "aqueous", "vitreous", "retina", "blind", "nerve"];
+  var partOrder = ["sclera", "cornea", "iris", "pupil", "lens", "ciliary", "aqueous", "vitreous", "retina", "blind", "nerve"];
   var chips = $("#partChips");
   partOrder.forEach(function (k) {
     var b = document.createElement("button");
@@ -1148,12 +1224,16 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
     b.addEventListener("click", function () { selectPart(k); });
     chips.appendChild(b);
   });
+  var partListeners = [];
   function selectPart(k) {
     var p = PARTS[k]; if (!p) return;
+    window.EyeLab.current = k;
+    partListeners.forEach(function (fn) { fn(k); });
     $("#partName").textContent = p.n; $("#partText").textContent = p.t; $("#partTip").textContent = p.tip;
     $$(".part").forEach(function (g) { g.classList.toggle("sel", g.getAttribute("data-part") === k); });
     $$("#partChips .chip").forEach(function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-part") === k); });
   }
+  window.EyeLab = { parts: PARTS, select: selectPart, onSelect: function (fn) { partListeners.push(fn); }, toast: toast, current: "retina" };
   $$(".part").forEach(function (g) {
     var k = g.getAttribute("data-part");
     g.addEventListener("click", function (e) { e.stopPropagation(); selectPart(k); });
@@ -1621,6 +1701,396 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
   }
   $("#glossSearch").addEventListener("input", filterGloss);
   filterGloss();
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+/* ---------- 3D eye model (three.js r128) ---------- */
+(function () {
+  "use strict";
+  var wrap = document.getElementById("eye3d");
+  var fallback = document.getElementById("eye3dFallback");
+  var lab = window.EyeLab;
+  function fail(msg) {
+    fallback.hidden = false; fallback.textContent = msg; wrap.classList.add("failed");
+    $all("#model3d input, #v3Full").forEach(function (i) { i.disabled = true; });
+  }
+  function $all(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  if (!lab) return;
+  if (!window.THREE || !THREE.OrbitControls) {
+    fail("The 3D model could not load. Check your internet connection and reload the page. The labelled diagram above covers the same parts.");
+    return;
+  }
+  var canvas = document.getElementById("eye3dCanvas");
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  } catch (e) {
+    fail("This browser or device cannot show 3D graphics (WebGL is off). The labelled diagram above covers the same parts.");
+    return;
+  }
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.localClippingEnabled = true;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.setClearColor(0x000000, 0);
+
+  var V3 = THREE.Vector3;
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(34, 16 / 9, 0.1, 50);
+  var TARGET = new V3(0, 0, -0.12);
+  var HOME = new V3(2.75, 0.75, 1.9);
+  camera.position.copy(HOME);
+  scene.add(camera);
+  scene.add(new THREE.HemisphereLight(0xf2f7ff, 0x30241f, 0.45));
+  var keyLight = new THREE.DirectionalLight(0xffffff, 0.85);
+  keyLight.position.set(1.2, 1.4, 2);
+  camera.add(keyLight);
+  var innerLight = new THREE.PointLight(0xffeedd, 0.35, 3.2);
+  innerLight.position.set(-0.25, 0.25, 0.2);
+  scene.add(innerLight);
+
+  var controls = new THREE.OrbitControls(camera, canvas);
+  controls.target.copy(TARGET);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.enablePan = false;
+  controls.minDistance = 1.7;
+  controls.maxDistance = 6.5;
+  controls.rotateSpeed = 0.8;
+  controls.autoRotateSpeed = 1.6;
+  controls.update();
+
+  /* ---- textures ---- */
+  function canvasTex(w, h, draw) {
+    var c = document.createElement("canvas"); c.width = w; c.height = h;
+    draw(c.getContext("2d"), w, h);
+    var t = new THREE.CanvasTexture(c);
+    t.encoding = THREE.sRGBEncoding;
+    t.anisotropy = 4;
+    return t;
+  }
+  var seed = 7;
+  function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+  var retinaTex = canvasTex(1024, 512, function (g, w, h) {
+    var gr = g.createLinearGradient(0, h, 0, 0);
+    gr.addColorStop(0, "#B8442B"); gr.addColorStop(0.55, "#9A3322"); gr.addColorStop(1, "#6A2216");
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    for (var i = 0; i < 900; i++) {
+      g.fillStyle = "rgba(90,20,10," + (rnd() * 0.12) + ")";
+      g.fillRect(rnd() * w, rnd() * h, 3, 3);
+    }
+    function vessel(x, y, ang, width, len) {
+      g.strokeStyle = "rgba(110,16,12,0.85)"; g.lineCap = "round";
+      for (var s = 0; s < len; s++) {
+        var nx = x + Math.sin(ang) * 9, ny = y - Math.cos(ang) * 9;
+        g.lineWidth = width; g.beginPath(); g.moveTo(x, y); g.lineTo(nx, ny); g.stroke();
+        x = nx; y = ny; ang += (rnd() - 0.5) * 0.35; width = Math.max(0.8, width * 0.975);
+        if (rnd() < 0.06 && width > 1.4) vessel(x, y, ang + (rnd() < 0.5 ? -0.7 : 0.7), width * 0.7, len - s - 4);
+        if (y < 0) break;
+      }
+    }
+    for (var v = 0; v < 18; v++) vessel(rnd() * w, h + 2, (rnd() - 0.5) * 0.6, 5 + rnd() * 2, 50);
+  });
+
+  var irisTex = canvasTex(512, 512, function (g, w) {
+    var c = w / 2;
+    var gr = g.createRadialGradient(c, c, 0, c, c, c);
+    gr.addColorStop(0, "#1E120A"); gr.addColorStop(0.28, "#5E3A20"); gr.addColorStop(0.55, "#8C5A31");
+    gr.addColorStop(0.85, "#5A361E"); gr.addColorStop(0.97, "#2A170C"); gr.addColorStop(1, "#1A0E07");
+    g.fillStyle = gr; g.beginPath(); g.arc(c, c, c, 0, Math.PI * 2); g.fill();
+    for (var i = 0; i < 420; i++) {
+      var a = rnd() * Math.PI * 2, r0 = 40 + rnd() * 50, r1 = 150 + rnd() * 100;
+      g.strokeStyle = rnd() < 0.5 ? "rgba(25,12,5,0.35)" : "rgba(215,160,95,0.22)";
+      g.lineWidth = 1 + rnd() * 1.5;
+      g.beginPath(); g.moveTo(c + Math.cos(a) * r0, c + Math.sin(a) * r0);
+      g.quadraticCurveTo(c + Math.cos(a + 0.08) * (r0 + r1) / 2, c + Math.sin(a + 0.08) * (r0 + r1) / 2, c + Math.cos(a) * r1, c + Math.sin(a) * r1);
+      g.stroke();
+    }
+    g.strokeStyle = "rgba(40,20,10,0.55)"; g.lineWidth = 4; g.beginPath();
+    for (var k = 0; k <= 64; k++) {
+      var t = k / 64 * Math.PI * 2, rr = 118 + Math.sin(t * 9) * 6;
+      if (k === 0) g.moveTo(c + Math.cos(t) * rr, c + Math.sin(t) * rr); else g.lineTo(c + Math.cos(t) * rr, c + Math.sin(t) * rr);
+    }
+    g.stroke();
+  });
+
+  /* ---- geometry helpers ---- */
+  var clipPlane = new THREE.Plane(new V3(-1, 0, 0), 0); // removes the x > 0 half
+  var clipMats = [];
+  function std(opts, clip) {
+    var m = new THREE.MeshStandardMaterial(opts);
+    if (clip) clipMats.push(m);
+    return m;
+  }
+  // Sphere segment around the +z axis; theta 0 is the front pole.
+  function shell(r, t0, tl, ws) {
+    var g = new THREE.SphereGeometry(r, ws || 72, 48, 0, Math.PI * 2, t0, tl);
+    g.rotateX(Math.PI / 2);
+    return g;
+  }
+  var parts = {};      // part key -> mesh used for highlight
+  var solids = [];     // meshes that can hide a label or take a click
+  function add(mesh, key, solid) {
+    mesh.userData.part = key || null;
+    scene.add(mesh);
+    if (key && !parts[key]) parts[key] = mesh;
+    if (solid) solids.push(mesh);
+    return mesh;
+  }
+
+  var DS = THREE.DoubleSide;
+  add(new THREE.Mesh(shell(1, 0.62, Math.PI - 0.62), std({ color: 0xF2ECE6, roughness: 0.55, side: DS }, true)), "sclera", true);
+  add(new THREE.Mesh(shell(0.982, 0.66, Math.PI - 0.66), std({ color: 0x4C1F19, roughness: 0.85, side: DS }, true)), null, true);
+  add(new THREE.Mesh(shell(0.964, 1.0, Math.PI - 1.0), std({ map: retinaTex, roughness: 0.7, side: DS }, true)), "retina", true);
+  var vitMat = std({ color: 0x9FD8EA, transparent: true, opacity: 0.09, depthWrite: false, side: DS }, true);
+  add(new THREE.Mesh(shell(0.95, 0.78, Math.PI - 0.78, 48), vitMat), "vitreous", false);
+  var cornea = add(new THREE.Mesh(shell(0.72, 0, 0.937, 64), std({ color: 0xD8F0FA, roughness: 0.04, metalness: 0.1, transparent: true, opacity: 0.26, depthWrite: false, side: DS }, true)), "cornea", false);
+  cornea.position.z = 0.388;
+  cornea.renderOrder = 2;
+
+  var IRIS_Z = 0.8, IRIS_OUT = 0.56;
+  var iris = add(new THREE.Mesh(new THREE.RingGeometry(0.16, IRIS_OUT, 96, 1), std({ map: irisTex, roughness: 0.6, side: DS })), "iris", true);
+  iris.position.z = IRIS_Z;
+  var pupilMat = new THREE.MeshBasicMaterial({ color: 0x050505, transparent: true, opacity: 0.82, side: THREE.FrontSide });
+  var pupil = add(new THREE.Mesh(new THREE.CircleGeometry(0.16, 64), pupilMat), "pupil", true);
+  pupil.position.z = IRIS_Z + 0.004;
+
+  var LENS_Z = 0.6;
+  var lens = add(new THREE.Mesh(new THREE.SphereGeometry(0.3, 56, 36), std({ color: 0xCDE7F2, roughness: 0.12, transparent: true, opacity: 0.8 })), "lens", true);
+  lens.position.z = LENS_Z;
+  var ciliary = add(new THREE.Mesh(new THREE.TorusGeometry(0.43, 0.05, 20, 80), std({ color: 0xB4524A, roughness: 0.6 })), "ciliary", true);
+  ciliary.position.z = LENS_Z;
+  var ligMat = new THREE.LineBasicMaterial({ color: 0xE9DCCB, transparent: true, opacity: 0.75 });
+  var ligaments = new THREE.LineSegments(new THREE.BufferGeometry(), ligMat);
+  ligaments.position.z = LENS_Z;
+  scene.add(ligaments);
+
+  var NERVE_X = -0.14;
+  var nerveGeo = new THREE.CylinderGeometry(0.13, 0.155, 0.75, 40);
+  nerveGeo.rotateX(Math.PI / 2);
+  var nerve = add(new THREE.Mesh(nerveGeo, std({ color: 0xEDD9A0, roughness: 0.7 })), "nerve", true);
+  nerve.position.set(NERVE_X, 0, -1.36);
+  var blindDir = new V3(NERVE_X, 0, -1).normalize();
+  var blind = add(new THREE.Mesh(new THREE.CircleGeometry(0.085, 40), std({ color: 0xF6E6B4, roughness: 0.6, side: DS }, true)), "blind", true);
+  blind.position.copy(blindDir.clone().multiplyScalar(0.958));
+  blind.lookAt(0, 0, 0);
+
+  /* ---- adjustable state ---- */
+  var pupilR = 0.16;
+  function setPupil(v) { // v: 0 dim .. 100 bright
+    pupilR = 0.27 - (v / 100) * 0.19;
+    iris.geometry.dispose(); iris.geometry = new THREE.RingGeometry(pupilR, IRIS_OUT, 96, 1);
+    pupil.geometry.dispose(); pupil.geometry = new THREE.CircleGeometry(pupilR, 64);
+    document.getElementById("v3LightCap").textContent = v > 66
+      ? "Bright light: the iris shrinks the pupil so less light enters."
+      : v < 34 ? "Dim light: the iris opens the pupil wide to let more light in."
+      : "Normal light: the pupil is of medium size.";
+    dirty = true;
+  }
+  function setFocus(v) { // v: 0 far .. 100 near
+    var t = v / 100;
+    lens.scale.set(1 - 0.06 * t, 1 - 0.06 * t, 0.4 + 0.24 * t);
+    var R = 0.435 - 0.035 * t, tube = 0.05 + 0.02 * t;
+    ciliary.geometry.dispose(); ciliary.geometry = new THREE.TorusGeometry(R, tube, 20, 80);
+    var pts = [], n = 28, lr = 0.3 * (1 - 0.06 * t);
+    for (var i = 0; i < n; i++) {
+      var a = i / n * Math.PI * 2, c = Math.cos(a), s = Math.sin(a);
+      pts.push(c * lr, s * lr, 0, c * (R - tube), s * (R - tube), 0);
+    }
+    ligaments.geometry.dispose();
+    ligaments.geometry = new THREE.BufferGeometry();
+    ligaments.geometry.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    document.getElementById("v3FocusCap").textContent = t > 0.5
+      ? "Near object: the ciliary muscles contract, the lens becomes thicker and its focal length decreases."
+      : "Far object: the ciliary muscles relax, the lens becomes thinner and its focal length increases.";
+    dirty = true;
+  }
+  var cutaway = true;
+  function setCut(on) {
+    cutaway = on;
+    clipMats.forEach(function (m) { m.clippingPlanes = on ? [clipPlane] : []; m.needsUpdate = true; });
+    dirty = true;
+  }
+
+  /* ---- labels ---- */
+  var LABELS = [
+    { k: "sclera", p: new V3(-0.36, 0.93, 0.05) },
+    { k: "cornea", p: new V3(0, 0.36, 1.01) },
+    { k: "aqueous", p: new V3(0, 0.16, 0.92) },
+    { k: "iris", p: new V3(0, 0.42, IRIS_Z) },
+    { k: "pupil", p: new V3(0, 0, IRIS_Z + 0.01) },
+    { k: "lens", p: new V3(0, -0.12, LENS_Z) },
+    { k: "ciliary", p: new V3(0, -0.43, LENS_Z) },
+    { k: "vitreous", p: new V3(0, -0.3, -0.25) },
+    { k: "retina", p: new V3(0, 0.62, -0.71) },
+    { k: "blind", p: blind.position.clone() },
+    { k: "nerve", p: new V3(NERVE_X, 0.15, -1.55) }
+  ];
+  var lblBox = document.getElementById("v3Labels");
+  LABELS.forEach(function (L) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "v3-lbl"; b.textContent = lab.parts[L.k].n;
+    b.addEventListener("click", function () { lab.select(L.k); });
+    lblBox.appendChild(b); L.el = b;
+  });
+  var ray = new THREE.Raycaster();
+  function validHit(h) { return !(cutaway && h.object.material && h.object.material.clippingPlanes && h.object.material.clippingPlanes.length && h.point.x > 0.002); }
+  var tmp = new V3();
+  function placeLabels(checkOcclusion) {
+    if (lblBox.classList.contains("off")) return;
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    LABELS.forEach(function (L) {
+      tmp.copy(L.p).project(camera);
+      var x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h;
+      var bw = L.el.offsetWidth || 80;
+      x = Math.min(Math.max(x - 6, 4), w - bw - 4); y = Math.min(Math.max(y - 11, 4), h - 26);
+      L.el.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px)";
+      if (checkOcclusion) {
+        var dir = L.p.clone().sub(camera.position), dist = dir.length();
+        ray.set(camera.position, dir.normalize()); ray.far = dist;
+        var hits = ray.intersectObjects(solids, false).filter(validHit);
+        var hidden = hits.length && hits[0].distance < dist - 0.04 && hits[0].object.userData.part !== L.k;
+        L.el.classList.toggle("hid", !!hidden);
+      }
+    });
+  }
+
+  /* ---- selection ---- */
+  var HL = new THREE.Color(0xF1C04E), NONE = new THREE.Color(0x000000);
+  function showPart(k) {
+    Object.keys(parts).forEach(function (key) {
+      var m = parts[key].material;
+      if (m.emissive) { m.emissive.copy(key === k ? HL : NONE); m.emissiveIntensity = key === k ? 0.42 : 0; }
+    });
+    pupilMat.color.set(k === "pupil" ? 0x5A4310 : 0x050505);
+    LABELS.forEach(function (L) { L.el.classList.toggle("sel", L.k === k); });
+    var p = lab.parts[k];
+    document.getElementById("v3Name").textContent = p.n;
+    document.getElementById("v3Text").textContent = p.t;
+    dirty = true;
+  }
+  lab.onSelect(showPart);
+
+  var down = null;
+  canvas.addEventListener("pointerdown", function (e) { down = { x: e.clientX, y: e.clientY }; });
+  canvas.addEventListener("pointerup", function (e) {
+    if (!down || Math.abs(e.clientX - down.x) + Math.abs(e.clientY - down.y) > 6) { down = null; return; }
+    down = null;
+    var r = canvas.getBoundingClientRect();
+    ray.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: -(e.clientY - r.top) / r.height * 2 + 1 }, camera);
+    ray.far = Infinity;
+    var hits = ray.intersectObjects(solids.concat([cornea]), false).filter(validHit).filter(function (h) { return h.object.userData.part; });
+    if (!hits.length) return;
+    var pick = hits[0].object.userData.part;
+    if (pick === "cornea" && hits[1] && /^(iris|pupil|lens)$/.test(hits[1].object.userData.part)) pick = hits[1].object.userData.part;
+    lab.select(pick);
+  });
+
+  /* ---- camera moves ---- */
+  var VIEWS = { front: new V3(0, 0.12, 3.5), side: new V3(3.5, 0.15, -0.12), back: new V3(-0.6, 0.55, -3.4), top: new V3(0.02, 3.5, 0.25), reset: HOME };
+  var fly = null;
+  var sph = new THREE.Spherical();
+  function toSph(v) { var s = new THREE.Spherical(); s.setFromVector3(v.clone().sub(TARGET)); return s; }
+  function flyTo(pos) {
+    var a = toSph(camera.position), b = toSph(pos);
+    var dt = b.theta - a.theta;
+    while (dt > Math.PI) dt -= 2 * Math.PI;
+    while (dt < -Math.PI) dt += 2 * Math.PI;
+    fly = { a: a, b: b, dt: dt, t0: performance.now(), dur: reduceMotion ? 1 : 750 };
+    wake();
+  }
+  function stepFly(now) {
+    var t = Math.min(1, (now - fly.t0) / fly.dur), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    sph.set(fly.a.radius + (fly.b.radius - fly.a.radius) * e, fly.a.phi + (fly.b.phi - fly.a.phi) * e, fly.a.theta + fly.dt * e);
+    camera.position.setFromSpherical(sph).add(TARGET);
+    camera.lookAt(TARGET);
+    if (t >= 1) fly = null;
+  }
+  $all("#eye3d [data-view]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var v = b.getAttribute("data-view");
+      if (v === "reset") resetAll();
+      flyTo(VIEWS[v]);
+    });
+  });
+  function nudge(dTheta, dPhi, zoom) {
+    var s = toSph(camera.position);
+    s.theta += dTheta; s.phi = Math.min(Math.PI - 0.05, Math.max(0.05, s.phi + dPhi));
+    s.radius = Math.min(controls.maxDistance, Math.max(controls.minDistance, s.radius * zoom));
+    camera.position.setFromSpherical(s).add(TARGET); camera.lookAt(TARGET);
+    stopSpin(); wake();
+  }
+  canvas.addEventListener("keydown", function (e) {
+    var map = { ArrowLeft: [-0.15, 0, 1], ArrowRight: [0.15, 0, 1], ArrowUp: [0, -0.12, 1], ArrowDown: [0, 0.12, 1], "+": [0, 0, 0.9], "=": [0, 0, 0.9], "-": [0, 0, 1.1] };
+    var m = map[e.key]; if (!m) return;
+    e.preventDefault(); nudge(m[0], m[1], m[2]);
+  });
+
+  /* ---- toggles ---- */
+  var cutBox = document.getElementById("v3Cut"), lblBoxToggle = document.getElementById("v3Lbl"), spinBox = document.getElementById("v3Spin");
+  var lightIn = document.getElementById("v3Light"), focusIn = document.getElementById("v3Focus");
+  cutBox.addEventListener("change", function () { setCut(cutBox.checked); });
+  lblBoxToggle.addEventListener("change", function () { lblBox.classList.toggle("off", !lblBoxToggle.checked); dirty = true; });
+  spinBox.addEventListener("change", function () { controls.autoRotate = spinBox.checked; wake(); });
+  function stopSpin() { if (controls.autoRotate) { controls.autoRotate = false; spinBox.checked = false; } }
+  controls.addEventListener("start", function () { stopSpin(); fly = null; });
+  controls.addEventListener("change", function () { dirty = true; });
+  lightIn.addEventListener("input", function () { setPupil(+lightIn.value); wake(); });
+  focusIn.addEventListener("input", function () { setFocus(+focusIn.value); wake(); });
+  function resetAll() {
+    cutBox.checked = true; setCut(true);
+    lblBoxToggle.checked = true; lblBox.classList.remove("off");
+    lightIn.value = 50; setPupil(50); focusIn.value = 0; setFocus(0);
+  }
+
+  var fullBtn = document.getElementById("v3Full");
+  if (!wrap.requestFullscreen) fullBtn.hidden = true;
+  fullBtn.addEventListener("click", function () {
+    if (document.fullscreenElement) { document.exitFullscreen().catch(function () {}); return; }
+    var p = wrap.requestFullscreen();
+    if (p && p.catch) p.catch(function () { lab.toast("Full screen is not available here. Zoom in with the mouse wheel or a pinch instead."); });
+  });
+  document.addEventListener("fullscreenchange", function () { fullBtn.textContent = document.fullscreenElement ? "Exit full screen" : "Full screen"; });
+
+  /* ---- sizing and render loop ---- */
+  function resize() {
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.fov = w / h < 1.2 ? 36 : 34;
+    camera.zoom = w / h < 1.2 ? 1.12 : 1;
+    camera.updateProjectionMatrix();
+    dirty = true; wake();
+  }
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(wrap); else window.addEventListener("resize", resize);
+
+  var dirty = true, visible = true, raf = null, frame = 0;
+  function tick(now) {
+    raf = null;
+    if (!visible) return;
+    if (fly) stepFly(now);
+    var moved = controls.update() || !!fly || controls.autoRotate;
+    if (moved || dirty) {
+      renderer.render(scene, camera);
+      frame++;
+      placeLabels(dirty || frame % 3 === 0);
+      dirty = false;
+    }
+    raf = requestAnimationFrame(tick);
+  }
+  function wake() { if (!raf && visible) raf = requestAnimationFrame(tick); }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) { dirty = true; wake(); } }).observe(wrap);
+  }
+
+  setCut(true); setPupil(50); setFocus(0);
+  showPart(lab.current || "retina");
+  resize();
+  wake();
 })();
 </script>
 </body>
