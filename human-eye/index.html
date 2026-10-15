@@ -7,7 +7,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Mukta:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
 <style>
 /* Layout: optometrist's lightbox. A Snellen chart hero, then a two-column study desk:
    sticky contents rail on the left, sections read top to bottom on the right. */
@@ -35,7 +35,6 @@
   --f-display: "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif;
   --f-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
   --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-  --f-hindi: "Mukta", "Nirmala UI", "Mangal", sans-serif;
 
   --s1: 0.25rem; --s2: 0.5rem; --s3: 0.75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem; --s8: 4.5rem;
   --r-sm: 6px; --r-md: 10px;
@@ -77,7 +76,6 @@ h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.15; text-wrap: ba
 h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; }
 h3 { font-size: 1.2rem; font-weight: 700; font-stretch: 105%; }
 p { margin: 0; }
-.hi { font-family: var(--f-hindi); font-weight: 600; }
 .mono { font-family: var(--f-mono); }
 a { color: var(--iris); }
 button, input, select { font: inherit; color: inherit; }
@@ -140,7 +138,6 @@ button, input, select { font: inherit; color: inherit; }
 .lightbox-foot { margin-top: var(--s4); display: flex; justify-content: space-between; gap: var(--s3); font-size: 0.78rem; color: #5B6C75; border-top: 1px dashed #C5D2D7; padding-top: var(--s3); flex-wrap: wrap; }
 .hero-copy { display: grid; gap: var(--s5); min-width: 0; }
 .hero-copy h1 { font-size: clamp(2rem, 4.6vw, 3.3rem); font-weight: 800; font-stretch: 110%; letter-spacing: -0.02em; }
-.hero-copy .hi-title { font-family: var(--f-hindi); font-size: 1.25rem; color: var(--muted); font-weight: 600; }
 .hero-copy p.lede { font-size: 1.15rem; color: var(--muted); max-width: 52ch; }
 .hero-actions { display: flex; gap: var(--s3); flex-wrap: wrap; }
 .hero-actions .btn { padding: 0.7rem 1.1rem; font-size: 1rem; }
@@ -173,7 +170,6 @@ main { display: grid; gap: var(--s8); min-width: 0; }
 .sec { display: grid; gap: var(--s5); min-width: 0; scroll-margin-top: 4.5rem; }
 .sec-head { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s4); align-items: center; border-bottom: 2px solid var(--ink); padding-bottom: var(--s3); }
 .sec-num { font-family: var(--f-mono); font-weight: 600; font-size: 0.95rem; color: var(--iris); border: 1.5px solid var(--iris); border-radius: var(--r-sm); padding: 0.1rem 0.45rem; }
-.sec-head .hi { display: block; font-size: 1rem; color: var(--muted); margin-top: 0.2rem; font-weight: 400; }
 .revise { white-space: nowrap; }
 .revise[aria-pressed="true"] { background: var(--good-soft); border-color: var(--good); color: var(--good); font-weight: 700; }
 @media (max-width: 600px) { .sec-head { grid-template-columns: auto 1fr; } .revise { grid-column: 1 / -1; justify-self: start; } }
@@ -215,7 +211,6 @@ svg text { font-family: var(--f-body); }
 .chip[aria-pressed="true"] { background: var(--iris); border-color: var(--iris); color: var(--on-iris); font-weight: 700; }
 .part-info { display: grid; gap: var(--s3); }
 .part-info h3 { font-size: 1.5rem; }
-.part-info .hi { font-size: 1.1rem; color: var(--muted); }
 .part-info .tip { font-size: 0.95rem; }
 
 /* Simulator */
@@ -264,7 +259,6 @@ table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 0.9
 th, td { text-align: left; vertical-align: top; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--line); }
 thead th { font-family: var(--f-display); font-stretch: 105%; font-size: 0.9rem; background: var(--iris-soft); color: var(--ink); }
 tbody th { font-family: var(--f-display); font-stretch: 105%; }
-tbody th .hi { display: block; font-weight: 400; color: var(--muted); font-size: 0.9rem; }
 tbody tr:last-child > * { border-bottom: 0; }
 
 /* Calculator */
@@ -393,8 +387,7 @@ input[type="range"] { width: 100%; accent-color: #7FC4DA; }
 .gloss-tools { display: flex; gap: var(--s3); align-items: center; flex-wrap: wrap; }
 .gloss-tools input { flex: 1 1 240px; }
 .gloss-count { font-size: 0.88rem; color: var(--muted); }
-#glossTable { min-width: 560px; }
-#glossTable td.hi { font-size: 1.05rem; }
+#glossTable { min-width: 0; }
 
 footer { border-top: 1px solid var(--line); }
 footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; }
@@ -433,7 +426,6 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
   <div class="hero-copy">
     <div>
       <h1>The Human Eye and the Colourful World</h1>
-      <p class="hi-title">मानव नेत्र तथा रंगबिरंगा संसार</p>
     </div>
     <p class="lede">Everything RBSE Class 10 asks from this chapter, in one place. Click the eye diagram, break the eye in the simulator, solve lens numericals step by step, then test yourself.</p>
     <ul class="covers" aria-label="Topics covered">
@@ -470,7 +462,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="eye" data-sec="eye">
       <div class="sec-head">
         <span class="sec-num">10.1</span>
-        <h2>The human eye <span class="hi">मानव नेत्र</span></h2>
+        <h2>The human eye</h2>
         <button class="btn revise" type="button" data-revise="eye" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="prose">
@@ -534,10 +526,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
         </div>
         <div class="panel part-info" aria-live="polite">
           <div class="part-chips" id="partChips" aria-label="Eye parts"></div>
-          <div>
-            <h3 id="partName">Retina</h3>
-            <p class="hi" id="partHindi">दृष्टिपटल</p>
-          </div>
+          <h3 id="partName">Retina</h3>
           <p id="partText"></p>
           <p class="note tip" id="partTip"></p>
         </div>
@@ -546,7 +535,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
       <div class="cols">
         <div class="prose">
           <h3>Power of accommodation <span class="ask">Often asked</span></h3>
-          <p>The ability of the eye lens to adjust its focal length is called the <strong>power of accommodation</strong> (समंजन क्षमता). The ciliary muscles change the curvature of the lens.</p>
+          <p>The ability of the eye lens to adjust its focal length is called the <strong>power of accommodation</strong>. The ciliary muscles change the curvature of the lens.</p>
           <ul class="points">
             <li><strong>Distant object:</strong> ciliary muscles relax, lens becomes thin, focal length increases.</li>
             <li><strong>Near object:</strong> ciliary muscles contract, lens becomes thick, focal length decreases.</li>
@@ -579,7 +568,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="defects" data-sec="defects">
       <div class="sec-head">
         <span class="sec-num">10.2</span>
-        <h2>Defects of vision and their correction <span class="hi">दृष्टि दोष तथा उनका संशोधन</span></h2>
+        <h2>Defects of vision and their correction</h2>
         <button class="btn revise" type="button" data-revise="defects" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="prose">
@@ -629,28 +618,28 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Myopia (near-sightedness) <span class="hi">निकट दृष्टि दोष</span></th>
+              <th scope="row">Myopia (near-sightedness)</th>
               <td>Near objects only. Far point is less than infinity.</td>
               <td>In front of the retina</td>
               <td>1. Excessive curvature of the eye lens<br>2. Elongation of the eyeball</td>
               <td><strong>Concave lens</strong> (diverging) of suitable power</td>
             </tr>
             <tr>
-              <th scope="row">Hypermetropia (far-sightedness) <span class="hi">दीर्घ दृष्टि दोष</span></th>
+              <th scope="row">Hypermetropia (far-sightedness)</th>
               <td>Distant objects only. Near point is farther than 25 cm.</td>
               <td>Behind the retina</td>
               <td>1. Focal length of the eye lens too long<br>2. Eyeball has become too small</td>
               <td><strong>Convex lens</strong> (converging) of suitable power</td>
             </tr>
             <tr>
-              <th scope="row">Presbyopia <span class="hi">जरा-दूरदृष्टिता</span></th>
+              <th scope="row">Presbyopia</th>
               <td>Near point gradually moves away with age; reading becomes hard.</td>
               <td>Behind the retina (for near objects)</td>
               <td>Gradual weakening of ciliary muscles and reduced flexibility of the eye lens</td>
               <td><strong>Convex lens</strong>. With both defects: <strong>bifocal lens</strong> (upper part concave, lower part convex)</td>
             </tr>
             <tr>
-              <th scope="row">Cataract <span class="hi">मोतियाबिंद</span></th>
+              <th scope="row">Cataract</th>
               <td>Vision becomes cloudy, partly or fully lost</td>
               <td>Lens becomes milky and cloudy</td>
               <td>Common in old age</td>
@@ -701,7 +690,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="prism" data-sec="prism">
       <div class="sec-head">
         <span class="sec-num">10.3</span>
-        <h2>Refraction of light through a glass prism <span class="hi">काँच के प्रिज़्म से प्रकाश का अपवर्तन</span></h2>
+        <h2>Refraction of light through a glass prism</h2>
         <button class="btn revise" type="button" data-revise="prism" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="cols">
@@ -741,7 +730,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="dispersion" data-sec="dispersion">
       <div class="sec-head">
         <span class="sec-num">10.4</span>
-        <h2>Dispersion of white light <span class="hi">श्वेत प्रकाश का विक्षेपण</span></h2>
+        <h2>Dispersion of white light</h2>
         <button class="btn revise" type="button" data-revise="dispersion" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="prose">
@@ -764,7 +753,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
 
       <div class="cols">
         <div class="prose">
-          <h3>Rainbow <span class="hi">इंद्रधनुष</span> <span class="ask">Often asked</span></h3>
+          <h3>Rainbow <span class="ask">Often asked</span></h3>
           <p>A rainbow is a natural spectrum seen in the sky after a rain shower. Tiny water droplets in the air act like small prisms.</p>
           <ol class="points">
             <li>Sunlight enters a droplet and is <strong>refracted and dispersed</strong>.</li>
@@ -799,7 +788,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="atmos" data-sec="atmos">
       <div class="sec-head">
         <span class="sec-num">10.5</span>
-        <h2>Atmospheric refraction <span class="hi">वायुमंडलीय अपवर्तन</span></h2>
+        <h2>Atmospheric refraction</h2>
         <button class="btn revise" type="button" data-revise="atmos" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="prose">
@@ -838,12 +827,12 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="scatter" data-sec="scatter">
       <div class="sec-head">
         <span class="sec-num">10.6</span>
-        <h2>Scattering of light <span class="hi">प्रकाश का प्रकीर्णन</span></h2>
+        <h2>Scattering of light</h2>
         <button class="btn revise" type="button" data-revise="scatter" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="cols">
         <div class="prose">
-          <h3>Tyndall effect <span class="hi">टिंडल प्रभाव</span></h3>
+          <h3>Tyndall effect</h3>
           <p>When a beam of light passes through a colloid, its path becomes visible because the particles scatter the light. Examples: sunlight through the canopy of a dense forest, and a beam through a smoke-filled room.</p>
           <p>The colour of scattered light depends on particle size:</p>
           <ul class="points">
@@ -880,7 +869,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="reasons" data-sec="reasons">
       <div class="sec-head">
         <span class="sec-num">P1</span>
-        <h2>Give reasons <span class="hi">कारण बताइए</span></h2>
+        <h2>Give reasons</h2>
         <button class="btn revise" type="button" data-revise="reasons" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="toolbar">
@@ -895,7 +884,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="quiz" data-sec="quiz">
       <div class="sec-head">
         <span class="sec-num">P2</span>
-        <h2>MCQ quiz <span class="hi">बहुविकल्पीय प्रश्न</span></h2>
+        <h2>MCQ quiz</h2>
         <button class="btn revise" type="button" data-revise="quiz" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="panel quiz" id="quizBox" aria-live="polite"></div>
@@ -905,7 +894,7 @@ footer .in { max-width: 1240px; margin: 0 auto; padding-block: var(--s5); color:
     <section class="sec" id="questions" data-sec="questions">
       <div class="sec-head">
         <span class="sec-num">P3</span>
-        <h2>Important questions <span class="hi">महत्त्वपूर्ण प्रश्न</span></h2>
+        <h2>Important questions</h2>
         <button class="btn revise" type="button" data-revise="questions" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="toolbar">
@@ -1009,7 +998,7 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
     <section class="sec" id="formulas" data-sec="formulas">
       <div class="sec-head">
         <span class="sec-num">P4</span>
-        <h2>Formulas and glossary <span class="hi">सूत्र और शब्दावली</span></h2>
+        <h2>Formulas and glossary</h2>
         <button class="btn revise" type="button" data-revise="formulas" aria-pressed="false">Mark as revised</button>
       </div>
       <div class="formulas">
@@ -1022,12 +1011,12 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
       </div>
       <div class="gloss-tools">
         <label for="glossSearch" class="sr">Search glossary</label>
-        <input type="search" id="glossSearch" placeholder="Search a term in English or Hindi">
+        <input type="search" id="glossSearch" placeholder="Search a term, such as myopia or prism">
         <span class="gloss-count" id="glossCount"></span>
       </div>
       <div class="table-wrap">
         <table id="glossTable">
-          <thead><tr><th scope="col">English</th><th scope="col">हिंदी</th><th scope="col">Meaning</th></tr></thead>
+          <thead><tr><th scope="col">Term</th><th scope="col">Meaning</th></tr></thead>
           <tbody id="glossBody"></tbody>
         </table>
       </div>
@@ -1140,16 +1129,16 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
 
   /* ---------- 10.1 eye parts ---------- */
   var PARTS = {
-    cornea: { n: "Cornea", h: "स्वच्छ मंडल (कॉर्निया)", t: "A thin, transparent membrane that bulges out at the front of the eyeball. Light enters the eye through it, and most of the refraction of light happens at its outer surface.", tip: "Exam point: corneal blindness is cured by transplanting a donated cornea." },
-    iris: { n: "Iris", h: "परितारिका", t: "A dark muscular diaphragm behind the cornea. It controls the size of the pupil. Its pigment gives the eye its colour.", tip: "Do not confuse: the iris controls the pupil's size; the pupil controls how much light enters." },
-    pupil: { n: "Pupil", h: "पुतली", t: "The opening at the centre of the iris. It regulates and controls the amount of light entering the eye. It becomes small in bright light and wide in dim light.", tip: "Asked as: why can't we see clearly for a while after entering a dark room? The pupil takes time to widen." },
-    lens: { n: "Eye lens", h: "नेत्र लेंस (क्रिस्टलीय लेंस)", t: "A convex lens made of a transparent, fibrous, jelly-like material. It fine-adjusts the focal length so that a real and inverted image forms on the retina.", tip: "When it becomes milky and cloudy, the condition is called cataract." },
-    ciliary: { n: "Ciliary muscles", h: "पक्ष्माभी पेशियाँ", t: "Muscles that hold the eye lens and change its curvature. Relaxed: lens thin, focal length long (distant vision). Contracted: lens thick, focal length short (near vision).", tip: "Weakening of these muscles with age causes presbyopia." },
-    retina: { n: "Retina", h: "दृष्टिपटल (रेटिना)", t: "A delicate membrane at the back of the eye with a huge number of light-sensitive cells. Rods respond to brightness and cones respond to colour. They produce electrical signals when light falls on them.", tip: "The image on the retina is real and inverted. The brain turns it upright." },
-    nerve: { n: "Optic nerve", h: "दृक् तंत्रिका", t: "Carries the electrical signals from the retina to the brain, which interprets them as images.", tip: "The point where it leaves the retina has no light-sensitive cells: the blind spot." },
-    blind: { n: "Blind spot", h: "अंध बिंदु", t: "The point where the optic nerve joins the retina. It has no rods or cones, so no image is seen when light falls here.", tip: "A one-mark favourite: 'Which point of the retina has no light-sensitive cells?'" },
-    aqueous: { n: "Aqueous humour", h: "जलीय द्रव", t: "A clear, watery fluid filling the space between the cornea and the eye lens. It keeps the front of the eye in shape and nourishes the cornea.", tip: "Aqueous is in front of the lens; vitreous is behind it." },
-    vitreous: { n: "Vitreous humour", h: "काचाभ द्रव", t: "A transparent, jelly-like fluid filling the space between the eye lens and the retina. It keeps the eyeball in shape.", tip: "Remember: vitreous fills the large chamber behind the lens." }
+    cornea: { n: "Cornea", t: "A thin, transparent membrane that bulges out at the front of the eyeball. Light enters the eye through it, and most of the refraction of light happens at its outer surface.", tip: "Exam point: corneal blindness is cured by transplanting a donated cornea." },
+    iris: { n: "Iris", t: "A dark muscular diaphragm behind the cornea. It controls the size of the pupil. Its pigment gives the eye its colour.", tip: "Do not confuse: the iris controls the pupil's size; the pupil controls how much light enters." },
+    pupil: { n: "Pupil", t: "The opening at the centre of the iris. It regulates and controls the amount of light entering the eye. It becomes small in bright light and wide in dim light.", tip: "Asked as: why can't we see clearly for a while after entering a dark room? The pupil takes time to widen." },
+    lens: { n: "Eye lens", t: "A convex lens made of a transparent, fibrous, jelly-like material. It fine-adjusts the focal length so that a real and inverted image forms on the retina.", tip: "When it becomes milky and cloudy, the condition is called cataract." },
+    ciliary: { n: "Ciliary muscles", t: "Muscles that hold the eye lens and change its curvature. Relaxed: lens thin, focal length long (distant vision). Contracted: lens thick, focal length short (near vision).", tip: "Weakening of these muscles with age causes presbyopia." },
+    retina: { n: "Retina", t: "A delicate membrane at the back of the eye with a huge number of light-sensitive cells. Rods respond to brightness and cones respond to colour. They produce electrical signals when light falls on them.", tip: "The image on the retina is real and inverted. The brain turns it upright." },
+    nerve: { n: "Optic nerve", t: "Carries the electrical signals from the retina to the brain, which interprets them as images.", tip: "The point where it leaves the retina has no light-sensitive cells: the blind spot." },
+    blind: { n: "Blind spot", t: "The point where the optic nerve joins the retina. It has no rods or cones, so no image is seen when light falls here.", tip: "A one-mark favourite: 'Which point of the retina has no light-sensitive cells?'" },
+    aqueous: { n: "Aqueous humour", t: "A clear, watery fluid filling the space between the cornea and the eye lens. It keeps the front of the eye in shape and nourishes the cornea.", tip: "Aqueous is in front of the lens; vitreous is behind it." },
+    vitreous: { n: "Vitreous humour", t: "A transparent, jelly-like fluid filling the space between the eye lens and the retina. It keeps the eyeball in shape.", tip: "Remember: vitreous fills the large chamber behind the lens." }
   };
   var partOrder = ["cornea", "iris", "pupil", "lens", "ciliary", "aqueous", "vitreous", "retina", "blind", "nerve"];
   var chips = $("#partChips");
@@ -1161,7 +1150,7 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
   });
   function selectPart(k) {
     var p = PARTS[k]; if (!p) return;
-    $("#partName").textContent = p.n; $("#partHindi").textContent = p.h; $("#partText").textContent = p.t; $("#partTip").textContent = p.tip;
+    $("#partName").textContent = p.n; $("#partText").textContent = p.t; $("#partTip").textContent = p.tip;
     $$(".part").forEach(function (g) { g.classList.toggle("sel", g.getAttribute("data-part") === k); });
     $$("#partChips .chip").forEach(function (c) { c.setAttribute("aria-pressed", c.getAttribute("data-part") === k); });
   }
@@ -1585,44 +1574,44 @@ Near vision:    f = 1/P = 1/(+1.5) m = +0.667 m = +66.7 cm</p>
 
   /* ---------- P4 glossary ---------- */
   var GLOSS = [
-    ["Human eye", "मानव नेत्र", "Sense organ that lets us see using light."],
-    ["Cornea", "स्वच्छ मंडल / कॉर्निया", "Transparent front bulge where most refraction happens."],
-    ["Iris", "परितारिका", "Muscular diaphragm that controls pupil size."],
-    ["Pupil", "पुतली", "Opening that regulates the light entering the eye."],
-    ["Eye lens", "नेत्र लेंस", "Convex jelly-like lens that focuses the image."],
-    ["Ciliary muscles", "पक्ष्माभी पेशियाँ", "Change the curvature of the eye lens."],
-    ["Retina", "दृष्टिपटल", "Light-sensitive screen at the back of the eye."],
-    ["Optic nerve", "दृक् तंत्रिका", "Carries signals from the retina to the brain."],
-    ["Blind spot", "अंध बिंदु", "Point on the retina with no light-sensitive cells."],
-    ["Power of accommodation", "समंजन क्षमता", "Ability of the eye lens to change its focal length."],
-    ["Near point", "निकट बिंदु", "Closest point seen clearly; 25 cm for a normal eye."],
-    ["Far point", "दूर बिंदु", "Farthest point seen clearly; infinity for a normal eye."],
-    ["Myopia", "निकट दृष्टि दोष", "Cannot see distant objects clearly."],
-    ["Hypermetropia", "दीर्घ दृष्टि दोष", "Cannot see nearby objects clearly."],
-    ["Presbyopia", "जरा-दूरदृष्टिता", "Age-related loss of near vision."],
-    ["Cataract", "मोतियाबिंद", "Eye lens becomes milky and cloudy."],
-    ["Bifocal lens", "द्विफोकसी लेंस", "Lens with concave upper and convex lower part."],
-    ["Dioptre", "डायोप्टर", "Unit of power of a lens (1 D = 1 per metre)."],
-    ["Prism", "प्रिज़्म", "Transparent glass with two inclined refracting faces."],
-    ["Angle of deviation", "विचलन कोण", "Angle between incident ray extended and emergent ray."],
-    ["Dispersion", "विक्षेपण", "Splitting of white light into seven colours."],
-    ["Spectrum", "स्पेक्ट्रम", "Band of colours produced by dispersion."],
-    ["Rainbow", "इंद्रधनुष", "Natural spectrum formed by water droplets."],
-    ["Atmospheric refraction", "वायुमंडलीय अपवर्तन", "Bending of light by layers of air of varying density."],
-    ["Scattering", "प्रकीर्णन", "Light thrown in different directions by particles."],
-    ["Tyndall effect", "टिंडल प्रभाव", "Visible light beam due to scattering by colloidal particles."],
-    ["Persistence of vision", "दृष्टि निर्बंध", "Image stays on the retina for about 1/16 second."]
+    ["Human eye", "Sense organ that lets us see using light."],
+    ["Cornea", "Transparent front bulge where most refraction happens."],
+    ["Iris", "Muscular diaphragm that controls pupil size."],
+    ["Pupil", "Opening that regulates the light entering the eye."],
+    ["Eye lens", "Convex jelly-like lens that focuses the image."],
+    ["Ciliary muscles", "Change the curvature of the eye lens."],
+    ["Retina", "Light-sensitive screen at the back of the eye."],
+    ["Optic nerve", "Carries signals from the retina to the brain."],
+    ["Blind spot", "Point on the retina with no light-sensitive cells."],
+    ["Power of accommodation", "Ability of the eye lens to change its focal length."],
+    ["Near point", "Closest point seen clearly; 25 cm for a normal eye."],
+    ["Far point", "Farthest point seen clearly; infinity for a normal eye."],
+    ["Myopia", "Cannot see distant objects clearly."],
+    ["Hypermetropia", "Cannot see nearby objects clearly."],
+    ["Presbyopia", "Age-related loss of near vision."],
+    ["Cataract", "Eye lens becomes milky and cloudy."],
+    ["Bifocal lens", "Lens with concave upper and convex lower part."],
+    ["Dioptre", "Unit of power of a lens (1 D = 1 per metre)."],
+    ["Prism", "Transparent glass with two inclined refracting faces."],
+    ["Angle of deviation", "Angle between incident ray extended and emergent ray."],
+    ["Dispersion", "Splitting of white light into seven colours."],
+    ["Spectrum", "Band of colours produced by dispersion."],
+    ["Rainbow", "Natural spectrum formed by water droplets."],
+    ["Atmospheric refraction", "Bending of light by layers of air of varying density."],
+    ["Scattering", "Light thrown in different directions by particles."],
+    ["Tyndall effect", "Visible light beam due to scattering by colloidal particles."],
+    ["Persistence of vision", "Image stays on the retina for about 1/16 second."]
   ];
   var gb = $("#glossBody");
   GLOSS.forEach(function (g) {
     var tr = document.createElement("tr");
-    tr.innerHTML = '<td><strong></strong></td><td class="hi"></td><td></td>';
-    tr.children[0].firstChild.textContent = g[0]; tr.children[1].textContent = g[1]; tr.children[2].textContent = g[2];
-    tr.setAttribute("data-s", (g[0] + " " + g[1] + " " + g[2]).toLowerCase());
+    tr.innerHTML = '<td><strong></strong></td><td></td>';
+    tr.children[0].firstChild.textContent = g[0]; tr.children[1].textContent = g[1];
+    tr.setAttribute("data-s", (g[0] + " " + g[1]).toLowerCase());
     gb.appendChild(tr);
   });
   var emptyRow = document.createElement("tr"); emptyRow.hidden = true;
-  emptyRow.innerHTML = '<td colspan="3" style="color:var(--muted)">No term matches. Try a shorter word, such as "lens" or "दृष्टि".</td>';
+  emptyRow.innerHTML = '<td colspan="2" style="color:var(--muted)">No term matches. Try a shorter word, such as "lens" or "point".</td>';
   gb.appendChild(emptyRow);
   function filterGloss() {
     var q = $("#glossSearch").value.trim().toLowerCase(), n = 0;
