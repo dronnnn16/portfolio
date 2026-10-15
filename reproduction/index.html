@@ -11,34 +11,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Tiro+Devanagari+Hindi&display=swap">
 <style>
-/* Layout: a sticky slide-index rail on the left, one reading column on the right; the dark 3D specimen stage opens the page. */
+/* Layout: a sticky section rail on the left, one reading column on the right; a soft pink 3D stage opens the page. Pink and white in every theme. */
 :root{
-  --glass:#F3F1F7; --paper:#FFFFFF; --ink:#1F1B2E; --ink-soft:#5B5670; --rule:#DCD7E7;
-  --hema:#3B3791; --hema-soft:#E8E6F7; --on-hema:#FFFFFF;
-  --eosin:#C22F68; --eosin-soft:#FBE3EC;
-  --ok:#22704C; --ok-soft:#DDF1E6; --bad:#B3261E; --bad-soft:#FBE2DF;
-  --stage-hi:#262036; --stage-lo:#0C0A12; --stage-ink:#EDE9F7; --stage-soft:#A39DB9; --stage-line:#3A334F;
+  --glass:#FFF5F9; --paper:#FFFFFF; --ink:#3B1E2C; --ink-soft:#7D5A69; --rule:#F5D3E0;
+  --hema:#CC2D6F; --hema-soft:#FDE7F0; --on-hema:#FFFFFF;
+  --eosin:#C2185B; --eosin-soft:#FFEEF4; --deep:#8E2457;
+  --ok:#1F7A52; --ok-soft:#E1F5EA; --bad:#C62828; --bad-soft:#FDE4E4;
+  --stage-hi:#FFFFFF; --stage-lo:#FCE1EC; --stage-ink:#3B1E2C; --stage-soft:#8A6676; --stage-line:#F2C4D6;
   --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
   --f-hi:"Tiro Devanagari Hindi", "Noto Serif Devanagari", "Mangal", serif;
   --s-1:.8rem; --s0:1rem; --s1:1.25rem; --s2:1.563rem; --s3:1.953rem; --s4:2.441rem; --s5:3.052rem;
   --r-sm:6px; --r-md:12px; --r-lg:20px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --glass:#100E17; --paper:#1A1724; --ink:#ECE9F5; --ink-soft:#A8A2BD; --rule:#302B40;
-    --hema:#AAA6F6; --hema-soft:#25224A; --on-hema:#15122B;
-    --eosin:#F27DAA; --eosin-soft:#3A1A2A;
-    --ok:#72D4A2; --ok-soft:#13311F; --bad:#FF8E84; --bad-soft:#3A1715;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --glass:#100E17; --paper:#1A1724; --ink:#ECE9F5; --ink-soft:#A8A2BD; --rule:#302B40;
-  --hema:#AAA6F6; --hema-soft:#25224A; --on-hema:#15122B;
-  --eosin:#F27DAA; --eosin-soft:#3A1A2A;
-  --ok:#72D4A2; --ok-soft:#13311F; --bad:#FF8E84; --bad-soft:#3A1715;
-  color-scheme:dark;
+  color-scheme:light;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
@@ -60,7 +45,7 @@ mark{background:var(--eosin-soft);color:inherit;border-radius:3px;padding:0 2px}
 .topbar{max-width:1240px;margin:0 auto;padding-block:18px 10px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .brand-mark{width:40px;height:40px;flex:none}
-.brand b{font-family:var(--f-display);font-size:var(--s1);font-weight:800;display:block;line-height:1.1}
+.brand b{font-family:var(--f-display);font-size:var(--s2);font-weight:800;display:block;line-height:1.1;color:var(--hema);letter-spacing:-.01em}
 .brand small{color:var(--ink-soft);font-size:var(--s-1)}
 .tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .search{position:relative}
@@ -111,34 +96,34 @@ body.keys-only .topic{gap:8px}
 .hero .chapter{color:var(--hema);font-weight:700;font-size:var(--s0)}
 .hero h1{font-size:clamp(2.2rem,5.4vw,var(--s5));font-weight:800;letter-spacing:-.025em}
 .hero .lede{color:var(--ink-soft);font-size:var(--s1);line-height:1.45}
-.stage{background:radial-gradient(120% 90% at 50% 20%, var(--stage-hi), var(--stage-lo));color:var(--stage-ink);border-radius:var(--r-lg);overflow:hidden;display:grid;position:relative;box-shadow:0 30px 60px -30px rgba(20,10,40,.55)}
+.stage{background:radial-gradient(120% 90% at 50% 20%, var(--stage-hi), var(--stage-lo));color:var(--stage-ink);border-radius:var(--r-lg);overflow:hidden;display:grid;position:relative;box-shadow:0 30px 60px -34px rgba(204,45,111,.45);border:1px solid var(--stage-line)}
 .stage-top{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding:14px 16px 0}
-.seg{display:inline-flex;background:rgba(255,255,255,.07);border:1px solid var(--stage-line);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--paper);border:1px solid var(--stage-line);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:0;background:transparent;color:var(--stage-soft);padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:700;font-size:.93rem}
-.seg button[aria-selected="true"]{background:var(--stage-ink);color:var(--stage-lo)}
+.seg button[aria-selected="true"]{background:var(--hema);color:var(--on-hema)}
 .hint{font-size:.85rem;color:var(--stage-soft)}
 .canvas-wrap{position:relative;aspect-ratio:16/10;min-height:360px;max-height:640px;width:100%;touch-action:none;cursor:grab}
 .canvas-wrap:active{cursor:grabbing}
 .canvas-wrap canvas{display:block;width:100%;height:100%;outline:none}
 .labels{position:absolute;inset:0;pointer-events:none}
 .pin{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:7px;border:0;background:none;padding:0;cursor:pointer;color:var(--stage-ink);transition:opacity .25s;white-space:nowrap;will-change:transform}
-.pin .dot{width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(242,125,170,.55),0 0 14px rgba(242,125,170,.9);flex:none;margin-left:-6px}
-.pin .txt{background:rgba(12,10,18,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border:1px solid var(--stage-line);padding:3px 9px;border-radius:999px;font-size:.82rem;font-weight:700}
+.pin .dot{width:12px;height:12px;border-radius:50%;background:var(--hema);box-shadow:0 0 0 3px #fff,0 0 0 5px rgba(204,45,111,.3),0 2px 8px rgba(204,45,111,.5);flex:none;margin-left:-6px}
+.pin .txt{color:var(--stage-ink);background:rgba(255,255,255,.93);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);border:1px solid var(--stage-line);padding:3px 9px;border-radius:999px;font-size:.82rem;font-weight:700}
 .pin.flip{flex-direction:row-reverse}
 .pin.flip .dot{margin-left:0;margin-right:-6px}
 .pin.behind{opacity:.32}
-.pin.on .txt{background:#F27DAA;color:#1A0B13;border-color:#F27DAA}
+.pin.on .txt{background:var(--hema);color:var(--on-hema);border-color:var(--hema)}
 .labels.off .pin{opacity:0;pointer-events:none}
 .stage-fallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--stage-soft)}
 .loading{position:absolute;left:16px;bottom:14px;font-size:.85rem;color:var(--stage-soft)}
 .stage-tools{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 16px;align-items:center}
-.tbtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--stage-line);background:rgba(255,255,255,.06);color:var(--stage-ink);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:.9rem;font-weight:700}
+.tbtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--stage-line);background:var(--paper);color:var(--stage-ink);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:.9rem;font-weight:700}
 .tbtn svg{width:16px;height:16px}
-.tbtn:hover{background:rgba(255,255,255,.12)}
-.tbtn[aria-pressed="true"]{background:#F27DAA;color:#1A0B13;border-color:#F27DAA}
+.tbtn:hover{background:var(--hema-soft)}
+.tbtn[aria-pressed="true"]{background:var(--hema);color:var(--on-hema);border-color:var(--hema)}
 .unroll{display:flex;align-items:center;gap:10px;font-size:.9rem;color:var(--stage-soft)}
-.unroll input{accent-color:#F27DAA;width:160px}
-.trace-cap{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;max-width:calc(100% - 32px);background:rgba(12,10,18,.8);border:1px solid var(--stage-line);border-radius:12px;padding:8px 14px;font-size:.92rem;text-align:center;pointer-events:none}
+.unroll input{accent-color:var(--hema);width:160px}
+.trace-cap{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;max-width:calc(100% - 32px);background:rgba(255,255,255,.95);border:1px solid var(--stage-line);border-radius:12px;padding:8px 14px;font-size:.92rem;text-align:center;pointer-events:none}
 .organ-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px;align-items:start}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--rule);background:var(--paper);border-radius:999px;padding:6px 13px;cursor:pointer;font-size:.92rem}
@@ -188,7 +173,7 @@ body.keys-only .topic{gap:8px}
 /* tables */
 .tabs{display:flex;flex-wrap:wrap;gap:6px}
 .tabs button{border:1.5px solid var(--rule);background:var(--paper);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:.93rem}
-.tabs button[aria-selected="true"]{background:var(--ink);color:var(--glass);border-color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--hema);color:var(--on-hema);border-color:var(--hema)}
 .table-wrap{overflow-x:auto;background:var(--paper);border:1px solid var(--rule);border-radius:var(--r-md)}
 table{border-collapse:collapse;width:100%;min-width:520px;font-size:.97rem}
 th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
@@ -281,7 +266,7 @@ footer{max-width:1240px;margin:56px auto 0;color:var(--ink-soft);font-size:.9rem
 <header class="topbar">
   <div class="brand">
     <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="var(--hema)" stroke-width="2.5"/><circle cx="14" cy="17" r="6" fill="var(--eosin)" opacity=".85"/><circle cx="26" cy="23" r="6" fill="var(--hema)" opacity=".85"/><circle cx="14" cy="17" r="2" fill="var(--paper)"/><circle cx="26" cy="23" r="2" fill="var(--paper)"/></svg>
-    <div><b>Chapter 6 Reproduction</b><small>Class 10 Science, RBSE board revision</small></div>
+    <div><b>Shubham Academy</b><small>Chapter 6 Reproduction, Class 10 Science board revision</small></div>
   </div>
   <div class="tools">
     <label class="search" for="search">
@@ -707,7 +692,7 @@ footer{max-width:1240px;margin:56px auto 0;color:var(--ink-soft);font-size:.9rem
     </section>
   </main>
 </div>
-<footer>Based on the NCERT Class 10 Science syllabus followed by RBSE. Check your own textbook's chapter numbering and your teacher's guidance on what to learn.</footer>
+<footer>Prepared for Shubham Academy students. Based on the NCERT Class 10 Science syllabus followed by RBSE. Check your own textbook's chapter numbering and your teacher's guidance on what to learn.</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -804,13 +789,13 @@ function initThree(){
     const pm=new T.PMREMGenerator(renderer);
     scene.environment=pm.fromScene(new T.RoomEnvironment(),.04).texture;
   }
-  scene.add(new T.HemisphereLight(0xfff4ee,0x2a1e3a,.45));
+  scene.add(new T.HemisphereLight(0xfff4ee,0xf6d3e0,.45));
   const key=new T.DirectionalLight(0xfff0e4,1.35);key.position.set(4,7,6);key.castShadow=true;
   key.shadow.mapSize.set(1024,1024);key.shadow.camera.left=-4;key.shadow.camera.right=4;key.shadow.camera.top=4;key.shadow.camera.bottom=-4;key.shadow.radius=6;key.shadow.bias=-.0008;
   scene.add(key);
-  const rim=new T.DirectionalLight(0xb9a8ff,.9);rim.position.set(-5,3,-6);scene.add(rim);
+  const rim=new T.DirectionalLight(0xffb3cf,.8);rim.position.set(-5,3,-6);scene.add(rim);
   const fill=new T.DirectionalLight(0xffc6d6,.35);fill.position.set(-4,-2,5);scene.add(fill);
-  const ground=new T.Mesh(new T.CircleGeometry(4.2,64),new T.ShadowMaterial({opacity:.38}));
+  const ground=new T.Mesh(new T.CircleGeometry(4.2,64),new T.ShadowMaterial({opacity:.18}));
   ground.rotation.x=-Math.PI/2;ground.position.y=-2.7;ground.receiveShadow=true;scene.add(ground);
 
   /* procedural tissue textures */
@@ -1074,9 +1059,8 @@ const P={mode:0,t:0,playing:!reduceMotion,last:0};
 const cvs=$('#playerCanvas'),ctx=cvs.getContext('2d');
 let C={};
 function readColors(){const cs=getComputedStyle(document.documentElement);const g=k=>cs.getPropertyValue(k).trim();
-  C={ink:g('--ink'),soft:g('--ink-soft'),hema:g('--hema'),eosin:g('--eosin'),rule:g('--rule'),paper:g('--paper'),glass:g('--glass'),ok:g('--ok')};}
+  C={ink:g('--ink'),soft:g('--ink-soft'),hema:g('--deep'),eosin:g('--eosin'),rule:g('--rule'),paper:g('--paper'),glass:g('--glass'),ok:g('--ok')};}
 readColors();
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readColors();});
 new MutationObserver(readColors).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)), ease=t=>{t=clamp(t);return t*t*(3-2*t);}, seg=(t,a,b)=>ease((t-a)/(b-a)), lerp=(a,b,t)=>a+(b-a)*t;
 function blobPath(x,y,r,wob,ph,sx=1,sy=1,begin=true){if(begin)ctx.beginPath();for(let i=0;i<=72;i++){const a=i/72*Math.PI*2;const rr=r*(1+wob*(Math.sin(3*a+ph)*.6+Math.sin(5*a-ph*1.3)*.4));const px=x+Math.cos(a)*rr*sx,py=y+Math.sin(a)*rr*sy;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();}
