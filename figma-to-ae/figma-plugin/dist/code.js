@@ -6,13 +6,13 @@
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
   var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
   var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {}))
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
+    for (var prop2 in b || (b = {}))
+      if (__hasOwnProp.call(b, prop2))
+        __defNormalProp(a, prop2, b[prop2]);
     if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
+      for (var prop2 of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop2))
+          __defNormalProp(a, prop2, b[prop2]);
       }
     return a;
   };
@@ -25,6 +25,9 @@
   }
   function num(value, fallback = 0) {
     return typeof value === "number" && isFinite(value) ? value : fallback;
+  }
+  function prop(node, key) {
+    return key in node ? node[key] : void 0;
   }
   function round(value, digits = 4) {
     const f = Math.pow(10, digits);
@@ -93,6 +96,9 @@
       visible: effect.visible !== false,
       radius: num(effect.radius)
     };
+    if ((effect.type === "LAYER_BLUR" || effect.type === "BACKGROUND_BLUR") && "blurType" in effect && effect.blurType) {
+      rec.blurType = effect.blurType;
+    }
     if (effect.type === "DROP_SHADOW" || effect.type === "INNER_SHADOW") {
       rec.color = rgba(effect.color);
       rec.offset = { x: effect.offset.x, y: effect.offset.y };
@@ -208,7 +214,6 @@
       if (this.options.onProgress && this.nodeCount % 25 === 0) {
         this.options.onProgress(`Serialised ${this.nodeCount} nodes\u2026`);
       }
-      const n = node;
       let kind = kindOf(node);
       const notes = [];
       const rec = {
@@ -219,16 +224,16 @@
         visible: node.visible !== false,
         parentId,
         index,
-        x: num(n.x),
-        y: num(n.y),
-        width: num(n.width),
-        height: num(n.height),
-        rotation: num(n.rotation),
-        relativeTransform: copyMatrix(n.relativeTransform),
-        absoluteTransform: copyMatrix(n.absoluteTransform),
-        absoluteBoundingBox: n.absoluteBoundingBox ? __spreadValues({}, n.absoluteBoundingBox) : null,
-        opacity: num(n.opacity, 1),
-        blendMode: n.blendMode || "NORMAL",
+        x: num(prop(node, "x")),
+        y: num(prop(node, "y")),
+        width: num(prop(node, "width")),
+        height: num(prop(node, "height")),
+        rotation: num(prop(node, "rotation")),
+        relativeTransform: copyMatrix(prop(node, "relativeTransform")),
+        absoluteTransform: copyMatrix(prop(node, "absoluteTransform")),
+        absoluteBoundingBox: prop(node, "absoluteBoundingBox") ? __spreadValues({}, prop(node, "absoluteBoundingBox")) : null,
+        opacity: num(prop(node, "opacity"), 1),
+        blendMode: prop(node, "blendMode") || "NORMAL",
         isMask: "isMask" in node ? !!node.isMask : false,
         maskType: "maskType" in node ? String(node.maskType) : "ALPHA",
         fills: "fills" in node ? serializePaints(node.fills) : [],

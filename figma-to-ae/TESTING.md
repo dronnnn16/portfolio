@@ -2,8 +2,8 @@
 
 There are two layers of testing:
 
-1. **Automated tests** (`npm test`). They run the real plugin serializer and the real `.jsx` against mocks of the Figma and After Effects APIs. They pass in this repository.
-2. **Manual checklist.** Build the test frame below in the real Figma desktop app, export it and import it into real After Effects 2025, then tick each item off. This has **not** been done here, because neither app was available in the build environment.
+1. **Automated tests** (`npm test`). They run the real plugin serializer and the real `.jsx` against mocks of the Figma and After Effects APIs, plus an export captured from real Figma. All 46 pass in this repository.
+2. **Manual checklist.** Build the test frame below in the Figma desktop app, export it and import it into real After Effects 2025, then tick each item off. The Figma half has been run in real Figma (see below). The After Effects half has **not**, because AE wasn't available in the build environment.
 
 ## Automated tests
 
@@ -20,6 +20,20 @@ npm test          # typecheck + build + node ../tests/run-all.mjs
 | A1–A19 | Import of `sample/` in **null mode**: undo group, comp settings, exact layer order and names, parenting, 5 circles → 5 shape layers, world placement of every shape/null/image layer vs Figma, rotation = −Figma rotation, opacity, blend mode, inside/outside/centre strokes, roundness and per-corner paths, polystars, bezier paths and fill rule, gradient fallback + log, drop shadow/blur values, point text and box text with mixed styles, font fallback, image scale/rotation/shadow, track mattes, hidden layers, summary counts |
 | B1–B3 | Import in **precomp mode**: one precomp per group/frame with the right size and contents, world placement through nested precomps, clipping (`collapseTransformation`) and effects on precomp layers |
 | C1–C3 | Errors: folder without `scene.json`, log file only written when the preference allows it, missing PNG falls back to a shape layer |
+| R1–R4 | **Real Figma export** (`tests/fixtures/figma-real-export/`): the mock scene has the same tree as the real one. The real export imports in both modes with every layer on its Figma position. Figma-specific data is checked too: `Q` rewritten as `C`, a non-zero-winding ring, font style matching, the 240 × 180 PNG at 50% |
+
+### What ran in real Figma
+
+The test frame below was built in a real Figma design file and the plugin's serializer was run on it in Figma's plugin runtime. Results:
+
+- The first run **crashed**: Figma throws when you read a property a node type doesn't have (`opacity` on the slice). The serializer now guards every property read, and the mock Figma API throws the same way.
+- After the fix: 38 nodes were serialised. The image came out through the clean clone path (`baked: false`, 240 × 180 PNG), and the page was left unchanged.
+- Differences from the mock that the importer already handled:
+  - Figma rewrote the Wave's `Q` as `C` and moved the path so it starts at the box's top-left.
+  - The boolean ring uses `NONZERO` winding with opposite path directions, not `EVENODD`.
+  - Shapes default to `PASS_THROUGH` blend mode.
+  - A masked group's box is the mask's box.
+- Not exercised: the plugin UI itself, i.e. the Export button and the ZIP download in the desktop app.
 
 `tests/lib/figma-mock.mjs` builds the frame described below. `node tests/generate-sample.mjs` regenerates `sample/` from it.
 
@@ -63,13 +77,13 @@ Inter must be installed on the Windows machine with After Effects (Regular, Semi
 
 Export **Hero** with the plugin, unzip, import with the panel **twice**: once with the precomp checkbox off (null mode) and once with it on. Items marked ⚠ test AE scripting behaviour that the automated mocks assume but could not observe.
 
-**Export (Figma)**
+**Export (Figma)**: E3–E5 were confirmed in real Figma through the plugin API (see above). E1–E2 need the installed plugin.
 
 - [ ] E1 The plugin button is enabled only with exactly one frame selected; it shows "Ready: "Hero" (800 × 600)".
 - [ ] E2 Export downloads `Hero-figma-ae.zip` containing `scene.json` and `images/img_001_Photo.png`.
 - [ ] E3 `img_001_Photo.png` is 240 × 180 px, unrotated, with rounded corners and no stroke or shadow.
 - [ ] E4 No temporary copy of Photo is left on the page after the export.
-- [ ] E5 In `scene.json`, Ring has `"renderChildren": false` and an `EVENODD` path. Body has `"mixed": true` with 5 segments.
+- [ ] E5 In `scene.json`, Ring has `"renderChildren": false` and one path with two sub-paths (outer + hole; Figma writes `NONZERO` winding with opposite directions). Body has `"mixed": true` with 5 segments.
 
 **Import (After Effects, null mode)**
 
@@ -84,7 +98,7 @@ Export **Hero** with the plugin, unzip, import with the panel **twice**: once wi
 - [ ] I9 Center Line: open path, 3 px, round caps, rotation −20°.
 - [ ] I10 Rounded Rect roundness 16. Mixed Corners is a bezier path with only TL/BR rounded, and its stroke group has Offset Paths −1.
 - [ ] I11 Star: Polystar (Star, 5 points) fills 80 × 80. Triangle: Polystar (Polygon, 3 points) fills 60 × 60 like in Figma.
-- [ ] I12 Wave: one closed bezier path with the same curve, fill 80% opacity, 2 px stroke. Ring: two paths, Fill Rule *Even-Odd*, hole visible.
+- [ ] I12 Wave: one closed bezier path with the same curve, fill 80% opacity, 2 px stroke. Ring: two paths, Fill Rule *Non-Zero Winding*, hole visible.
 - [ ] I13 ⚠ Gradient Rect: a solid `#00C6FF` fill, plus a warning saying gradient colours can't be set by script. (If your AE build *does* accept gradient colours, you'll see a Gradient Fill instead and no warning.)
 - [ ] I14 ⚠ Background Card has a Drop Shadow with Opacity **15%**, Direction 180°, Distance 8, Softness 24. Photo's shadow points down-right like in Figma. Blurred Ellipse has Gaussian Blur 8.
 - [ ] I15 Title: editable point text, Inter Bold 32, centre-justified, `#111111`, horizontally centred on the Figma text. Its baseline is within ~2 px of Figma's.

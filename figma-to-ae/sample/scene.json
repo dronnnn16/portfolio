@@ -68,7 +68,7 @@
       "height": 600
     },
     "opacity": 1,
-    "blendMode": "NORMAL",
+    "blendMode": "PASS_THROUGH",
     "isMask": false,
     "maskType": "ALPHA",
     "fills": [
@@ -144,7 +144,7 @@
           "height": 520
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -302,7 +302,7 @@
               "height": 211.4883221288054
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -441,7 +441,7 @@
                       "height": 69.00181492265517
                     },
                     "opacity": 1,
-                    "blendMode": "NORMAL",
+                    "blendMode": "PASS_THROUGH",
                     "isMask": false,
                     "maskType": "ALPHA",
                     "fills": [
@@ -518,7 +518,7 @@
                       "height": 73.48469228349529
                     },
                     "opacity": 1,
-                    "blendMode": "NORMAL",
+                    "blendMode": "PASS_THROUGH",
                     "isMask": false,
                     "maskType": "ALPHA",
                     "fills": [
@@ -665,7 +665,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -742,7 +742,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -819,7 +819,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -896,7 +896,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -973,7 +973,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -1129,7 +1129,7 @@
           "height": 70
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1219,7 +1219,7 @@
           "height": 80
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1309,7 +1309,7 @@
           "height": 41.042417199080205
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [],
@@ -1386,7 +1386,7 @@
           "height": 70
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1463,7 +1463,7 @@
           "height": 70
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1553,7 +1553,7 @@
           "height": 80
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1635,7 +1635,7 @@
           "height": 60
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1717,7 +1717,7 @@
           "height": 60
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1813,7 +1813,7 @@
           "height": 80
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -1889,7 +1889,7 @@
               "height": 80
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -1966,7 +1966,7 @@
               "height": 40
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -2052,7 +2052,7 @@
           "height": 60
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -2171,7 +2171,7 @@
           "height": 60
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -2205,7 +2205,8 @@
           {
             "type": "LAYER_BLUR",
             "visible": true,
-            "radius": 8
+            "radius": 8,
+            "blurType": "NORMAL"
           }
         ],
         "children": []
@@ -2254,7 +2255,7 @@
           "height": 39
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -2394,7 +2395,7 @@
           "height": 48
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [],
@@ -2659,7 +2660,7 @@
           "height": 17
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -2799,7 +2800,7 @@
           "height": 105.82489830194925
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -2872,40 +2873,40 @@
         "visible": true,
         "parentId": "39:40",
         "index": 19,
-        "x": 690,
-        "y": 170,
-        "width": 70,
-        "height": 80,
+        "x": 700,
+        "y": 180,
+        "width": 60,
+        "height": 60,
         "rotation": 0,
         "relativeTransform": [
           [
             1,
             0,
-            690
+            700
           ],
           [
             0,
             1,
-            170
+            180
           ]
         ],
         "absoluteTransform": [
           [
             1,
             0,
-            1690
+            1700
           ],
           [
             0,
             1,
-            670
+            680
           ]
         ],
         "absoluteBoundingBox": {
-          "x": 1690,
-          "y": 670,
-          "width": 70,
-          "height": 80
+          "x": 1700,
+          "y": 680,
+          "width": 60,
+          "height": 60
         },
         "opacity": 1,
         "blendMode": "PASS_THROUGH",
@@ -2971,7 +2972,7 @@
               "height": 60
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": true,
             "maskType": "ALPHA",
             "fills": [
@@ -3048,7 +3049,7 @@
               "height": 80
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [
@@ -3127,7 +3128,7 @@
           "height": 20
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -3204,7 +3205,7 @@
           "height": 44
         },
         "opacity": 1,
-        "blendMode": "NORMAL",
+        "blendMode": "PASS_THROUGH",
         "isMask": false,
         "maskType": "ALPHA",
         "fills": [
@@ -3298,7 +3299,7 @@
               "height": 19
             },
             "opacity": 1,
-            "blendMode": "NORMAL",
+            "blendMode": "PASS_THROUGH",
             "isMask": false,
             "maskType": "ALPHA",
             "fills": [

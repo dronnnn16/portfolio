@@ -38,6 +38,19 @@ export function solid(h, opacity = 1) {
   return { type: 'SOLID', visible: true, opacity, blendMode: 'NORMAL', color: { r, g, b } };
 }
 
+// Like Figma, reading a property this node type doesn't have throws.
+const SAFE_KEYS = new Set(['then', 'toJSON', 'constructor', 'inspect']);
+function strict(target) {
+  return new Proxy(target, {
+    get(t, key, receiver) {
+      if (typeof key === 'string' && !key.startsWith('_') && !SAFE_KEYS.has(key) && !(key in t)) {
+        throw new TypeError(`node.${key}: no such property '${key}' on ${t.type} node`);
+      }
+      return Reflect.get(t, key, receiver);
+    },
+  });
+}
+
 class MockNode {
   constructor(type, props = {}, children = []) {
     this.id = props.id || `${nextId++}:${nextId}`;
@@ -51,11 +64,14 @@ class MockNode {
     this._rotation = props.rotation || 0;
     this._w = props.width || 0;
     this._h = props.height || 0;
-    this.opacity = props.opacity === undefined ? 1 : props.opacity;
-    this.blendMode = props.blendMode || (type === 'GROUP' ? 'PASS_THROUGH' : 'NORMAL');
-    this.isMask = !!props.isMask;
-    this.maskType = props.maskType || 'ALPHA';
-    this.effects = props.effects || [];
+    if (type !== 'SLICE') {
+      // Slices only have layout properties (no blend/opacity/effects/mask).
+      this.opacity = props.opacity === undefined ? 1 : props.opacity;
+      this.blendMode = props.blendMode || 'PASS_THROUGH'; // Figma's default, even on shapes
+      this.isMask = !!props.isMask;
+      this.maskType = props.maskType || 'ALPHA';
+      this.effects = props.effects || [];
+    }
     if (type !== 'GROUP' && type !== 'SLICE') {
       this.fills = props.fills || [];
       this.strokes = props.strokes || [];
@@ -83,6 +99,7 @@ class MockNode {
       this.children = [];
       for (const c of children) this.appendChild(c);
     }
+    return strict(this);
   }
 
   appendChild(child) {
@@ -104,9 +121,11 @@ class MockNode {
   }
 
   // Groups/boolean ops: box = bounds of children in the container's space.
+  // A group whose bottom child is a mask takes the mask's box (as Figma does).
   get _groupBox() {
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    for (const c of this.children) {
+    const kids = this.children.length && this.children[0].isMask ? [this.children[0]] : this.children;
+    for (const c of kids) {
       const M = c.relativeTransform;
       for (const [x, y] of [[0, 0], [c.width, 0], [c.width, c.height], [0, c.height]]) {
         const [px, py] = apply(M, x, y);
@@ -172,12 +191,13 @@ class MockNode {
     copy.id = `${nextId++}:clone`;
     copy.parent = null;
     copy.removed = false;
-    if (this.children) {
+    if ('children' in this) {
       copy.children = [];
       for (const c of this.children) copy.appendChild(c.clone());
     }
-    if (this.parent) this.parent.appendChild(copy);
-    return copy;
+    const proxied = strict(copy);
+    if (this.parent) this.parent.appendChild(proxied);
+    return proxied;
   }
 
   async exportAsync(settings) {
@@ -300,7 +320,7 @@ export function buildTestScene() {
         gradientStops: [{ position: 0, color: hex('#00C6FF') }, { position: 1, color: hex('#0072FF') }],
       }],
     }),
-    node('ELLIPSE', { name: 'Blurred Ellipse', x: 540, y: 420, width: 60, height: 60, fills: [solid('#30A46C')], effects: [{ type: 'LAYER_BLUR', visible: true, radius: 8 }] }),
+    node('ELLIPSE', { name: 'Blurred Ellipse', x: 540, y: 420, width: 60, height: 60, fills: [solid('#30A46C')], effects: [{ type: 'LAYER_BLUR', blurType: 'NORMAL', visible: true, radius: 8 }] }),
 
     // Text: single style (auto width) and mixed style (fixed width)
     node('TEXT', {

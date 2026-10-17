@@ -33,6 +33,7 @@ export interface PaintRecord {
 export interface EffectRecord {
   type: string; // DROP_SHADOW | INNER_SHADOW | LAYER_BLUR | BACKGROUND_BLUR | ...
   visible: boolean;
+  blurType?: string; // NORMAL | PROGRESSIVE (blurs only)
   radius: number;
   color?: RGBA;
   offset?: { x: number; y: number };

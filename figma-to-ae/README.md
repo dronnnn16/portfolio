@@ -87,19 +87,22 @@ You can also run it once without installing: **File → Scripts → Run Script F
 
 ## How it was tested
 
-`npm test` (in `figma-plugin/`) runs 42 automated checks:
+`npm test` (in `figma-plugin/`) runs 46 automated checks:
 
 - **Plugin:** the real serializer and ZIP writer run against a mock of the Figma plugin API that builds the reference test frame from [TESTING.md](TESTING.md). The mock follows Figma's transform rules: children of a group are positioned relative to the nearest frame, and the group's box comes from its children. The output is the committed [`sample/`](sample/). The ZIP is checked with `unzip -t`.
+- **Real Figma:** the test frame was built in a real Figma design file and the plugin's serializer was run inside Figma's plugin runtime. That run found a crash the mock had hidden: Figma throws when you read a property a node type lacks, e.g. `opacity` on a slice. It is fixed, and the mock now throws the same way. The real export is committed in [`tests/fixtures/figma-real-export/`](tests/fixtures/figma-real-export/) and imported by the tests in both modes. Every layer lands on its Figma position (worst error ~1e-13 px), and the mock scene is checked to have the same structure as the real one.
 - **AE script:** the real `FigmaToAE.jsx` runs against a strict mock of the AE scripting DOM. The mock rejects unknown match names, non-finite values and out-of-range values, and invalidates stale property references the way AE does. Parenting keeps world transforms, text documents are copies, and gradient colours can't be set. The tests import `sample/` in null mode and in precomp mode, then check every layer's world placement against Figma's `absoluteTransform`, plus the contents, effects, text and mattes. The script also has to parse as ECMAScript 3, contain only ASCII and run without any ES5+ built-ins.
 
-**Not verified in this repository:** a run inside the real Figma desktop app or the real After Effects 2025. Neither was available where this was built, so the mocks encode the documented APIs (and the AE behaviour listed above) rather than observed behaviour. Before relying on it, build the test frame in Figma and work through the [manual checklist in TESTING.md](TESTING.md#manual-checklist-real-figma--after-effects-2025). The AE assumptions most worth confirming there are marked ⚠ in the checklist.
+**Not verified in this repository:**
+- **Figma side:** the plugin's own UI, i.e. the **Export** button, the ZIP download and the save dialog in the desktop app. The serializer and the image export did run in real Figma, but through Figma's plugin API rather than as the installed plugin.
+- **After Effects side:** nothing has been run in real After Effects 2025. AE wasn't available, so the AE mock encodes the documented scripting API (and the behaviour listed above) rather than observed behaviour. Before relying on it, build the test frame in Figma and work through the [manual checklist in TESTING.md](TESTING.md#manual-checklist-real-figma--after-effects-2025). The AE assumptions most worth confirming there are marked ⚠ in the checklist.
 
 ## Known limitations
 
 **Paint and effects**
 - Gradient colours can't be set from ExtendScript, so gradient fills become a solid fill in the first stop's colour (logged). Angular/diamond gradients and gradient strokes get the same fallback.
 - Image fills are baked into a PNG with all of that node's fills (e.g. a solid fill under the image) and its crop/scale mode. Video and pattern fills are skipped (logged).
-- Inner shadow, background blur and drop-shadow spread are not supported (logged). Mapping blur radius → softness/blurriness 1:1 is an approximation.
+- Inner shadow, background blur and drop-shadow spread are not supported (logged). Progressive blurs become a uniform Gaussian Blur (logged). Mapping blur radius → softness/blurriness 1:1 is an approximation.
 - Paint blend modes and "show shadow behind node" are ignored.
 
 **Strokes and shapes**

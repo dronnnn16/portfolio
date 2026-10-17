@@ -237,7 +237,7 @@ await test('P8 effects: drop shadow and layer blur values', () => {
   assert.deepEqual(s.offset, { x: 0, y: 8 });
   assert.equal(s.radius, 24);
   assert.equal(s.color.a, 0.15);
-  assert.deepEqual(byName['Blurred Ellipse'].effects[0], { type: 'LAYER_BLUR', visible: true, radius: 8 });
+  assert.deepEqual(byName['Blurred Ellipse'].effects[0], { type: 'LAYER_BLUR', visible: true, radius: 8, blurType: 'NORMAL' });
 });
 
 await test('P9 text: single style and mixed segments', () => {
@@ -723,6 +723,58 @@ await test('C3 missing image file falls back to a shape layer with a warning', (
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
+});
+
+// ==================================================================================
+section('Real Figma export (tests/fixtures/figma-real-export, captured from Figma itself)');
+
+const realDir = join(here, 'fixtures', 'figma-real-export');
+const realScene = JSON.parse(readFileSync(join(realDir, 'scene.json'), 'utf8'));
+const realByName = indexScene(realScene.root);
+
+await test('R1 mock scene has the same tree as the real Figma export (names, types, kinds, order, masks)', () => {
+  const shape = (n) => ({ name: n.name, type: n.type, kind: n.kind, visible: n.visible, isMask: n.isMask, renderChildren: n.renderChildren, children: n.children.map(shape) });
+  assert.deepEqual(shape(scene.root), shape(realScene.root));
+});
+
+for (const precomps of [false, true]) {
+  await test(`R${precomps ? 3 : 2} real export imports in ${precomps ? 'precomp' : 'null'} mode with exact placement`, () => {
+    const run = runImport(realDir, { precomps });
+    assert.equal(run.result.ok, true, run.result.error);
+    assert.deepEqual(run.result.unsupported, ['Export Slice (SLICE)']);
+    assert.equal(run.result.warnings.length, 2, run.result.warnings.join('\n'));
+    const all = collectLayers(run.env.comps()[0]);
+    if (!precomps) assert.deepEqual(namesBottomUp(run.env.comps()[0]), namesBottomUp(rootComp));
+    let checked = 0;
+    for (const e of all) {
+      const node = realByName[e.layer.name.replace(/ \((background|stroke)\)$/, '')];
+      if (!node) continue;
+      const kind = { shape: 'shape', null: 'origin', precomp: 'origin', footage: 'footage' }[e.layer.kind];
+      if (!kind) continue;
+      assertPlacement(e, realScene, node, kind);
+      checked++;
+    }
+    assert.equal(checked, 34);
+  });
+}
+
+await test('R4 real-data specifics: Figma-normalised paths, non-zero ring, fonts, image', () => {
+  assert.doesNotMatch(realByName.Wave.vectorPaths[0].data, /Q/, 'Figma rewrites Q as C');
+  assert.equal(realByName.Ring.vectorPaths[0].windingRule, 'NONZERO');
+  const run = runImport(realDir, {});
+  const L2 = (name) => collectLayers(run.env.comps()[0]).find((e) => e.layer.name === name).layer;
+  const wave = find(contentsOf(shapeGroups(L2('Wave'))[1]), 'ADBE Vector Shape - Group').property('ADBE Vector Shape').value;
+  assert.equal(wave.closed, true);
+  assert.equal(wave.vertices.length, 5);
+  near(wave.vertices[0], [-100, 22.5 - 52.5 / 2], 1e-6, 'Wave start');
+  const ring = contentsOf(shapeGroups(L2('Ring'))[0]);
+  assert.equal(ring.filter((p) => p.matchName === 'ADBE Vector Shape - Group').length, 2);
+  assert.equal(find(ring, 'ADBE Vector Graphic - Fill').property('ADBE Vector Fill Rule').value, 1);
+  assert.equal(textDoc(L2('Label')).font, 'Inter-SemiBold');
+  assert.equal(textDoc(L2('Body')).ranges.find((r) => r.start === 18).props.font, 'Inter-Bold');
+  const photo = L2('Photo');
+  assert.deepEqual([photo.source.width, photo.source.height], [240, 180]);
+  near(photo.tp('ADBE Scale').value, [50, 50], 1e-4, 'scale (Figma matrices are float32)');
 });
 
 // ==================================================================================

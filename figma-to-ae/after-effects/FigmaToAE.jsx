@@ -684,6 +684,9 @@
                 }
                 this.stats.effects++;
             } else if (e.type === "LAYER_BLUR") {
+                if (e.blurType === "PROGRESSIVE") {
+                    this.warn(node, "progressive blur imported as a uniform Gaussian Blur");
+                }
                 var blur = layer.property("ADBE Effect Parade").addProperty("ADBE Gaussian Blur 2");
                 blur.property("ADBE Gaussian Blur 2-0001").setValue(e.radius / s);
                 this.stats.effects++;

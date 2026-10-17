@@ -36,6 +36,12 @@ function num(value: unknown, fallback = 0): number {
   return typeof value === 'number' && isFinite(value) ? value : fallback;
 }
 
+// Figma throws when reading a property the node type doesn't have (e.g. opacity
+// on a SLICE), so every mixin property is read through this guard.
+function prop<T = unknown>(node: BaseNode, key: string): T | undefined {
+  return key in node ? ((node as unknown as Record<string, unknown>)[key] as T) : undefined;
+}
+
 function round(value: number, digits = 4): number {
   const f = Math.pow(10, digits);
   return Math.round(value * f) / f;
@@ -118,6 +124,9 @@ export function serializeEffect(effect: Effect): EffectRecord {
     visible: effect.visible !== false,
     radius: num((effect as { radius?: number }).radius),
   };
+  if ((effect.type === 'LAYER_BLUR' || effect.type === 'BACKGROUND_BLUR') && 'blurType' in effect && effect.blurType) {
+    rec.blurType = effect.blurType;
+  }
   if (effect.type === 'DROP_SHADOW' || effect.type === 'INNER_SHADOW') {
     rec.color = rgba(effect.color);
     rec.offset = { x: effect.offset.x, y: effect.offset.y };
@@ -241,7 +250,6 @@ class Serializer {
     if (this.options.onProgress && this.nodeCount % 25 === 0) {
       this.options.onProgress(`Serialised ${this.nodeCount} nodes…`);
     }
-    const n = node as SceneNode & Partial<MinimalStrokesMixin & BlendMixin & LayoutMixin & CornerMixin & RectangleCornerMixin>;
     let kind = kindOf(node);
     const notes: string[] = [];
 
@@ -253,16 +261,16 @@ class Serializer {
       visible: node.visible !== false,
       parentId,
       index,
-      x: num(n.x),
-      y: num(n.y),
-      width: num(n.width),
-      height: num(n.height),
-      rotation: num(n.rotation),
-      relativeTransform: copyMatrix(n.relativeTransform),
-      absoluteTransform: copyMatrix(n.absoluteTransform),
-      absoluteBoundingBox: n.absoluteBoundingBox ? { ...n.absoluteBoundingBox } : null,
-      opacity: num(n.opacity, 1),
-      blendMode: n.blendMode || 'NORMAL',
+      x: num(prop(node, 'x')),
+      y: num(prop(node, 'y')),
+      width: num(prop(node, 'width')),
+      height: num(prop(node, 'height')),
+      rotation: num(prop(node, 'rotation')),
+      relativeTransform: copyMatrix(prop<Transform>(node, 'relativeTransform')),
+      absoluteTransform: copyMatrix(prop<Transform>(node, 'absoluteTransform')),
+      absoluteBoundingBox: prop<Rect | null>(node, 'absoluteBoundingBox') ? { ...prop<Rect>(node, 'absoluteBoundingBox')! } : null,
+      opacity: num(prop(node, 'opacity'), 1),
+      blendMode: prop<string>(node, 'blendMode') || 'NORMAL',
       isMask: 'isMask' in node ? !!node.isMask : false,
       maskType: 'maskType' in node ? String(node.maskType) : 'ALPHA',
       fills: 'fills' in node ? serializePaints(node.fills as ReadonlyArray<Paint> | PluginAPI['mixed']) : [],
