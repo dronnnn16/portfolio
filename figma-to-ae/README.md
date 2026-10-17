@@ -75,7 +75,7 @@ You can also run it once without installing: **File → Scripts → Run Script F
 | Every shape | Its **own** shape layer; 5 circles in Figma = 5 shape layers, never merged |
 | Solid fills and strokes | Fill / Stroke per paint, in Figma's stacking order, with colour and opacity. Inside/outside stroke is simulated: primitives are resized by the stroke width, paths get an **Offset Paths** operator |
 | Linear/radial gradient fill | Gradient Fill with type and start/end points. AE does not let scripts set gradient colours, so it is replaced by a solid fill in the first stop's colour and logged |
-| TEXT | Editable text layer: font looked up by family+style (`app.fonts`), size, colour, alignment, tracking = letterSpacing / fontSize × 1000 (or % × 10), leading from lineHeight. Fixed-width text → paragraph (box) text, auto-width → point text. Mixed styles → per-range styling with `TextDocument.characterRange` (AE 24.3+). Missing font → Arial + warning |
+| TEXT | Editable text layer: font looked up by family+style (`app.fonts`), size, colour, alignment, tracking = letterSpacing / fontSize × 1000 (or % × 10), rounded to a whole number because AE only accepts integers, leading from lineHeight. Fixed-width text → paragraph (box) text, auto-width → point text. Mixed styles → per-range styling with `TextDocument.characterRange` (AE 24.3+). Missing font → Arial + warning; bold/semibold/black styles fall back to Arial Bold and italics to Arial Italic, so mixed-style text keeps its emphasis |
 | IMAGE fill | Node exported as a clean PNG @2x (fills only, unrotated); imported as footage and placed at 50% scale with the node's rotation, opacity and effects. Its stroke becomes a separate `(stroke)` shape layer |
 | Transform | Computed from `absoluteTransform`, so group/frame nesting is exact. Anchor point = shape centre, rotation = −Figma rotation, opacity × 100, blend mode |
 | Drop shadow | Drop Shadow effect (colour, opacity, direction, distance, softness), corrected for the layer's rotation and scale |
@@ -116,7 +116,7 @@ You can also run it once without installing: **File → Scripts → Run Script F
 - The first-baseline position is estimated (Figma doesn't expose font metrics), so text can be a few pixels off vertically depending on the font. AE may also wrap paragraph text slightly differently; boxes get +2 px width and extra height to reduce that.
 - Underline/strikethrough, title case, paragraph spacing, per-character opacity, OpenType features, variable-font axes and text on a path are not supported (logged where detectable).
 - Mixed styles need AE 24.3+ (`characterRange`); older versions get the first style for all text (logged). Vertical alignment of fixed boxes needs `BoxVerticalAlignment` support, otherwise it is logged.
-- Font matching uses family + style name. Fonts whose style names differ from Figma's (beyond spaces/case) fall back to Arial (logged).
+- Font matching uses family + style name. Fonts whose style names differ from Figma's (beyond spaces/case) fall back to Arial, Arial Bold or Arial Italic depending on the style (logged). Figma ships Inter itself, so on Windows Inter is often not installed: install it from Google Fonts if text should match Figma.
 
 **Hierarchy**
 - Null mode: AE nulls don't pass opacity to children, so group opacity is multiplied into each child, which looks different where children overlap. Group blend modes, group effects and frame clipping are only reproduced in precomp mode (logged).

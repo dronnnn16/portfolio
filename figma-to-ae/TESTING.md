@@ -108,7 +108,7 @@ Export **Hero** with the plugin, unzip, import with the panel **twice**: once wi
 - [ ] I19 Photo: footage layer at Scale 50%, Rotation −8°, with rounded corners from the PNG. **Photo (stroke)** is a white 2 px outline around it.
 - [ ] I20 ⚠ Masked Rect uses Mask Circle as an alpha track matte; only the circle-shaped part is visible. Mask Circle is switched off.
 - [ ] I21 Hidden Rect exists but its eye is off.
-- [ ] I22 The summary shows layers created (38), 2 warnings (gradient, missing font) and 1 unsupported node (Export Slice (SLICE)). With the preference enabled, `figma-ae-import-log.txt` is written next to `scene.json`.
+- [ ] I22 The summary shows layers created (38), 2 warnings (gradient, missing font) and 1 unsupported node (Export Slice (SLICE)). Inter must be installed in Windows for this (Figma ships its own copy, so it is often missing): without it you get 3 extra font warnings, and Title, Label and the "bold" word fall back to Arial Bold. With the preference enabled, `figma-ae-import-log.txt` is written next to `scene.json`.
 
 **Import (precomp mode)**
 

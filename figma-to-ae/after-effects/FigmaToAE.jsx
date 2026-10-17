@@ -1218,12 +1218,30 @@
             ps = (family + "-" + style).replace(/\s+/g, "");
         }
         if (!ps) {
-            this.warn(node, "font \"" + family + " " + style + "\" is not installed; using Arial");
-            ps = "ArialMT";
+            // Keep the weight/slant so "bold" or italic text stays visibly different.
+            var fb = arialFallback(style);
+            this.warn(node, "font \"" + family + " " + style + "\" is not installed; using " + fb.label);
+            ps = fb.ps;
         }
         this.fontCache[key] = ps;
         return ps;
     };
+
+    function arialFallback(style) {
+        var s = String(style || "").toLowerCase();
+        var bold = /(semi|demi|extra|ultra)?\s*bold|black|heavy/.test(s);
+        var italic = /italic|oblique/.test(s);
+        if (bold && italic) {
+            return { ps: "Arial-BoldItalicMT", label: "Arial Bold Italic" };
+        }
+        if (bold) {
+            return { ps: "Arial-BoldMT", label: "Arial Bold" };
+        }
+        if (italic) {
+            return { ps: "Arial-ItalicMT", label: "Arial Italic" };
+        }
+        return { ps: "ArialMT", label: "Arial" };
+    }
 
     function pickFont(list) {
         if (!list || !list.length) {
@@ -1266,9 +1284,10 @@
             return 0;
         }
         if (ls.unit === "PERCENT") {
-            return ls.value * 10; // % of font size -> 1/1000 em
+            return Math.round(ls.value * 10); // % of font size -> 1/1000 em
         }
-        return ls.value / fontSize * 1000;
+        // AE only accepts whole numbers for tracking ("... is not an integer").
+        return Math.round(ls.value / fontSize * 1000);
     }
 
     function segmentColor(seg) {

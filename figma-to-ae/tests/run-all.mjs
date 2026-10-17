@@ -590,6 +590,23 @@ await test('A16 missing font falls back to Arial with a warning; tracking from p
   assert.ok(R.warnings.some((w) => w === '[Missing Font Text] font "Comic Neue Regular" is not installed; using Arial'));
 });
 
+await test('A16b without Inter installed, bold/semibold fall back to Arial Bold (bold stays bold)', () => {
+  // Reproduces a real Windows PC: Figma ships Inter itself, so it is often missing from the OS.
+  const { env, result } = runImport(sampleDir, { precomps: false, writeLog: false }, {
+    fonts: [{ familyName: 'Arial', styleName: 'Regular', postScriptName: 'ArialMT' }],
+  });
+  assert.equal(result.ok, true, result.error);
+  const all = collectLayers(env.comps()[0]);
+  const doc = (name) => textDoc(all.find((x) => x.layer.name === name).layer);
+  assert.equal(doc('Title').font, 'Arial-BoldMT', 'Inter Bold -> Arial Bold');
+  assert.equal(doc('Label').font, 'Arial-BoldMT', 'Inter Semi Bold -> Arial Bold');
+  const body = doc('Body');
+  assert.equal(body.font, 'ArialMT', 'Inter Regular -> Arial');
+  const bold = body.ranges.find((r) => r.start === 18 && r.end === 22);
+  assert.equal(bold.props.font, 'Arial-BoldMT', '"bold" segment stays bold');
+  assert.ok(result.warnings.includes('[Title] font "Inter Bold" is not installed; using Arial Bold'));
+});
+
 await test('A17 image: footage at 50% scale, rotated, with shadow; outer stroke as its own layer', () => {
   const e = L('Photo');
   assert.equal(e.layer.kind, 'footage');

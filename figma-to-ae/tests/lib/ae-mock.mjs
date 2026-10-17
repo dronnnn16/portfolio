@@ -317,6 +317,7 @@ export class TextDocument {
       {
         set(_, key, value) {
           if (!allowed.includes(key)) throw new Error(`CharacterRange has no property ${String(key)}`);
+          if (key === 'tracking' && !Number.isInteger(value)) throw new Error(`Unable to set "tracking". ${value} is not an integer.`);
           rec.props[key] = value;
           return true;
         },
@@ -339,7 +340,8 @@ class TextDocumentProperty extends Invalidatable {
     if (typeof doc.font !== 'string' || !doc.font) throw new Error('bad font');
     if (!(doc.fontSize > 0)) throw new Error('bad fontSize');
     checkNums('fillColor', doc.fillColor, 3);
-    if (!isFinite(doc.tracking)) throw new Error('bad tracking');
+    // Real AE throws: Unable to set "tracking". 99.9999982970102 is not an integer.
+    if (!Number.isInteger(doc.tracking)) throw new Error(`Unable to set "tracking". ${doc.tracking} is not an integer.`);
     this._doc = doc.clone();
   }
 }
