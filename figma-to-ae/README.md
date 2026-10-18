@@ -41,34 +41,42 @@ npm run build        # or: npm run watch
 ### After Effects script (Windows, AE 2025)
 
 1. Close After Effects.
-2. Copy `after-effects/FigmaToAE.jsx` into
-   `C:\Program Files\Adobe\Adobe After Effects 2025\Support Files\Scripts\ScriptUI Panels\`
-   (Explorer will ask for administrator permission).
+2. Double-click `install-after-effects.bat` (in the `figma-to-ae` folder) and click **Yes**. It copies `after-effects\FigmaToAE.jsx` into
+   `C:\Program Files\Adobe\Adobe After Effects 2025\Support Files\Scripts\ScriptUI Panels\`.
+   You can also copy the file there yourself; Explorer will ask for administrator permission.
 3. Start After Effects and enable **Edit → Preferences → Scripting & Expressions → Allow Scripts to Write Files and Access Network**.
-   The import itself only reads files; this setting is needed for the panel to write `figma-ae-import-log.txt` next to `scene.json`. Without it the import still runs and the summary tells you the log was skipped.
-4. Open the panel from the **Window** menu → **FigmaToAE.jsx** and dock it wherever you like.
+   The panel needs this to save the pasted data (scene + images) and the import log.
+4. Open the panel from the **Window** menu → **FigmaToAE.jsx** and dock it wherever you like. The bottom line shows the version (v1.1.1).
 
 You can also run it once without installing: **File → Scripts → Run Script File…** and pick `FigmaToAE.jsx` (it opens as a floating palette).
 
 ## Use
 
-No files to save or folders to pick: the plugin copies everything to the clipboard and the panel pastes it.
+Normal way: copy in Figma, paste in After Effects. You don't save or unzip any files.
 
-1. In Figma, select **one** frame (a component, instance, section or group also works) and click **Copy for After Effects** in the plugin.
-2. In After Effects, open the **FigmaToAE** panel, set the options if you like, and click **Paste from Figma**:
-   - **Groups/frames as precomps (instead of nulls)**: off makes every Figma group/frame a Null layer that its children are parented to. On makes every group/frame a precomp, which you need for group opacity, group effects, group blend modes and frame clipping (see limitations).
-   - **Write import log**.
-3. A new comp named after the frame (frame size, 30 fps, 10 s) opens. A summary lists the layers created, warnings and unsupported nodes. Everything is one undo step (**Edit → Undo Import Figma Export**).
+1. **Figma:** select **one** frame (a component, instance, section or group also works). Run the plugin and click **Copy for After Effects**.
+   It says, for example, "Copied 38 layers and 1 images (7 KB)".
+2. **After Effects:** in the **FigmaToAE** panel, **click the big text box**, press **Ctrl+V**, then click **Import pasted data**.
+3. A new comp named after the frame opens (frame size, 30 fps, 10 s), with a summary of the layers, warnings and unsupported nodes. The box empties itself. Everything is one undo step (**Edit → Undo Import Figma Export**).
 
-The panel keeps the pasted data, because image footage needs real files:
+Options in the panel:
+- **Groups/frames as precomps (instead of nulls)**: off makes every Figma group/frame a Null layer that its children are parented to. On makes every group/frame a precomp, which you need for group opacity, group effects, group blend modes and frame clipping (see limitations).
+- **Write import log**.
+
+Image layers need real files, so the panel saves what you paste here:
 - **Saved project:** `<project folder>\Figma Imports\<frame> <date-time>\`
 - **Unsaved project:** `Documents\FigmaToAE\<frame> <date-time>\`
 
-These folders hold `scene.json`, `images\` and the import log. Reading the clipboard uses PowerShell (`pbpaste` on macOS), which is why **Allow Scripts to Write Files and Access Network** must be on.
+These folders hold `scene.json`, `images\` and the import log. Saving them is why **Allow Scripts to Write Files and Access Network** must be on.
 
-**Backup route (ZIP):** click **or download a ZIP instead** in the plugin, unzip it, then use **Import from folder…** in the panel and pick the unzipped folder (the one containing `scene.json`).
+**Other buttons:**
+- **Paste from Figma**: tries to read the clipboard by itself, using PowerShell. On many PCs After Effects can't start PowerShell; then it tells you to use the box and puts the cursor in it.
+- **Load Figma ZIP...**: for very big frames (large photos). In the plugin click **or download a ZIP instead**, then pick that ZIP here. No unzipping needed; the dialog opens in Downloads.
+- **Import from folder...**: pick an already unzipped export folder (the one containing `scene.json`).
 
-If the plugin shows **Copy to clipboard** instead of "Copied", the export took longer than the browser allows for an automatic copy. Click that button once.
+**If the data is "cut off":** on some Windows PCs a text box only takes about 32,000 characters. The plugin compresses the data (the Hero test frame is about 7,000 characters), so normal frames fit. Frames with big photos may not fit; the panel then says the data is cut off, and you should use **Load Figma ZIP...** for that frame. The plugin also warns when an export is larger than about 30,000 characters.
+
+If the plugin shows a **Copy to clipboard** button instead of "Copied", the export took longer than the browser allows for an automatic copy. Click that button once.
 
 ## What gets converted
 
@@ -96,14 +104,15 @@ If the plugin shows **Copy to clipboard** instead of "Copied", the export took l
 
 ## How it was tested
 
-`npm test` (in `figma-plugin/`) runs 46 automated checks:
+`npm test` (in `figma-plugin/`) runs 58 automated checks:
 
 - **Plugin:** the real serializer and ZIP writer run against a mock of the Figma plugin API that builds the reference test frame from [TESTING.md](TESTING.md). The mock follows Figma's transform rules: children of a group are positioned relative to the nearest frame, and the group's box comes from its children. The output is the committed [`sample/`](sample/). The ZIP is checked with `unzip -t`.
 - **Real Figma:** the test frame was built in a real Figma design file and the plugin's serializer was run inside Figma's plugin runtime. That run found a crash the mock had hidden: Figma throws when you read a property a node type lacks, e.g. `opacity` on a slice. It is fixed, and the mock now throws the same way. The real export is committed in [`tests/fixtures/figma-real-export/`](tests/fixtures/figma-real-export/) and imported by the tests in both modes. Every layer lands on its Figma position (worst error ~1e-13 px), and the mock scene is checked to have the same structure as the real one.
 - **AE script:** the real `FigmaToAE.jsx` runs against a strict mock of the AE scripting DOM. The mock rejects unknown match names, non-finite values and out-of-range values, and invalidates stale property references the way AE does. Parenting keeps world transforms, text documents are copies, and gradient colours can't be set. The tests import `sample/` in null mode and in precomp mode, then check every layer's world placement against Figma's `absoluteTransform`, plus the contents, effects, text and mattes. The script also has to parse as ECMAScript 3, contain only ASCII and run without any ES5+ built-ins.
 
 **Not verified in this repository:**
-- **Clipboard transfer:** the copy step in the Figma plugin window and the PowerShell clipboard read on Windows. Both are tested only against mocks; the ZIP route is the fallback.
+- **Paste box:** tested against mocks only. Real Windows `edittext` behaviour has not been run here: how much text one paste holds, and how long a very large paste takes. Cut-off pastes are detected and point to **Load Figma ZIP...**.
+- **Paste from Figma (PowerShell):** confirmed **not** to work on at least one Windows 11 + AE 2025 PC, where AE's `system.callSystem` can't run external programs. It is now only an optional shortcut that falls back to the paste box.
 - **Figma side:** the plugin's own UI, i.e. the **Export** button, the ZIP download and the save dialog in the desktop app. The serializer and the image export did run in real Figma, but through Figma's plugin API rather than as the installed plugin.
 - **After Effects side:** nothing has been run in real After Effects 2025. AE wasn't available, so the AE mock encodes the documented scripting API (and the behaviour listed above) rather than observed behaviour. Before relying on it, build the test frame in Figma and work through the [manual checklist in TESTING.md](TESTING.md#manual-checklist-real-figma--after-effects-2025). The AE assumptions most worth confirming there are marked ⚠ in the checklist.
 

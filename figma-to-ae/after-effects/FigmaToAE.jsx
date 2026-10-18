@@ -13,7 +13,7 @@
  */
 #targetengine "FigmaToAE"
 (function (thisObj) {
-    var VERSION = "1.1.0";
+    var VERSION = "1.1.1";
     var COMP_FPS = 30;
     var COMP_DURATION = 10;
     var LOG_FILE_NAME = "figma-ae-import-log.txt";
@@ -1553,21 +1553,35 @@
         };
     }
 
-
     // ------------------------------------------------------------------
-    // Clipboard import: "Copy for After Effects" in the Figma plugin puts the whole
-    // export on the clipboard (see figma-plugin/src/clipboard.ts). We read it with
-    // PowerShell (pbpaste on macOS), write scene.json + PNGs to a folder next to the
-    // project (or Documents\FigmaToAE) and import that folder.
+    // Transfer from the Figma plugin without files.
+    //
+    // "Copy for After Effects" puts the whole export on the clipboard as one ASCII
+    // text block (figma-plugin/src/clipboard.ts):
+    //
+    //   FIGMA_TO_AE_CLIPBOARD 2          (1 = old plugin, scene not compressed)
+    //   NAME "Hero"
+    //   SCENEZ                           (v1: SCENE)
+    //   <base64 of the deflated scene.json>   (v1: the JSON itself)
+    //   IMAGE images/img_001_Photo.png
+    //   <base64 PNG>
+    //   END
+    //
+    // Main path: the user pastes it into the panel's text box (Ctrl+V). On some PCs
+    // AE cannot start external programs, so reading the clipboard with PowerShell
+    // ("Paste from Figma") is only a fast path. Big exports can come as the plugin's
+    // ZIP instead, which this panel reads directly (no unzipping).
     // ------------------------------------------------------------------
 
-    var CLIPBOARD_HEADER = "FIGMA_TO_AE_CLIPBOARD 1";
+    var CLIPBOARD_HEADER = "FIGMA_TO_AE_CLIPBOARD";
     var B64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    var B64_MAP = null;
 
     function isWindows() {
         return String($.os).indexOf("Windows") >= 0;
     }
 
+    // Fast path only: on PCs where AE may not start external programs this returns "".
     function readClipboard() {
         var tmp = new File(Folder.temp.fsName + "/figma-to-ae-clipboard.txt");
         if (tmp.exists) {
@@ -1580,7 +1594,11 @@
         } else {
             cmd = "pbpaste > '" + tmp.fsName.replace(/'/g, "'\\''") + "'";
         }
-        system.callSystem(cmd);
+        try {
+            system.callSystem(cmd);
+        } catch (e) {
+            return "";
+        }
         if (!tmp.exists) {
             return "";
         }
@@ -1592,60 +1610,333 @@
         return text;
     }
 
-    // Returns null when the clipboard holds something else; throws when it is a
-    // Figma export that got cut off.
+    function trimStr(s) {
+        return s.replace(/^\s+|\s+$/g, "");
+    }
+
+    // Parses the copied text. Tolerates CRLF/CR/LF, blank lines, surrounding spaces,
+    // text before the header (e.g. the box hint) and data lines broken by wrapping.
+    // Returns null when there is no Figma export in the text; throws when the export
+    // is there but cut off or damaged.
     function parseClipboard(text) {
-        if (!text || text.substr(0, CLIPBOARD_HEADER.length) !== CLIPBOARD_HEADER) {
+        text = String(text || "");
+        var at = text.indexOf(CLIPBOARD_HEADER);
+        if (at < 0) {
             return null;
         }
-        var lines = text.split(/\r?\n/);
-        var clip = { name: "Figma", scene: null, images: [], complete: false };
-        for (var k = 1; k < lines.length; k++) {
+        var raw = text.substring(at).split(/\r\n|\r|\n/);
+        var lines = [];
+        var k;
+        for (k = 0; k < raw.length; k++) {
+            var t = trimStr(raw[k]);
+            if (t !== "") {
+                lines.push(t);
+            }
+        }
+        var version = parseInt(trimStr(lines[0].substring(CLIPBOARD_HEADER.length)), 10);
+        if (version !== 1 && version !== 2) {
+            throw new Error("This Figma export needs a newer version of the After Effects panel (format " + lines[0] + ").");
+        }
+        function isKeyword(line) {
+            return line === "SCENE" || line === "SCENEZ" || line === "END" || line.indexOf("NAME ") === 0 || line.indexOf("IMAGE ") === 0;
+        }
+        // A data block is every line up to the next keyword, joined back together.
+        function block(start) {
+            var parts = [];
+            var j = start;
+            while (j < lines.length && !isKeyword(lines[j])) {
+                parts.push(lines[j]);
+                j++;
+            }
+            return { data: parts.join(""), next: j };
+        }
+        var clip = { version: version, name: "Figma", scene: null, sceneZ: null, images: [], complete: false, length: text.length };
+        k = 1;
+        while (k < lines.length) {
             var line = lines[k];
+            var b;
             if (line.indexOf("NAME ") === 0) {
-                clip.name = String(parseJSON(line.substring(5)));
-            } else if (line === "SCENE") {
-                clip.scene = lines[++k];
+                try {
+                    clip.name = String(parseJSON(line.substring(5)));
+                } catch (eName) {
+                    clip.name = line.substring(5);
+                }
+                k++;
+            } else if (line === "SCENE" || line === "SCENEZ") {
+                b = block(k + 1);
+                if (line === "SCENE") {
+                    clip.scene = b.data;
+                } else {
+                    clip.sceneZ = b.data;
+                }
+                k = b.next;
             } else if (line.indexOf("IMAGE ") === 0) {
-                clip.images.push({ path: line.substring(6), data: lines[++k] || "" });
+                b = block(k + 1);
+                clip.images.push({ path: trimStr(line.substring(6)), data: b.data });
+                k = b.next;
             } else if (line === "END") {
                 clip.complete = true;
                 break;
+            } else {
+                k++;
             }
         }
-        if (!clip.scene || !clip.complete) {
-            throw new Error("The Figma data on the clipboard is incomplete. Copy it again in Figma.");
+        if (!clip.complete || (clip.scene === null && clip.sceneZ === null)) {
+            var err = new Error("The Figma data is cut off (got " + text.length + " characters, but the end is missing).");
+            err.cutOff = true;
+            throw err;
+        }
+        if (clip.sceneZ !== null) {
+            clip.scene = bytesToString(inflateRaw(base64DecodeBytes(clip.sceneZ)));
+        }
+        if (clip.scene.charAt(0) !== "{") {
+            throw new Error("The Figma data is damaged (scene is not JSON). Copy it again in Figma.");
         }
         return clip;
     }
 
-    function base64Decode(s) {
-        var map = {};
-        var k;
-        for (k = 0; k < B64_CHARS.length; k++) {
-            map[B64_CHARS.charAt(k)] = k;
+    function base64Map() {
+        if (!B64_MAP) {
+            B64_MAP = {};
+            for (var k = 0; k < B64_CHARS.length; k++) {
+                B64_MAP[B64_CHARS.charAt(k)] = k;
+            }
         }
+        return B64_MAP;
+    }
+
+    // Base64 -> array of byte values. Ignores whitespace and padding.
+    function base64DecodeBytes(s) {
+        var map = base64Map();
         var out = [];
-        var chunk = [];
         var buf = 0, bits = 0, v;
-        for (k = 0; k < s.length; k++) {
+        for (var k = 0; k < s.length; k++) {
             v = map[s.charAt(k)];
             if (v === undefined) {
-                continue; // padding or whitespace
+                continue;
             }
             buf = ((buf << 6) | v) & 0xFFFFFF;
             bits += 6;
             if (bits >= 8) {
                 bits -= 8;
-                chunk.push(String.fromCharCode((buf >> bits) & 255));
-                if (chunk.length >= 8192) {
-                    out.push(chunk.join(""));
-                    chunk = [];
+                out.push((buf >> bits) & 255);
+            }
+        }
+        return out;
+    }
+
+    // Array of byte values -> "binary" string (one char per byte), for File BINARY writes.
+    function bytesToString(bytes) {
+        var parts = [];
+        for (var k = 0; k < bytes.length; k += 4096) {
+            parts.push(String.fromCharCode.apply(null, bytes.slice(k, k + 4096)));
+        }
+        return parts.join("");
+    }
+
+    function base64Decode(s) {
+        return bytesToString(base64DecodeBytes(s));
+    }
+
+    // Raw DEFLATE (RFC 1951) decoder, after zlib's "puff". Input and output are arrays
+    // of byte values. Used for the compressed scene and for deflated ZIP entries.
+    var INF_LBASE = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258];
+    var INF_LEXT = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0];
+    var INF_DBASE = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577];
+    var INF_DEXT = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13];
+    var INF_ORDER = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
+
+    function inflateRaw(src) {
+        var pos = 0, bitbuf = 0, bitcnt = 0;
+        var out = [];
+
+        function fail(msg) {
+            throw new Error("Compressed data is damaged (" + msg + ")");
+        }
+        function bits(need) {
+            var val = bitbuf;
+            while (bitcnt < need) {
+                if (pos >= src.length) {
+                    fail("unexpected end");
+                }
+                val |= src[pos++] << bitcnt;
+                bitcnt += 8;
+            }
+            bitbuf = val >> need;
+            bitcnt -= need;
+            return val & ((1 << need) - 1);
+        }
+        function construct(lengths, off, n) {
+            var h = { count: [], symbol: [] };
+            var offs = [];
+            var len, sym, left;
+            for (len = 0; len <= 15; len++) {
+                h.count[len] = 0;
+            }
+            for (sym = 0; sym < n; sym++) {
+                h.count[lengths[off + sym]]++;
+            }
+            if (h.count[0] === n) {
+                return h;
+            }
+            left = 1;
+            for (len = 1; len <= 15; len++) {
+                left <<= 1;
+                left -= h.count[len];
+                if (left < 0) {
+                    fail("over-subscribed code");
+                }
+            }
+            offs[1] = 0;
+            for (len = 1; len < 15; len++) {
+                offs[len + 1] = offs[len] + h.count[len];
+            }
+            for (sym = 0; sym < n; sym++) {
+                if (lengths[off + sym] !== 0) {
+                    h.symbol[offs[lengths[off + sym]]++] = sym;
+                }
+            }
+            return h;
+        }
+        function decode(h) {
+            var code = 0, first = 0, index = 0, count;
+            for (var len = 1; len <= 15; len++) {
+                code |= bits(1);
+                count = h.count[len];
+                if (code - count < first) {
+                    return h.symbol[index + (code - first)];
+                }
+                index += count;
+                first += count;
+                first <<= 1;
+                code <<= 1;
+            }
+            fail("bad code");
+        }
+        function codes(lencode, distcode) {
+            var sym, len, dist, start, k;
+            while (true) {
+                sym = decode(lencode);
+                if (sym < 256) {
+                    out.push(sym);
+                } else if (sym === 256) {
+                    return;
+                } else {
+                    sym -= 257;
+                    if (sym >= 29) {
+                        fail("bad length");
+                    }
+                    len = INF_LBASE[sym] + bits(INF_LEXT[sym]);
+                    sym = decode(distcode);
+                    if (sym >= 30) {
+                        fail("bad distance");
+                    }
+                    dist = INF_DBASE[sym] + bits(INF_DEXT[sym]);
+                    if (dist > out.length) {
+                        fail("distance too far");
+                    }
+                    start = out.length - dist;
+                    for (k = 0; k < len; k++) {
+                        out.push(out[start + k]);
+                    }
                 }
             }
         }
-        out.push(chunk.join(""));
-        return out.join("");
+        function stored() {
+            bitbuf = 0;
+            bitcnt = 0;
+            if (pos + 4 > src.length) {
+                fail("unexpected end");
+            }
+            var len = src[pos] | (src[pos + 1] << 8);
+            var nlen = src[pos + 2] | (src[pos + 3] << 8);
+            pos += 4;
+            if (len !== (~nlen & 0xFFFF)) {
+                fail("bad stored block");
+            }
+            if (pos + len > src.length) {
+                fail("unexpected end");
+            }
+            for (var k = 0; k < len; k++) {
+                out.push(src[pos++]);
+            }
+        }
+        var fixedLen = null, fixedDist = null;
+        function fixed() {
+            if (!fixedLen) {
+                var l = [];
+                var s;
+                for (s = 0; s < 144; s++) { l[s] = 8; }
+                for (; s < 256; s++) { l[s] = 9; }
+                for (; s < 280; s++) { l[s] = 7; }
+                for (; s < 288; s++) { l[s] = 8; }
+                fixedLen = construct(l, 0, 288);
+                var d = [];
+                for (s = 0; s < 30; s++) { d[s] = 5; }
+                fixedDist = construct(d, 0, 30);
+            }
+            codes(fixedLen, fixedDist);
+        }
+        function dynamic() {
+            var nlen = bits(5) + 257;
+            var ndist = bits(5) + 1;
+            var ncode = bits(4) + 4;
+            var lengths = [];
+            var index, sym, len;
+            if (nlen > 286 || ndist > 30) {
+                fail("bad counts");
+            }
+            for (index = 0; index < 19; index++) {
+                lengths[INF_ORDER[index]] = index < ncode ? bits(3) : 0;
+            }
+            var lencode = construct(lengths, 0, 19);
+            index = 0;
+            while (index < nlen + ndist) {
+                sym = decode(lencode);
+                if (sym < 16) {
+                    lengths[index++] = sym;
+                } else {
+                    len = 0;
+                    if (sym === 16) {
+                        if (index === 0) {
+                            fail("repeat with no first length");
+                        }
+                        len = lengths[index - 1];
+                        sym = 3 + bits(2);
+                    } else if (sym === 17) {
+                        sym = 3 + bits(3);
+                    } else {
+                        sym = 11 + bits(7);
+                    }
+                    if (index + sym > nlen + ndist) {
+                        fail("too many lengths");
+                    }
+                    while (sym--) {
+                        lengths[index++] = len;
+                    }
+                }
+            }
+            if (!lengths[256]) {
+                fail("no end-of-block code");
+            }
+            codes(construct(lengths, 0, nlen), construct(lengths, nlen, ndist));
+        }
+
+        var last, type;
+        do {
+            last = bits(1);
+            type = bits(2);
+            if (type === 0) {
+                stored();
+            } else if (type === 1) {
+                fixed();
+            } else if (type === 2) {
+                dynamic();
+            } else {
+                fail("bad block type");
+            }
+        } while (!last);
+        return out;
     }
 
     function writeFile(path, data, encoding) {
@@ -1686,83 +1977,298 @@
         return ensureFolder(folder);
     }
 
-    function importFromClipboard(options) {
-        options = options || {};
-        function fail(message) {
-            if (options.showSummary) {
-                alert(message, "Figma -> AE", true);
+    var SAFE_IMAGE_PATH = /^images\/[A-Za-z0-9_\-]+\.png$/;
+    var WRITE_PREF_MESSAGE = "Enable Edit > Preferences > Scripting & Expressions > \"Allow Scripts to Write Files and Access Network\", then try again.";
+    var NO_EXPORT_MESSAGE = "This doesn't contain a Figma export.\nIn Figma: select a frame, run the plugin and click \"Copy for After Effects\". Then click the box in this panel, press Ctrl+V and click \"Import pasted data\".";
+    var CUT_OFF_HELP = "\n\nThe paste box can only hold a limited amount of text on some PCs. For this frame, click \"or download a ZIP instead\" in the Figma plugin, then \"Load Figma ZIP...\" here.";
+
+    function failResult(options, message, extra) {
+        if (options.showSummary) {
+            alert(message, "Figma -> AE", true);
+        }
+        var r = { ok: false, error: message };
+        if (extra) {
+            for (var key in extra) {
+                if (extra.hasOwnProperty(key)) {
+                    r[key] = extra[key];
+                }
             }
-            return { ok: false, error: message };
         }
-        if (!canWriteFiles()) {
-            return fail("Enable Edit > Preferences > Scripting & Expressions > \"Allow Scripts to Write Files and Access Network\", then try again.");
-        }
-        var clip;
-        try {
-            clip = parseClipboard(readClipboard());
-        } catch (e) {
-            return fail(e.message || String(e));
-        }
-        if (!clip) {
-            return fail("No Figma export on the clipboard.\nIn Figma: select a frame, run the plugin and click \"Copy for After Effects\". Then click \"Paste from Figma\" here.");
-        }
+        return r;
+    }
+
+    // Writes scene.json + images (each { path, binary }) to a new folder and imports it.
+    function saveAndImport(name, sceneText, sceneEncoding, images, options) {
         var folder;
         try {
-            folder = clipboardTargetFolder(clip.name);
-            writeFile(folder.fsName + "/scene.json", clip.scene, "UTF-8");
-            if (clip.images.length) {
+            folder = clipboardTargetFolder(name);
+            writeFile(folder.fsName + "/scene.json", sceneText, sceneEncoding);
+            if (images.length) {
                 ensureFolder(new Folder(folder.fsName + "/images"));
             }
-            for (var k = 0; k < clip.images.length; k++) {
-                // Only plain file names inside images/ - never write anywhere else.
-                if (!/^images\/[A-Za-z0-9_\-]+\.png$/.test(clip.images[k].path)) {
-                    return fail("Unexpected image path on the clipboard: " + clip.images[k].path);
-                }
-                writeFile(folder.fsName + "/" + clip.images[k].path, base64Decode(clip.images[k].data), "BINARY");
+            for (var k = 0; k < images.length; k++) {
+                writeFile(folder.fsName + "/" + images[k].path, images[k].binary, "BINARY");
             }
-        } catch (e2) {
-            return fail("Could not save the Figma data: " + (e2.message || e2));
+        } catch (e) {
+            return failResult(options, "Could not save the Figma data: " + (e.message || e));
         }
         var result = importFolder(folder, options);
         result.folder = folder;
         return result;
     }
 
+    // Paste box: import the text the user pasted into the panel.
+    function importFromText(text, options) {
+        options = options || {};
+        if (!canWriteFiles()) {
+            return failResult(options, WRITE_PREF_MESSAGE);
+        }
+        var clip;
+        try {
+            clip = parseClipboard(text);
+        } catch (e) {
+            return failResult(options, (e.message || String(e)) + (e.cutOff ? CUT_OFF_HELP : ""), { cutOff: !!e.cutOff });
+        }
+        if (!clip) {
+            return failResult(options, NO_EXPORT_MESSAGE);
+        }
+        var images = [];
+        for (var k = 0; k < clip.images.length; k++) {
+            // Only plain file names inside images/ - never write anywhere else.
+            if (!SAFE_IMAGE_PATH.test(clip.images[k].path)) {
+                return failResult(options, "Unexpected image path in the Figma data: " + clip.images[k].path);
+            }
+            images.push({ path: clip.images[k].path, binary: base64Decode(clip.images[k].data) });
+        }
+        return saveAndImport(clip.name, clip.scene, "UTF-8", images, options);
+    }
+
+    // "Paste from Figma": try reading the clipboard directly; when this PC doesn't allow
+    // it, ask for the paste box instead of claiming the clipboard is empty.
+    function importFromClipboard(options) {
+        options = options || {};
+        if (!canWriteFiles()) {
+            return failResult(options, WRITE_PREF_MESSAGE);
+        }
+        var text = readClipboard();
+        if (!text) {
+            return failResult(options,
+                "After Effects can't read the clipboard on this PC.\nClick the box in this panel, press Ctrl+V, then click \"Import pasted data\".",
+                { needsPasteBox: true });
+        }
+        return importFromText(text, options);
+    }
+
+    // --- ZIP from the plugin's "download a ZIP instead", read directly (no unzipping) ---
+
+    function readBinaryFile(file) {
+        file.encoding = "BINARY";
+        if (!file.open("r")) {
+            throw new Error("Could not open " + file.fsName);
+        }
+        var data = file.read();
+        file.close();
+        return data;
+    }
+
+    function u16(s, p) {
+        return s.charCodeAt(p) | (s.charCodeAt(p + 1) << 8);
+    }
+
+    function u32(s, p) {
+        return u16(s, p) + u16(s, p + 2) * 65536;
+    }
+
+    function stringToBytes(s, start, end) {
+        var out = [];
+        for (var k = start; k < end; k++) {
+            out.push(s.charCodeAt(k) & 255);
+        }
+        return out;
+    }
+
+    // Returns [{ name, data (binary string) }] for every file in a ZIP (stored or deflated).
+    function readZipEntries(data) {
+        var eocd = -1;
+        for (var p = data.length - 22; p >= 0 && p >= data.length - 22 - 65535; p--) {
+            if (u32(data, p) === 0x06054b50) {
+                eocd = p;
+                break;
+            }
+        }
+        if (eocd < 0) {
+            throw new Error("This is not a ZIP file (or it is damaged).");
+        }
+        var count = u16(data, eocd + 10);
+        var cd = u32(data, eocd + 16);
+        var entries = [];
+        for (var k = 0; k < count; k++) {
+            if (u32(data, cd) !== 0x02014b50) {
+                throw new Error("The ZIP file is damaged.");
+            }
+            var method = u16(data, cd + 10);
+            var csize = u32(data, cd + 20);
+            var nameLen = u16(data, cd + 28);
+            var extraLen = u16(data, cd + 30);
+            var commentLen = u16(data, cd + 32);
+            var local = u32(data, cd + 42);
+            var name = data.substr(cd + 46, nameLen).replace(/\\/g, "/");
+            cd += 46 + nameLen + extraLen + commentLen;
+            if (name.charAt(name.length - 1) === "/") {
+                continue; // folder entry
+            }
+            var start = local + 30 + u16(data, local + 26) + u16(data, local + 28);
+            var body;
+            if (method === 0) {
+                body = data.substr(start, csize);
+            } else if (method === 8) {
+                body = bytesToString(inflateRaw(stringToBytes(data, start, start + csize)));
+            } else {
+                throw new Error("Unsupported compression in the ZIP (" + name + ").");
+            }
+            entries.push({ name: name, data: body });
+        }
+        return entries;
+    }
+
+    function importZipFile(file, options) {
+        options = options || {};
+        if (!canWriteFiles()) {
+            return failResult(options, WRITE_PREF_MESSAGE);
+        }
+        var scene = null;
+        var images = [];
+        try {
+            var entries = readZipEntries(readBinaryFile(file));
+            // Allow the files to sit inside one top folder (a re-zipped export folder).
+            var prefix = null;
+            var k;
+            for (k = 0; k < entries.length; k++) {
+                var m = /^(.*\/)?scene\.json$/.exec(entries[k].name);
+                if (m) {
+                    prefix = m[1] || "";
+                    scene = entries[k].data;
+                    break;
+                }
+            }
+            if (prefix === null) {
+                return failResult(options, "This ZIP has no scene.json. Use the ZIP made by the Figma plugin (\"or download a ZIP instead\").");
+            }
+            for (k = 0; k < entries.length; k++) {
+                var n = entries[k].name;
+                if (n.substr(0, prefix.length) === prefix && n.substr(prefix.length, 7) === "images/") {
+                    var rel = n.substr(prefix.length);
+                    if (!SAFE_IMAGE_PATH.test(rel)) {
+                        return failResult(options, "Unexpected file in the ZIP: " + n);
+                    }
+                    images.push({ path: rel, binary: entries[k].data });
+                }
+            }
+        } catch (e) {
+            return failResult(options, e.message || String(e));
+        }
+        // scene.json bytes are copied as they are (BINARY keeps its UTF-8 intact).
+        return saveAndImport(file.name.replace(/(-figma-ae)?\.zip$/i, ""), scene, "BINARY", images, options);
+    }
+
+    function downloadsFolder() {
+        var home = Folder.myDocuments.parent;
+        return home ? new Folder(home.fsName + "/Downloads") : null;
+    }
+
     // ------------------------------------------------------------------
     // ScriptUI panel
     // ------------------------------------------------------------------
+
+    var PASTE_HINT = "Click here, press Ctrl+V, then Import pasted data";
 
     function buildUI(host) {
         var win = (host instanceof Panel) ? host : new Window("palette", "Figma -> After Effects", undefined, { resizeable: true });
         win.orientation = "column";
         win.alignChildren = ["fill", "top"];
-        win.spacing = 8;
-        win.margins = 12;
+        win.spacing = 6;
+        win.margins = 10;
 
-        var pasteButton = win.add("button", undefined, "Paste from Figma");
-        var folderButton = win.add("button", undefined, "Import from folder...");
+        win.add("statictext", undefined, "1. Figma: Copy for After Effects   2. Paste below (Ctrl+V)   3. Import");
+        var box = win.add("edittext", undefined, PASTE_HINT, { multiline: true, scrolling: true, wantReturn: true });
+        box.preferredSize = [280, 90];
+        box.onActivate = function () {
+            if (box.text === PASTE_HINT) {
+                box.text = "";
+            }
+        };
+
+        var row1 = win.add("group");
+        row1.orientation = "row";
+        row1.alignChildren = ["fill", "center"];
+        var importButton = row1.add("button", undefined, "Import pasted data");
+        var pasteButton = row1.add("button", undefined, "Paste from Figma");
+
+        var row2 = win.add("group");
+        row2.orientation = "row";
+        row2.alignChildren = ["fill", "center"];
+        var zipButton = row2.add("button", undefined, "Load Figma ZIP...");
+        var folderButton = row2.add("button", undefined, "Import from folder...");
+
         var precompBox = win.add("checkbox", undefined, "Groups/frames as precomps (instead of nulls)");
         precompBox.value = false;
         var logBox = win.add("checkbox", undefined, "Write import log");
         logBox.value = true;
-        var status = win.add("statictext", undefined, "In Figma click \"Copy for After Effects\", then \"Paste from Figma\" here.", { multiline: true });
-        status.preferredSize = [260, 60];
+        var status = win.add("statictext", undefined, "Paste the Figma data into the box above.", { multiline: true });
+        status.preferredSize = [280, 44];
         win.add("statictext", undefined, "v" + VERSION);
 
+        function opts() {
+            return { precomps: precompBox.value, writeLog: logBox.value, showSummary: true };
+        }
         function report(result) {
             status.text = result.ok
                 ? "Imported " + result.stats.layers + " layers, " + result.warnings.length + " warnings."
-                : "Import failed: " + result.error;
+                : "Import failed: " + result.error.split("\n")[0];
+            return result;
         }
+
+        importButton.onClick = function () {
+            var text = box.text;
+            if (!text || text === PASTE_HINT) {
+                status.text = "The box is empty. In Figma click \"Copy for After Effects\", then click the box and press Ctrl+V.";
+                box.active = true;
+                return;
+            }
+            status.text = "Importing " + Math.round(text.length / 1024) + " KB of Figma data...";
+            if (report(importFromText(text, opts())).ok) {
+                box.text = "";
+            }
+        };
         pasteButton.onClick = function () {
-            report(importFromClipboard({ precomps: precompBox.value, writeLog: logBox.value, showSummary: true }));
+            var result = report(importFromClipboard(opts()));
+            if (result.needsPasteBox) {
+                status.text = "Click the box above, press Ctrl+V, then \"Import pasted data\".";
+                box.active = true;
+            }
+        };
+        zipButton.onClick = function () {
+            var file;
+            var dl = downloadsFolder();
+            var filter = isWindows() ? "Figma export ZIP:*.zip,All files:*.*" : function (f) {
+                return f instanceof Folder || /\.zip$/i.test(f.name);
+            };
+            if (dl && dl.exists) {
+                // openDlg on a File starts the dialog in that file's folder (Downloads).
+                file = new File(dl.fsName + "/figma-export.zip").openDlg("Select the ZIP from the Figma plugin", filter, false);
+            } else {
+                file = File.openDialog("Select the ZIP from the Figma plugin", filter, false);
+            }
+            if (file) {
+                report(importZipFile(file, opts()));
+            }
         };
         folderButton.onClick = function () {
             var folder = Folder.selectDialog("Select the unzipped Figma export folder (contains scene.json)");
             if (!folder) {
                 return;
             }
-            report(importFolder(folder, { precomps: precompBox.value, writeLog: logBox.value, showSummary: true }));
+            report(importFolder(folder, opts()));
         };
 
         win.onResizing = win.onResize = function () {
@@ -1780,9 +2286,12 @@
     var api = {
         version: VERSION,
         importFolder: importFolder,
+        importFromText: importFromText,
         importFromClipboard: importFromClipboard,
+        importZipFile: importZipFile,
         parseClipboard: parseClipboard,
         base64Decode: base64Decode,
+        inflateRaw: inflateRaw,
         parseJSON: parseJSON,
         parseSvgPath: parseSvgPath,
         roundedRectPath: roundedRectPath,

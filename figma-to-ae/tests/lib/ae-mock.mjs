@@ -527,7 +527,9 @@ export class FootageItem extends Item {
 // ---------------------------------------------------------------- environment
 // clipboard: text the simulated Windows clipboard holds (null = empty).
 // documentsDir/tempDir: real folders standing in for Folder.myDocuments / Folder.temp.
-export function createAEEnvironment({ prefsAllowWrite = true, fonts, clipboard = null, documentsDir, tempDir, projectFile = null } = {}) {
+// clipboardReadable: false simulates PCs where AE's system.callSystem can't run external
+// programs (PowerShell produces no output and no side effects).
+export function createAEEnvironment({ prefsAllowWrite = true, fonts, clipboard = null, clipboardReadable = true, documentsDir, tempDir, projectFile = null } = {}) {
   const docs = documentsDir || mkdtempSync(tmpdir() + '/ae-docs-');
   const temp = tempDir || mkdtempSync(tmpdir() + '/ae-temp-');
   const items = [];
@@ -564,7 +566,8 @@ export function createAEEnvironment({ prefsAllowWrite = true, fonts, clipboard =
       this._mode = mode;
       if (mode === 'r') {
         if (!this.exists) return false;
-        this._buf = readFileSync(this.fsName, 'utf8');
+        // BINARY reads give one char per byte, as in ExtendScript.
+        this._buf = readFileSync(this.fsName, this.encoding === 'BINARY' ? 'latin1' : 'utf8');
       } else {
         this._buf = '';
       }
@@ -624,6 +627,7 @@ export function createAEEnvironment({ prefsAllowWrite = true, fonts, clipboard =
       const m = /^powershell\.exe .*-Command "Get-Clipboard -Raw \| Set-Content -LiteralPath '((?:[^']|'')+)' -Encoding ASCII -NoNewline"$/.exec(cmd);
       if (!m) throw new Error('mock: unexpected command ' + cmd);
       if (!prefsAllowWrite) throw new Error('callSystem blocked: scripting file/network access is off');
+      if (!clipboardReadable) return ''; // the external process silently does nothing
       const text = state.clipboard == null ? '' : state.clipboard;
       if (/[^\x00-\x7f]/.test(text)) throw new Error('mock: non-ASCII clipboard would be mangled by -Encoding ASCII');
       writeFileSync(m[1].replace(/''/g, "'"), text, 'ascii');

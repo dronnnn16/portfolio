@@ -6,13 +6,14 @@
 // Usage (from figma-plugin/): npm test     or: node ../tests/run-all.mjs
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import zlib from 'node:zlib';
 import { createAEEnvironment, apply, inv, mul, CompItem } from './lib/ae-mock.mjs';
-import { pngSize } from './lib/png.mjs';
+import { encodePng, pngSize } from './lib/png.mjs';
 import { loadPluginModules, requirePlugin } from './lib/plugin-modules.mjs';
 import { exportTestScene, sampleDir } from './generate-sample.mjs';
 
@@ -803,80 +804,217 @@ await test('R4 real-data specifics: Figma-normalised paths, non-zero ring, fonts
 });
 
 // ==================================================================================
-section('Clipboard: "Copy for After Effects" (plugin) -> "Paste from Figma" (AE)');
+section('Paste box: "Copy for After Effects" (plugin) -> Ctrl+V into the panel -> "Import pasted data"');
 
-const { clipboard: clipMod } = await loadPluginModules();
-const clipText = clipMod.buildClipboardText(scene.frame.name, JSON.stringify(scene), exported.images);
+const { clipboard: clipMod, zip: zipMod } = await loadPluginModules();
+const clipText = await clipMod.buildClipboardText(scene.frame.name, JSON.stringify(scene), exported.images);
+const clipTextV1 = await clipMod.buildClipboardText(scene.frame.name, JSON.stringify(scene), exported.images, { compress: false });
+const plainScene = JSON.parse(JSON.stringify(scene));
 
-await test('K1 clipboard text is ASCII, one item per line, and round-trips through the AE parser', () => {
+function runTextImport(text, options = {}, envOptions = {}) {
+  const env = createAEEnvironment(envOptions);
+  const api = loadJsx(env);
+  const result = api.importFromText(text, options);
+  if (result.warnings) result.warnings = Array.from(result.warnings);
+  return { env, api, result };
+}
+
+await test('Z1 ES3 inflate matches zlib (stored, fixed and dynamic blocks, random data, empty)', () => {
+  const env = createAEEnvironment();
+  const api = loadJsx(env);
+  const inflate = (buf) => Buffer.from(Array.from(api.inflateRaw(Array.from(buf))));
+  const text = Buffer.from(readFileSync(join(sampleDir, 'scene.json')));
+  const random = Buffer.alloc(70000);
+  for (let i = 0; i < random.length; i++) random[i] = (i * 2654435761) >>> 24;
+  for (const [label, input] of [['scene', text], ['random', random], ['empty', Buffer.alloc(0)], ['repeat', Buffer.alloc(100000, 97)]]) {
+    for (const level of [0, 1, 6, 9]) {
+      assert.ok(inflate(zlib.deflateRawSync(input, { level })).equals(input), `${label} level ${level}`);
+    }
+  }
+  assert.ok(inflate(zlib.deflateRawSync(text, { strategy: zlib.constants.Z_FIXED })).equals(text), 'fixed Huffman');
+  assert.throws(() => api.inflateRaw(Array.from(zlib.deflateRawSync(text)).slice(0, 500)), /damaged/);
+});
+
+await test('PB1 plugin output: compressed format 2, ASCII, small enough for a paste box', () => {
   assert.equal(/[^\x00-\x7f]/.test(clipText), false);
   const lines = clipText.split('\n');
-  assert.equal(lines[0], 'FIGMA_TO_AE_CLIPBOARD 1');
+  assert.deepEqual([lines[0], lines[1], lines[2]], ['FIGMA_TO_AE_CLIPBOARD 2', 'NAME "Hero"', 'SCENEZ']);
   assert.equal(lines.at(-1), 'END');
+  assert.ok(clipText.length < clipMod.PASTE_BOX_SAFE_CHARS, `Hero payload ${clipText.length} chars`);
+  assert.ok(clipText.length < clipTextV1.length / 3, `compression: ${clipText.length} vs ${clipTextV1.length}`);
   const env = createAEEnvironment();
   const api = loadJsx(env);
   const clip = api.parseClipboard(clipText);
   assert.equal(clip.name, 'Hero');
-  assert.deepEqual(JSON.parse(clip.scene), JSON.parse(JSON.stringify(scene)));
-  assert.equal(clip.images.length, 1);
-  const bytes = Buffer.from(api.base64Decode(clip.images[0].data), 'latin1');
-  assert.deepEqual(new Uint8Array(bytes), exported.images[0].bytes);
-  // Windows line endings (PowerShell) work too.
-  assert.equal(api.parseClipboard(clipText.replace(/\n/g, '\r\n')).images.length, 1);
+  assert.deepEqual(JSON.parse(clip.scene), plainScene);
+  assert.deepEqual(new Uint8Array(Buffer.from(api.base64Decode(clip.images[0].data), 'latin1')), exported.images[0].bytes);
+  assert.deepEqual(JSON.parse(api.parseClipboard(clipTextV1).scene), plainScene, 'old format 1 still reads');
 });
 
-await test('K2 "Paste from Figma" imports straight from the clipboard - no file dialog, no ZIP', () => {
-  const run = runClipboardImport(clipText, { precomps: false, writeLog: true });
+await test('PB2 "Import pasted data" builds the comp from the box text - no PowerShell, no dialogs, box path files', () => {
+  const run = runTextImport(clipText, { precomps: false, writeLog: true });
   assert.equal(run.result.ok, true, run.result.error);
-  assert.equal(run.env.log.commands.length, 1);
-  assert.match(run.env.log.commands[0], /^powershell\.exe .*Get-Clipboard -Raw/);
-  assert.deepEqual(namesBottomUp(run.env.comps()[0]), namesBottomUp(rootComp));
-  // Files land in Documents\FigmaToAE\Hero <timestamp>\ when the project is unsaved.
+  assert.equal(run.env.log.commands.length, 0, 'no external process');
+  const comp = run.env.comps()[0];
+  assert.deepEqual([comp.name, comp.width, comp.height], ['Hero', 800, 600]);
+  assert.deepEqual(namesBottomUp(comp), namesBottomUp(rootComp));
+  assert.equal(run.result.stats.layers, 38);
+  assert.equal(run.result.warnings.length, 2);
   const folder = run.result.folder.fsName;
   assert.match(folder, /\/FigmaToAE\/Hero \d{8}-\d{6}$/);
-  assert.ok(folder.startsWith(run.env.docs));
   assert.deepEqual(new Uint8Array(readFileSync(join(folder, 'images', 'img_001_Photo.png'))), exported.images[0].bytes);
-  assert.ok(existsSync(join(folder, 'figma-ae-import-log.txt')));
-  const photo = collectLayers(run.env.comps()[0]).find((e) => e.layer.name === 'Photo').layer;
-  assert.deepEqual([photo.source.width, photo.source.height], [240, 180]);
+  assert.deepEqual(JSON.parse(readFileSync(join(folder, 'scene.json'), 'utf8')), plainScene);
 });
 
-await test('K3 saved project: files go next to it in "Figma Imports"; non-ASCII frame names survive', () => {
-  const proj = mkdtempSync(join(tmpdir(), 'figma-ae-proj-'));
-  try {
-    const env0 = createAEEnvironment();
-    const projectFile = new env0.globals.File(join(proj, 'trading.aep'));
-    const text = clipMod.buildClipboardText('Héro "v2" → final', JSON.stringify(scene), exported.images);
-    const run = runClipboardImport(text, {}, { projectFile });
-    assert.equal(run.result.ok, true, run.result.error);
-    assert.match(run.result.folder.fsName, /\/Figma Imports\/H_ro _v2_ _ final \d{8}-\d{6}$/);
-    assert.ok(run.result.folder.fsName.startsWith(proj));
-    assert.equal(run.api.parseClipboard(text).name, 'Héro "v2" → final');
-  } finally {
-    rmSync(proj, { recursive: true, force: true });
+await test('PB3 paste survives CRLF, CR, extra spaces/blank lines, the box hint and wrapped data lines', () => {
+  const wrap = (t) => t.split('\n').map((l) => (l.length > 76 && !/^(NAME|IMAGE) /.test(l) ? l.match(/.{1,76}/g).join('\n') : l)).join('\n');
+  const variants = {
+    crlf: clipText.replace(/\n/g, '\r\n'),
+    cr: clipText.replace(/\n/g, '\r'),
+    padded: '\n\n   ' + clipText.split('\n').map((l) => '  ' + l + ' \t').join('\n\n') + '\r\n\r\n  ',
+    hint: 'Click here, press Ctrl+V, then Import pasted data' + clipText,
+    wrapped: wrap(clipText),
+    wrappedV1crlf: wrap(clipTextV1).replace(/\n/g, '\r\n'),
+  };
+  for (const [label, text] of Object.entries(variants)) {
+    const run = runTextImport(text);
+    assert.equal(run.result.ok, true, `${label}: ${run.result.error}`);
+    assert.equal(run.result.stats.layers, 38, label);
+    assert.deepEqual(new Uint8Array(readFileSync(join(run.result.folder.fsName, 'images', 'img_001_Photo.png'))), exported.images[0].bytes, label);
   }
 });
 
-await test('K4 friendly errors: empty/other clipboard, cut-off data, preference off, unsafe image path', () => {
-  let run = runClipboardImport('just some copied text', { showSummary: true });
-  assert.equal(run.result.ok, false);
-  assert.match(run.result.error, /No Figma export on the clipboard/);
-  assert.match(run.env.log.alerts[0], /Copy for After Effects/);
-  assert.equal(run.env.comps().length, 0);
+await test('PB4 big paste: 400x300 noise photo (~550 KB of text) imports intact', async () => {
+  let seed = 2463534242;
+  const next = () => {
+    seed ^= seed << 13; seed >>>= 0;
+    seed ^= seed >>> 17;
+    seed ^= seed << 5; seed >>>= 0;
+    return seed;
+  };
+  const noise = encodePng(400, 300, () => { const r = next(); return [r >>> 24, (r >>> 16) & 255, (r >>> 8) & 255, 255]; });
+  const images = [{ path: 'images/img_001_Photo.png', bytes: noise }];
+  const big = await clipMod.buildClipboardText('Hero', JSON.stringify(scene), images);
+  assert.ok(big.length > 500000, `payload ${big.length}`);
+  const t0 = Date.now();
+  const run = runTextImport(big.replace(/\n/g, '\r\n'));
+  assert.equal(run.result.ok, true, run.result.error);
+  assert.deepEqual(new Uint8Array(readFileSync(join(run.result.folder.fsName, 'images', 'img_001_Photo.png'))), noise);
+  const photo = collectLayers(run.env.comps()[0]).find((e) => e.layer.name === 'Photo').layer;
+  assert.deepEqual([photo.source.width, photo.source.height], [400, 300]);
+  assert.ok(Date.now() - t0 < 20000, 'too slow');
+});
 
-  run = runClipboardImport(null);
-  assert.match(run.result.error, /No Figma export on the clipboard/);
+await test('PB5 cut-off paste (e.g. a 32,767-char box limit) is reported clearly and imports nothing', async () => {
+  const big = await clipMod.buildClipboardText('Hero', JSON.stringify(scene), [{ path: 'images/img_001_Photo.png', bytes: encodePng(300, 200, (x, y) => [x & 255, y & 255, (x * y) & 255, 255]) }]);
+  for (const cut of [32767, 120, big.indexOf('IMAGE') + 40]) {
+    const run = runTextImport(big.slice(0, cut), { showSummary: true });
+    assert.equal(run.result.ok, false, `cut at ${cut}`);
+    assert.equal(run.result.cutOff, true, `cut at ${cut}: ${run.result.error}`);
+    assert.match(run.result.error, new RegExp(`cut off \\(got ${cut} characters`));
+    assert.match(run.result.error, /Load Figma ZIP/);
+    assert.match(run.env.log.alerts[0], /cut off/);
+    assert.equal(run.env.comps().length, 0);
+  }
+  // Damaged compressed scene (END present) is an error, not a crash.
+  const lines = clipText.split('\n');
+  lines[3] = lines[3].slice(0, 200);
+  assert.match(runTextImport(lines.join('\n')).result.error, /damaged/);
+});
 
-  run = runClipboardImport(clipText.slice(0, 5000));
-  assert.match(run.result.error, /incomplete/);
-
-  run = runClipboardImport(clipText, {}, { prefsAllowWrite: false });
-  assert.match(run.result.error, /Allow Scripts to Write Files/);
-  assert.equal(run.env.log.commands.length, 0);
-
-  run = runClipboardImport(clipText.replace('IMAGE images/img_001_Photo.png', 'IMAGE ../../evil.png'));
+await test('PB6 other text in the box, empty box, unsafe image path, preference off', () => {
+  let run = runTextImport('hello world', { showSummary: true });
+  assert.match(run.result.error, /doesn't contain a Figma export/);
+  assert.match(run.env.log.alerts[0], /Ctrl\+V/);
+  run = runTextImport('');
+  assert.match(run.result.error, /doesn't contain a Figma export/);
+  run = runTextImport(clipText.replace('IMAGE images/img_001_Photo.png', 'IMAGE ../../evil.png'));
   assert.match(run.result.error, /Unexpected image path/);
   assert.equal(run.env.comps().length, 0);
+  run = runTextImport(clipText, {}, { prefsAllowWrite: false });
+  assert.match(run.result.error, /Allow Scripts to Write Files/);
+  assert.match(runTextImport(clipText.replace('FIGMA_TO_AE_CLIPBOARD 2', 'FIGMA_TO_AE_CLIPBOARD 9')).result.error, /newer version/);
+});
+
+await test('PB7 "Paste from Figma": works where PowerShell works; on a PC like yours it points to the box', () => {
+  let run = runClipboardImport(clipText, {});
+  assert.equal(run.result.ok, true, run.result.error);
+  assert.match(run.env.log.commands[0], /^powershell\.exe .*Get-Clipboard -Raw/);
+  // callSystem runs but PowerShell does nothing (the reported AE behaviour).
+  run = runClipboardImport(clipText, { showSummary: true }, { clipboardReadable: false });
+  assert.equal(run.result.ok, false);
+  assert.equal(run.result.needsPasteBox, true);
+  assert.doesNotMatch(run.result.error, /No Figma export/);
+  assert.match(run.result.error, /can't read the clipboard on this PC[\s\S]*Ctrl\+V[\s\S]*Import pasted data/);
+  assert.equal(run.env.comps().length, 0);
+  // A readable clipboard with other content still says so.
+  run = runClipboardImport('some other text');
+  assert.match(run.result.error, /doesn't contain a Figma export/);
+});
+
+await test('ZIP1 "Load Figma ZIP..." reads the plugin ZIP directly (no unzipping)', () => {
+  const env = createAEEnvironment();
+  const api = loadJsx(env);
+  const result = api.importZipFile(new env.globals.File(join(sampleDir, 'figma-ae-sample.zip')), {});
+  assert.equal(result.ok, true, result.error);
+  assert.equal(result.stats.layers, 38);
+  assert.match(result.folder.fsName, /\/FigmaToAE\/figma-ae-sample \d{8}-\d{6}$/);
+  assert.deepEqual(new Uint8Array(readFileSync(join(result.folder.fsName, 'images', 'img_001_Photo.png'))), exported.images[0].bytes);
+  assert.equal(readFileSync(join(result.folder.fsName, 'scene.json'), 'utf8'), exported.sceneText);
+});
+
+await test('ZIP2 deflated ZIP with a top folder (re-zipped by Windows) works; bad ZIPs fail cleanly', () => {
+  const tmp = mkdtempSync(join(tmpdir(), 'figma-ae-zip2-'));
+  try {
+    // Build a deflate-compressed ZIP, files inside "Hero-figma-ae/".
+    const files = [
+      { name: 'Hero-figma-ae/', data: Buffer.alloc(0) },
+      { name: 'Hero-figma-ae/scene.json', data: Buffer.from(exported.sceneText) },
+      { name: 'Hero-figma-ae/images/img_001_Photo.png', data: Buffer.from(exported.images[0].bytes) },
+    ];
+    const locals = [], centrals = [];
+    let offset = 0;
+    for (const f of files) {
+      const comp = f.data.length ? zlib.deflateRawSync(f.data) : Buffer.alloc(0);
+      const name = Buffer.from(f.name);
+      const crc = zipMod.crc32(new Uint8Array(f.data));
+      const lh = Buffer.alloc(30); lh.writeUInt32LE(0x04034b50, 0); lh.writeUInt16LE(20, 4); lh.writeUInt16LE(f.data.length ? 8 : 0, 8);
+      lh.writeUInt32LE(crc, 14); lh.writeUInt32LE(comp.length, 18); lh.writeUInt32LE(f.data.length, 22); lh.writeUInt16LE(name.length, 26);
+      const ch = Buffer.alloc(46); ch.writeUInt32LE(0x02014b50, 0); ch.writeUInt16LE(20, 4); ch.writeUInt16LE(20, 6); ch.writeUInt16LE(f.data.length ? 8 : 0, 10);
+      ch.writeUInt32LE(crc, 16); ch.writeUInt32LE(comp.length, 20); ch.writeUInt32LE(f.data.length, 24); ch.writeUInt16LE(name.length, 28); ch.writeUInt32LE(offset, 42);
+      locals.push(lh, name, comp); centrals.push(ch, name);
+      offset += 30 + name.length + comp.length;
+    }
+    const cd = Buffer.concat(centrals);
+    const eocd = Buffer.alloc(22); eocd.writeUInt32LE(0x06054b50, 0); eocd.writeUInt16LE(files.length, 8); eocd.writeUInt16LE(files.length, 10); eocd.writeUInt32LE(cd.length, 12); eocd.writeUInt32LE(offset, 16);
+    const zipPath = join(tmp, 'Hero-figma-ae.zip');
+    writeFileSync(zipPath, Buffer.concat([...locals, cd, eocd]));
+    execFileSync('unzip', ['-tq', zipPath]);
+
+    const env = createAEEnvironment();
+    const api = loadJsx(env);
+    const ok = api.importZipFile(new env.globals.File(zipPath), {});
+    assert.equal(ok.ok, true, ok.error);
+    assert.equal(ok.stats.layers, 38);
+    assert.match(ok.folder.fsName, /\/Hero \d{8}-\d{6}$/);
+    assert.deepEqual(new Uint8Array(readFileSync(join(ok.folder.fsName, 'images', 'img_001_Photo.png'))), exported.images[0].bytes);
+
+    writeFileSync(join(tmp, 'not.zip'), 'hello');
+    assert.match(api.importZipFile(new env.globals.File(join(tmp, 'not.zip')), {}).error, /not a ZIP/);
+    writeFileSync(join(tmp, 'other.zip'), zipMod.createZip([{ path: 'readme.txt', data: zipMod.utf8('x') }]));
+    assert.match(api.importZipFile(new env.globals.File(join(tmp, 'other.zip')), {}).error, /no scene\.json/);
+    writeFileSync(join(tmp, 'evil.zip'), zipMod.createZip([{ path: 'scene.json', data: zipMod.utf8(exported.sceneText) }, { path: 'images/../../x.png', data: zipMod.utf8('x') }]));
+    assert.match(api.importZipFile(new env.globals.File(join(tmp, 'evil.zip')), {}).error, /Unexpected file/);
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+await test('V1 panel and plugin are both version 1.1.1', () => {
+  const env = createAEEnvironment();
+  assert.equal(loadJsx(env).version, '1.1.1');
+  assert.equal(JSON.parse(readFileSync(join(here, '..', 'figma-plugin', 'package.json'), 'utf8')).version, '1.1.1');
+  assert.match(readFileSync(join(here, '..', 'figma-plugin', 'dist', 'ui.html'), 'utf8'), /v1\.1\.1[\s\S]*press <b>Ctrl\+V<\/b>|press <b>Ctrl\+V<\/b>[\s\S]*v1\.1\.1/);
 });
 
 // ==================================================================================

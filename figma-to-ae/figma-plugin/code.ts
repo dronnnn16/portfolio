@@ -3,7 +3,7 @@
 
 import { isExportableRoot, serializeScene } from './src/serialize';
 
-figma.showUI(__html__, { width: 340, height: 330, themeColors: true });
+figma.showUI(__html__, { width: 340, height: 390, themeColors: true });
 
 function describeSelection(): { ok: boolean; message: string } {
   const sel = figma.currentPage.selection;

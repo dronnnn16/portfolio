@@ -368,7 +368,7 @@
   }
 
   // code.ts
-  figma.showUI(__html__, { width: 340, height: 330, themeColors: true });
+  figma.showUI(__html__, { width: 340, height: 390, themeColors: true });
   function describeSelection() {
     const sel = figma.currentPage.selection;
     if (sel.length !== 1) {

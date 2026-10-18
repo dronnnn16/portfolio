@@ -1,8 +1,8 @@
 // Plugin UI script (runs in the iframe). Receives scene.json + images from code.ts and
-// either copies everything to the clipboard for the After Effects panel ("Paste from
-// Figma") or packs it into a ZIP download.
+// either copies everything to the clipboard (pasted into the After Effects panel's box)
+// or packs it into a ZIP download.
 
-import { buildClipboardText } from './clipboard';
+import { buildClipboardText, PASTE_BOX_SAFE_CHARS } from './clipboard';
 import { createZip, utf8, ZipEntry } from './zip';
 
 interface ExportResult {
@@ -70,10 +70,21 @@ function copyText(text: string): boolean {
   return ok;
 }
 
+let lastSize = 0;
+
 function copied(stats: { nodes: number; images: number }) {
   pendingCopy = '';
   retryButton.hidden = true;
-  setStatus(`Copied ${stats.nodes} layers and ${stats.images} images.\nNow click "Paste from Figma" in the After Effects panel.`, 'ok');
+  const kb = Math.max(1, Math.round(lastSize / 1024));
+  let text =
+    `Copied ${stats.nodes} layers and ${stats.images} images (${kb} KB).\n` +
+    `In After Effects: click the box in the FigmaToAE panel, press Ctrl+V, then click "Import pasted data".`;
+  if (lastSize > PASTE_BOX_SAFE_CHARS) {
+    text +=
+      `\nThis export is large. If After Effects says the data is cut off, click "or download a ZIP instead" ` +
+      `and use "Load Figma ZIP..." in the panel.`;
+  }
+  setStatus(text, 'ok');
 }
 
 function startExport(mode: 'copy' | 'zip') {
@@ -93,7 +104,7 @@ retryButton.onclick = () => {
   else setStatus('Copy failed. Use "Download ZIP" instead.', 'error');
 };
 
-window.onmessage = (event: MessageEvent) => {
+window.onmessage = async (event: MessageEvent) => {
   const msg = event.data && event.data.pluginMessage;
   if (!msg) return;
   if (msg.type === 'selection') {
@@ -117,7 +128,8 @@ window.onmessage = (event: MessageEvent) => {
       download(createZip(entries), name);
       setStatus(`Saved ${name}: ${result.stats.nodes} nodes, ${result.stats.images} images.`, 'ok');
     } else {
-      const text = buildClipboardText(result.fileName, result.scene, result.images);
+      const text = await buildClipboardText(result.fileName, result.scene, result.images);
+      lastSize = text.length;
       if (copyText(text)) {
         copied(result.stats);
       } else {

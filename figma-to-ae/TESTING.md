@@ -2,7 +2,7 @@
 
 There are two layers of testing:
 
-1. **Automated tests** (`npm test`). They run the real plugin serializer and the real `.jsx` against mocks of the Figma and After Effects APIs, plus an export captured from real Figma. All 46 pass in this repository.
+1. **Automated tests** (`npm test`). They run the real plugin serializer and the real `.jsx` against mocks of the Figma and After Effects APIs, plus an export captured from real Figma. All 58 pass in this repository.
 2. **Manual checklist.** Build the test frame below in the Figma desktop app, export it and import it into real After Effects 2025, then tick each item off. The Figma half has been run in real Figma (see below). The After Effects half has **not**, because AE wasn't available in the build environment.
 
 ## Automated tests
@@ -20,6 +20,7 @@ npm test          # typecheck + build + node ../tests/run-all.mjs
 | A1–A19 | Import of `sample/` in **null mode**: undo group, comp settings, exact layer order and names, parenting, 5 circles → 5 shape layers, world placement of every shape/null/image layer vs Figma, rotation = −Figma rotation, opacity, blend mode, inside/outside/centre strokes, roundness and per-corner paths, polystars, bezier paths and fill rule, gradient fallback + log, drop shadow/blur values, point text and box text with mixed styles, font fallback, image scale/rotation/shadow, track mattes, hidden layers, summary counts |
 | B1–B3 | Import in **precomp mode**: one precomp per group/frame with the right size and contents, world placement through nested precomps, clipping (`collapseTransformation`) and effects on precomp layers |
 | C1–C3 | Errors: folder without `scene.json`, log file only written when the preference allows it, missing PNG falls back to a shape layer |
+| Z1, PB1–PB7, ZIP1–ZIP2, V1 | **Copy → paste and ZIP transfer:** the ES3 inflate matches zlib. The plugin's compressed paste format is ASCII and small (Hero ≈ 7,000 characters; uncompressed it would be ≈ 35,000, over the 32,767 limit), and the old format still reads. **Import pasted data** builds the same 38-layer comp without starting any external program. Pastes still work with CRLF/CR line endings, extra spaces and blank lines, the box hint left in, and wrapped data lines. A ~550 KB paste with a big photo imports intact. A cut-off paste (e.g. at 32,767 characters) gives a clear "cut off… use Load Figma ZIP" message and imports nothing. Other text, unsafe paths and the preference being off are handled. **Paste from Figma** on a PC where PowerShell does nothing points to the box instead of saying "no Figma export". The plugin ZIP (stored) and a Windows re-zipped one (deflated, inside a top folder) are read directly. Both parts report version 1.1.1 |
 | R1–R4 | **Real Figma export** (`tests/fixtures/figma-real-export/`): the mock scene has the same tree as the real one. The real export imports in both modes with every layer on its Figma position. Figma-specific data is checked too: `Q` rewritten as `C`, a non-zero-winding ring, font style matching, the 240 × 180 PNG at 50% |
 
 ### What ran in real Figma
@@ -80,12 +81,19 @@ Export **Hero** with the plugin, unzip, import with the panel **twice**: once wi
 **Export (Figma)**: E3–E5 were confirmed in real Figma through the plugin API (see above). E1–E2 need the installed plugin.
 
 - [ ] E1 The plugin button is enabled only with exactly one frame selected; it shows "Ready: "Hero" (800 × 600)".
-- [ ] E2 Export downloads `Hero-figma-ae.zip` containing `scene.json` and `images/img_001_Photo.png`.
+- [ ] E2 **Copy for After Effects** shows "Copied 38 layers and 1 images (7 KB)…" with the Ctrl+V instructions. The ZIP link still downloads `Hero-figma-ae.zip` containing `scene.json` and `images/img_001_Photo.png`.
 - [ ] E3 `img_001_Photo.png` is 240 × 180 px, unrotated, with rounded corners and no stroke or shadow.
 - [ ] E4 No temporary copy of Photo is left on the page after the export.
 - [ ] E5 In `scene.json`, Ring has `"renderChildren": false` and one path with two sub-paths (outer + hole; Figma writes `NONZERO` winding with opposite directions). Body has `"mixed": true` with 5 segments.
 
 **Import (After Effects, null mode)**
+
+How to import: in the FigmaToAE panel (bottom line shows **v1.1.1**), click the big box, press **Ctrl+V**, then click **Import pasted data**. Backups: **Load Figma ZIP...** (pick the plugin's ZIP, no unzipping) or **Import from folder...**.
+
+- [ ] P1 After the paste, the box shows text starting with `FIGMA_TO_AE_CLIPBOARD 2`. After the import the box is empty again.
+- [ ] P2 The files are saved in `Documents\FigmaToAE\Hero <date-time>\` (or `<project folder>\Figma Imports\…` when the project is saved).
+- [ ] P3 **Paste from Figma** either imports directly, or says "After Effects can't read the clipboard on this PC…" and puts the cursor in the box. It never says "No Figma export" when the clipboard has one.
+- [ ] P4 **Load Figma ZIP...** opens in Downloads, and picking `Hero-figma-ae.zip` gives the same comp.
 
 - [ ] I1 Comp **Hero** opens: 800 × 600, 30 fps, 10 s, inside a project folder "Figma - Hero". One **Undo Import Figma Export** reverts everything.
 - [ ] I2 Layer stack, bottom → top, reads: Hero (background), Background Card, Level 1, Level 2, Level 2 (background), Level 3, Deep Rect, Deep Ellipse, Circles, Circle 1 … 5, Rotated Rect, … , Button, Button (background), Label. These are the same names as in Figma.

@@ -63,6 +63,11 @@
       .status.error {
         color: var(--figma-color-text-danger, #d22);
       }
+      .version {
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--figma-color-text-tertiary, #999);
+      }
       .status.ok {
         color: var(--figma-color-text-success, #198f51);
       }
@@ -70,17 +75,20 @@
   </head>
   <body>
     <h1>Figma → After Effects</h1>
-    <p>Select a frame, click <b>Copy for After Effects</b>, then click <b>Paste from Figma</b> in the After Effects panel.</p>
+    <p>Select a frame and click <b>Copy for After Effects</b>. In After Effects, click the box in the FigmaToAE panel, press <b>Ctrl+V</b>, then <b>Import pasted data</b>.</p>
     <div id="selection">Select one frame to export.</div>
     <button id="copy" disabled>Copy for After Effects</button>
     <button id="retry" class="secondary" hidden>Copy to clipboard</button>
     <button id="zip" class="link" disabled>or download a ZIP instead</button>
     <div id="status" class="status"></div>
+    <div class="version">v1.1.1</div>
     <script>
       "use strict";
 (() => {
   // src/clipboard.ts
-  var CLIPBOARD_HEADER = "FIGMA_TO_AE_CLIPBOARD 1";
+  var CLIPBOARD_HEADER_V1 = "FIGMA_TO_AE_CLIPBOARD 1";
+  var CLIPBOARD_HEADER_V2 = "FIGMA_TO_AE_CLIPBOARD 2";
+  var PASTE_BOX_SAFE_CHARS = 3e4;
   var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
   function base64(bytes) {
     const out = [];
@@ -100,10 +108,21 @@
     return out.join("");
   }
   function asciiOnly(text) {
-    return text.replace(/[\u007f-\uffff]/g, (c) => "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4));
+    return text.replace(/[\u007f-￿]/g, (c) => "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4));
   }
-  function buildClipboardText(frameName, sceneJson, images) {
-    const lines = [CLIPBOARD_HEADER, "NAME " + asciiOnly(JSON.stringify(frameName)), "SCENE", asciiOnly(sceneJson)];
+  async function deflateRaw(data) {
+    if (typeof CompressionStream === "undefined") return null;
+    try {
+      const stream = new Blob([data]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+      return new Uint8Array(await new Response(stream).arrayBuffer());
+    } catch (err) {
+      return null;
+    }
+  }
+  async function buildClipboardText(frameName, sceneJson, images, options = {}) {
+    const scene = asciiOnly(sceneJson);
+    const compressed = options.compress === false ? null : await deflateRaw(new TextEncoder().encode(scene));
+    const lines = compressed ? [CLIPBOARD_HEADER_V2, "NAME " + asciiOnly(JSON.stringify(frameName)), "SCENEZ", base64(compressed)] : [CLIPBOARD_HEADER_V1, "NAME " + asciiOnly(JSON.stringify(frameName)), "SCENE", scene];
     for (const img of images) {
       lines.push("IMAGE " + img.path, base64(img.bytes));
     }
@@ -248,11 +267,18 @@
     area.remove();
     return ok;
   }
+  var lastSize = 0;
   function copied(stats) {
     pendingCopy = "";
     retryButton.hidden = true;
-    setStatus(`Copied ${stats.nodes} layers and ${stats.images} images.
-Now click "Paste from Figma" in the After Effects panel.`, "ok");
+    const kb = Math.max(1, Math.round(lastSize / 1024));
+    let text = `Copied ${stats.nodes} layers and ${stats.images} images (${kb} KB).
+In After Effects: click the box in the FigmaToAE panel, press Ctrl+V, then click "Import pasted data".`;
+    if (lastSize > PASTE_BOX_SAFE_CHARS) {
+      text += `
+This export is large. If After Effects says the data is cut off, click "or download a ZIP instead" and use "Load Figma ZIP..." in the panel.`;
+    }
+    setStatus(text, "ok");
   }
   function startExport(mode) {
     busy = true;
@@ -268,7 +294,7 @@ Now click "Paste from Figma" in the After Effects panel.`, "ok");
     if (pendingCopy && copyText(pendingCopy)) copied(lastStats);
     else setStatus('Copy failed. Use "Download ZIP" instead.', "error");
   };
-  window.onmessage = (event) => {
+  window.onmessage = async (event) => {
     const msg = event.data && event.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "selection") {
@@ -292,7 +318,8 @@ Now click "Paste from Figma" in the After Effects panel.`, "ok");
         download(createZip(entries), name);
         setStatus(`Saved ${name}: ${result.stats.nodes} nodes, ${result.stats.images} images.`, "ok");
       } else {
-        const text = buildClipboardText(result.fileName, result.scene, result.images);
+        const text = await buildClipboardText(result.fileName, result.scene, result.images);
+        lastSize = text.length;
         if (copyText(text)) {
           copied(result.stats);
         } else {

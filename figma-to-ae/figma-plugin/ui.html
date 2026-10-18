@@ -63,6 +63,11 @@
       .status.error {
         color: var(--figma-color-text-danger, #d22);
       }
+      .version {
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--figma-color-text-tertiary, #999);
+      }
       .status.ok {
         color: var(--figma-color-text-success, #198f51);
       }
@@ -70,12 +75,13 @@
   </head>
   <body>
     <h1>Figma → After Effects</h1>
-    <p>Select a frame, click <b>Copy for After Effects</b>, then click <b>Paste from Figma</b> in the After Effects panel.</p>
+    <p>Select a frame and click <b>Copy for After Effects</b>. In After Effects, click the box in the FigmaToAE panel, press <b>Ctrl+V</b>, then <b>Import pasted data</b>.</p>
     <div id="selection">Select one frame to export.</div>
     <button id="copy" disabled>Copy for After Effects</button>
     <button id="retry" class="secondary" hidden>Copy to clipboard</button>
     <button id="zip" class="link" disabled>or download a ZIP instead</button>
     <div id="status" class="status"></div>
+    <div class="version">v1.1.1</div>
     <script>
       /*__UI_SCRIPT__*/
     </script>
