@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { createAEEnvironment, apply, inv, mul, CompItem } from './lib/ae-mock.mjs';
 import { pngSize } from './lib/png.mjs';
-import { requirePlugin } from './lib/plugin-modules.mjs';
+import { loadPluginModules, requirePlugin } from './lib/plugin-modules.mjs';
 import { exportTestScene, sampleDir } from './generate-sample.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -81,10 +81,18 @@ function loadJsx(env) {
   const ctx = vm.createContext({});
   vm.runInContext(ES5_PLUS, ctx);
   Object.assign(ctx, env.globals);
-  ctx.$ = { global: ctx, writeln: (s) => env.log.writeln.push(String(s)) };
+  ctx.$ = { global: ctx, os: 'Windows/64 10.0', writeln: (s) => env.log.writeln.push(String(s)) };
   ctx.FIGMA_TO_AE_NO_UI = true;
   vm.runInContext(src, ctx, { filename: 'FigmaToAE.jsx' });
   return ctx.FigmaToAE;
+}
+
+function runClipboardImport(clipboard, options = {}, envOptions = {}) {
+  const env = createAEEnvironment({ clipboard, ...envOptions });
+  const api = loadJsx(env);
+  const result = api.importFromClipboard(options);
+  if (result.warnings) result.warnings = Array.from(result.warnings);
+  return { env, api, result };
 }
 
 function runImport(folder, options, envOptions) {
@@ -792,6 +800,83 @@ await test('R4 real-data specifics: Figma-normalised paths, non-zero ring, fonts
   const photo = L2('Photo');
   assert.deepEqual([photo.source.width, photo.source.height], [240, 180]);
   near(photo.tp('ADBE Scale').value, [50, 50], 1e-4, 'scale (Figma matrices are float32)');
+});
+
+// ==================================================================================
+section('Clipboard: "Copy for After Effects" (plugin) -> "Paste from Figma" (AE)');
+
+const { clipboard: clipMod } = await loadPluginModules();
+const clipText = clipMod.buildClipboardText(scene.frame.name, JSON.stringify(scene), exported.images);
+
+await test('K1 clipboard text is ASCII, one item per line, and round-trips through the AE parser', () => {
+  assert.equal(/[^\x00-\x7f]/.test(clipText), false);
+  const lines = clipText.split('\n');
+  assert.equal(lines[0], 'FIGMA_TO_AE_CLIPBOARD 1');
+  assert.equal(lines.at(-1), 'END');
+  const env = createAEEnvironment();
+  const api = loadJsx(env);
+  const clip = api.parseClipboard(clipText);
+  assert.equal(clip.name, 'Hero');
+  assert.deepEqual(JSON.parse(clip.scene), JSON.parse(JSON.stringify(scene)));
+  assert.equal(clip.images.length, 1);
+  const bytes = Buffer.from(api.base64Decode(clip.images[0].data), 'latin1');
+  assert.deepEqual(new Uint8Array(bytes), exported.images[0].bytes);
+  // Windows line endings (PowerShell) work too.
+  assert.equal(api.parseClipboard(clipText.replace(/\n/g, '\r\n')).images.length, 1);
+});
+
+await test('K2 "Paste from Figma" imports straight from the clipboard - no file dialog, no ZIP', () => {
+  const run = runClipboardImport(clipText, { precomps: false, writeLog: true });
+  assert.equal(run.result.ok, true, run.result.error);
+  assert.equal(run.env.log.commands.length, 1);
+  assert.match(run.env.log.commands[0], /^powershell\.exe .*Get-Clipboard -Raw/);
+  assert.deepEqual(namesBottomUp(run.env.comps()[0]), namesBottomUp(rootComp));
+  // Files land in Documents\FigmaToAE\Hero <timestamp>\ when the project is unsaved.
+  const folder = run.result.folder.fsName;
+  assert.match(folder, /\/FigmaToAE\/Hero \d{8}-\d{6}$/);
+  assert.ok(folder.startsWith(run.env.docs));
+  assert.deepEqual(new Uint8Array(readFileSync(join(folder, 'images', 'img_001_Photo.png'))), exported.images[0].bytes);
+  assert.ok(existsSync(join(folder, 'figma-ae-import-log.txt')));
+  const photo = collectLayers(run.env.comps()[0]).find((e) => e.layer.name === 'Photo').layer;
+  assert.deepEqual([photo.source.width, photo.source.height], [240, 180]);
+});
+
+await test('K3 saved project: files go next to it in "Figma Imports"; non-ASCII frame names survive', () => {
+  const proj = mkdtempSync(join(tmpdir(), 'figma-ae-proj-'));
+  try {
+    const env0 = createAEEnvironment();
+    const projectFile = new env0.globals.File(join(proj, 'trading.aep'));
+    const text = clipMod.buildClipboardText('Héro "v2" → final', JSON.stringify(scene), exported.images);
+    const run = runClipboardImport(text, {}, { projectFile });
+    assert.equal(run.result.ok, true, run.result.error);
+    assert.match(run.result.folder.fsName, /\/Figma Imports\/H_ro _v2_ _ final \d{8}-\d{6}$/);
+    assert.ok(run.result.folder.fsName.startsWith(proj));
+    assert.equal(run.api.parseClipboard(text).name, 'Héro "v2" → final');
+  } finally {
+    rmSync(proj, { recursive: true, force: true });
+  }
+});
+
+await test('K4 friendly errors: empty/other clipboard, cut-off data, preference off, unsafe image path', () => {
+  let run = runClipboardImport('just some copied text', { showSummary: true });
+  assert.equal(run.result.ok, false);
+  assert.match(run.result.error, /No Figma export on the clipboard/);
+  assert.match(run.env.log.alerts[0], /Copy for After Effects/);
+  assert.equal(run.env.comps().length, 0);
+
+  run = runClipboardImport(null);
+  assert.match(run.result.error, /No Figma export on the clipboard/);
+
+  run = runClipboardImport(clipText.slice(0, 5000));
+  assert.match(run.result.error, /incomplete/);
+
+  run = runClipboardImport(clipText, {}, { prefsAllowWrite: false });
+  assert.match(run.result.error, /Allow Scripts to Write Files/);
+  assert.equal(run.env.log.commands.length, 0);
+
+  run = runClipboardImport(clipText.replace('IMAGE images/img_001_Photo.png', 'IMAGE ../../evil.png'));
+  assert.match(run.result.error, /Unexpected image path/);
+  assert.equal(run.env.comps().length, 0);
 });
 
 // ==================================================================================

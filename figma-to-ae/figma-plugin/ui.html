@@ -35,6 +35,22 @@
         background: var(--figma-color-bg-brand, #0d99ff);
         cursor: pointer;
       }
+      button + button {
+        margin-top: 8px;
+      }
+      button.secondary {
+        color: var(--figma-color-text, #222);
+        background: var(--figma-color-bg-secondary, #eee);
+      }
+      button.link {
+        font-weight: 400;
+        color: var(--figma-color-text-secondary, #666);
+        background: none;
+        text-decoration: underline;
+      }
+      button[hidden] {
+        display: none;
+      }
       button:disabled {
         opacity: 0.4;
         cursor: default;
@@ -54,9 +70,11 @@
   </head>
   <body>
     <h1>Figma → After Effects</h1>
-    <p>Exports the selected frame as scene.json + @2x PNGs in one ZIP. Unzip it and run “Import Figma Export” in the After Effects panel.</p>
+    <p>Select a frame, click <b>Copy for After Effects</b>, then click <b>Paste from Figma</b> in the After Effects panel.</p>
     <div id="selection">Select one frame to export.</div>
-    <button id="export" disabled>Export</button>
+    <button id="copy" disabled>Copy for After Effects</button>
+    <button id="retry" class="secondary" hidden>Copy to clipboard</button>
+    <button id="zip" class="link" disabled>or download a ZIP instead</button>
     <div id="status" class="status"></div>
     <script>
       /*__UI_SCRIPT__*/

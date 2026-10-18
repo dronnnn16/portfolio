@@ -9,7 +9,9 @@
 // - TextDocument values are copies: changes only stick after setValue();
 // - gradient colours cannot be set (as in AE).
 // It also composes transforms so tests can check where things end up in the comp.
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync, mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname as pathDirname } from 'node:path';
 import { pngSize } from './png.mjs';
 
 // ---------------------------------------------------------------- matrices
@@ -523,9 +525,13 @@ export class FootageItem extends Item {
 }
 
 // ---------------------------------------------------------------- environment
-export function createAEEnvironment({ prefsAllowWrite = true, fonts } = {}) {
+// clipboard: text the simulated Windows clipboard holds (null = empty).
+// documentsDir/tempDir: real folders standing in for Folder.myDocuments / Folder.temp.
+export function createAEEnvironment({ prefsAllowWrite = true, fonts, clipboard = null, documentsDir, tempDir, projectFile = null } = {}) {
+  const docs = documentsDir || mkdtempSync(tmpdir() + '/ae-docs-');
+  const temp = tempDir || mkdtempSync(tmpdir() + '/ae-temp-');
   const items = [];
-  const log = { alerts: [], writeln: [], undo: [] };
+  const log = { alerts: [], writeln: [], undo: [], commands: [] };
   const installedFonts = fonts || [
     { familyName: 'Inter', styleName: 'Regular', postScriptName: 'Inter-Regular' },
     { familyName: 'Inter', styleName: 'Bold', postScriptName: 'Inter-Bold' },
@@ -572,16 +578,59 @@ export function createAEEnvironment({ prefsAllowWrite = true, fonts } = {}) {
       return true;
     }
     close() {
-      if (this._mode === 'w') writeFileSync(this.fsName, this._buf);
+      if (this._mode === 'w') {
+        // BINARY: each char code is one byte, as in ExtendScript.
+        if (this.encoding === 'BINARY') {
+          for (let i = 0; i < this._buf.length; i++) if (this._buf.charCodeAt(i) > 255) throw new Error('BINARY write with char > 255');
+          writeFileSync(this.fsName, Buffer.from(this._buf, 'latin1'));
+        } else {
+          writeFileSync(this.fsName, this._buf);
+        }
+      }
       this._mode = null;
       return true;
+    }
+    remove() {
+      rmSync(this.fsName, { force: true });
+      return true;
+    }
+    get parent() {
+      return new Folder(pathDirname(this.fsName));
     }
   }
   class Folder {
     constructor(path) {
       this.fsName = String(path).replace(/\\/g, '/');
     }
+    get exists() {
+      return existsSync(this.fsName);
+    }
+    create() {
+      mkdirSync(this.fsName, { recursive: true });
+      return true;
+    }
+    static get temp() {
+      return new Folder(temp);
+    }
+    static get myDocuments() {
+      return new Folder(docs);
+    }
   }
+
+  // Simulates PowerShell "Get-Clipboard -Raw | Set-Content -LiteralPath '<file>' -Encoding ASCII -NoNewline".
+  const system = {
+    callSystem(cmd) {
+      log.commands.push(cmd);
+      const m = /^powershell\.exe .*-Command "Get-Clipboard -Raw \| Set-Content -LiteralPath '((?:[^']|'')+)' -Encoding ASCII -NoNewline"$/.exec(cmd);
+      if (!m) throw new Error('mock: unexpected command ' + cmd);
+      if (!prefsAllowWrite) throw new Error('callSystem blocked: scripting file/network access is off');
+      const text = state.clipboard == null ? '' : state.clipboard;
+      if (/[^\x00-\x7f]/.test(text)) throw new Error('mock: non-ASCII clipboard would be mangled by -Encoding ASCII');
+      writeFileSync(m[1].replace(/''/g, "'"), text, 'ascii');
+      return '';
+    },
+  };
+  const state = { clipboard };
 
   const app = {
     project: {
@@ -628,8 +677,10 @@ export function createAEEnvironment({ prefsAllowWrite = true, fonts } = {}) {
     },
   };
 
+  app.project.file = projectFile;
   const globals = {
     app,
+    system,
     Shape,
     File,
     Folder,
@@ -649,5 +700,5 @@ export function createAEEnvironment({ prefsAllowWrite = true, fonts } = {}) {
       log.alerts.push(String(msg));
     },
   };
-  return { globals, items, log, comps: () => items.filter((i) => i instanceof CompItem) };
+  return { globals, items, log, state, docs, temp, comps: () => items.filter((i) => i instanceof CompItem) };
 }

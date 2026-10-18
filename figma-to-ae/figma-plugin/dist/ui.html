@@ -35,6 +35,22 @@
         background: var(--figma-color-bg-brand, #0d99ff);
         cursor: pointer;
       }
+      button + button {
+        margin-top: 8px;
+      }
+      button.secondary {
+        color: var(--figma-color-text, #222);
+        background: var(--figma-color-bg-secondary, #eee);
+      }
+      button.link {
+        font-weight: 400;
+        color: var(--figma-color-text-secondary, #666);
+        background: none;
+        text-decoration: underline;
+      }
+      button[hidden] {
+        display: none;
+      }
       button:disabled {
         opacity: 0.4;
         cursor: default;
@@ -54,13 +70,47 @@
   </head>
   <body>
     <h1>Figma → After Effects</h1>
-    <p>Exports the selected frame as scene.json + @2x PNGs in one ZIP. Unzip it and run “Import Figma Export” in the After Effects panel.</p>
+    <p>Select a frame, click <b>Copy for After Effects</b>, then click <b>Paste from Figma</b> in the After Effects panel.</p>
     <div id="selection">Select one frame to export.</div>
-    <button id="export" disabled>Export</button>
+    <button id="copy" disabled>Copy for After Effects</button>
+    <button id="retry" class="secondary" hidden>Copy to clipboard</button>
+    <button id="zip" class="link" disabled>or download a ZIP instead</button>
     <div id="status" class="status"></div>
     <script>
       "use strict";
 (() => {
+  // src/clipboard.ts
+  var CLIPBOARD_HEADER = "FIGMA_TO_AE_CLIPBOARD 1";
+  var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  function base64(bytes) {
+    const out = [];
+    let i = 0;
+    for (; i + 2 < bytes.length; i += 3) {
+      const n = bytes[i] << 16 | bytes[i + 1] << 8 | bytes[i + 2];
+      out.push(B64[n >> 18 & 63] + B64[n >> 12 & 63] + B64[n >> 6 & 63] + B64[n & 63]);
+    }
+    const rest = bytes.length - i;
+    if (rest === 1) {
+      const n = bytes[i] << 16;
+      out.push(B64[n >> 18 & 63] + B64[n >> 12 & 63] + "==");
+    } else if (rest === 2) {
+      const n = bytes[i] << 16 | bytes[i + 1] << 8;
+      out.push(B64[n >> 18 & 63] + B64[n >> 12 & 63] + B64[n >> 6 & 63] + "=");
+    }
+    return out.join("");
+  }
+  function asciiOnly(text) {
+    return text.replace(/[\u007f-\uffff]/g, (c) => "\\u" + ("0000" + c.charCodeAt(0).toString(16)).slice(-4));
+  }
+  function buildClipboardText(frameName, sceneJson, images) {
+    const lines = [CLIPBOARD_HEADER, "NAME " + asciiOnly(JSON.stringify(frameName)), "SCENE", asciiOnly(sceneJson)];
+    for (const img of images) {
+      lines.push("IMAGE " + img.path, base64(img.bytes));
+    }
+    lines.push("END");
+    return lines.join("\n");
+  }
+
   // src/zip.ts
   var CRC_TABLE = (() => {
     const table = new Uint32Array(256);
@@ -151,12 +201,20 @@
   }
 
   // src/ui.ts
-  var button = document.getElementById("export");
+  var copyButton = document.getElementById("copy");
+  var zipButton = document.getElementById("zip");
+  var retryButton = document.getElementById("retry");
   var statusEl = document.getElementById("status");
   var selectionEl = document.getElementById("selection");
+  var selectionOk = false;
+  var busy = false;
+  var pendingCopy = "";
   function setStatus(text, kind = "info") {
     statusEl.textContent = text;
     statusEl.className = `status ${kind}`;
+  }
+  function refreshButtons() {
+    copyButton.disabled = zipButton.disabled = busy || !selectionOk;
   }
   function zipName(frameName) {
     const base = frameName.replace(/[\\/:*?"<>|]+/g, "_").trim() || "frame";
@@ -173,30 +231,78 @@
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1e4);
   }
-  button.onclick = () => {
-    button.disabled = true;
+  function copyText(text) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (err) {
+      ok = false;
+    }
+    area.remove();
+    return ok;
+  }
+  function copied(stats) {
+    pendingCopy = "";
+    retryButton.hidden = true;
+    setStatus(`Copied ${stats.nodes} layers and ${stats.images} images.
+Now click "Paste from Figma" in the After Effects panel.`, "ok");
+  }
+  function startExport(mode) {
+    busy = true;
+    refreshButtons();
+    retryButton.hidden = true;
     setStatus("Exporting\u2026");
-    parent.postMessage({ pluginMessage: { type: "export" } }, "*");
+    parent.postMessage({ pluginMessage: { type: "export", mode } }, "*");
+  }
+  copyButton.onclick = () => startExport("copy");
+  zipButton.onclick = () => startExport("zip");
+  var lastStats = { nodes: 0, images: 0 };
+  retryButton.onclick = () => {
+    if (pendingCopy && copyText(pendingCopy)) copied(lastStats);
+    else setStatus('Copy failed. Use "Download ZIP" instead.', "error");
   };
   window.onmessage = (event) => {
     const msg = event.data && event.data.pluginMessage;
     if (!msg) return;
     if (msg.type === "selection") {
       selectionEl.textContent = msg.message;
-      button.disabled = !msg.ok;
+      selectionOk = msg.ok;
+      refreshButtons();
     } else if (msg.type === "progress") {
       setStatus(msg.message);
     } else if (msg.type === "error") {
       setStatus(msg.message, "error");
-      button.disabled = false;
+      busy = false;
+      refreshButtons();
     } else if (msg.type === "export-result") {
       const result = msg;
-      const entries = [{ path: "scene.json", data: utf8(result.scene) }];
-      for (const img of result.images) entries.push({ path: img.path, data: img.bytes });
-      const name = zipName(result.fileName);
-      download(createZip(entries), name);
-      setStatus(`Saved ${name}: ${result.stats.nodes} nodes, ${result.stats.images} images.`, "ok");
-      button.disabled = false;
+      lastStats = result.stats;
+      if (result.mode === "zip") {
+        const pretty = JSON.stringify(JSON.parse(result.scene), null, 2);
+        const entries = [{ path: "scene.json", data: utf8(pretty) }];
+        for (const img of result.images) entries.push({ path: img.path, data: img.bytes });
+        const name = zipName(result.fileName);
+        download(createZip(entries), name);
+        setStatus(`Saved ${name}: ${result.stats.nodes} nodes, ${result.stats.images} images.`, "ok");
+      } else {
+        const text = buildClipboardText(result.fileName, result.scene, result.images);
+        if (copyText(text)) {
+          copied(result.stats);
+        } else {
+          pendingCopy = text;
+          retryButton.hidden = false;
+          setStatus('Export ready. Click "Copy to clipboard" to finish.', "info");
+        }
+      }
+      busy = false;
+      refreshButtons();
     }
   };
 })();

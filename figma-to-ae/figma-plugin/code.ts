@@ -1,9 +1,9 @@
 // Figma plugin entry point (runs in the plugin sandbox).
-// Serialises the selected frame and hands scene.json + PNGs to the UI, which zips them.
+// Serialises the selected frame and hands scene.json + PNGs to the UI, which copies them to the clipboard or zips them.
 
 import { isExportableRoot, serializeScene } from './src/serialize';
 
-figma.showUI(__html__, { width: 340, height: 300, themeColors: true });
+figma.showUI(__html__, { width: 340, height: 330, themeColors: true });
 
 function describeSelection(): { ok: boolean; message: string } {
   const sel = figma.currentPage.selection;
@@ -24,7 +24,7 @@ function postSelection() {
 figma.on('selectionchange', postSelection);
 postSelection();
 
-figma.ui.onmessage = async (msg: { type: string }) => {
+figma.ui.onmessage = async (msg: { type: string; mode?: 'copy' | 'zip' }) => {
   if (msg.type === 'close') {
     figma.closePlugin();
     return;
@@ -44,8 +44,9 @@ figma.ui.onmessage = async (msg: { type: string }) => {
     });
     figma.ui.postMessage({
       type: 'export-result',
+      mode: msg.mode === 'zip' ? 'zip' : 'copy',
       fileName: root.name,
-      scene: JSON.stringify(scene, null, 2),
+      scene: JSON.stringify(scene),
       images,
       stats: scene.stats,
     });

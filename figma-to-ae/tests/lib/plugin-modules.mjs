@@ -11,7 +11,7 @@ export async function loadPluginModules() {
   const esbuild = requirePlugin('esbuild');
   const outdir = join(here, '..', '.build');
   await esbuild.build({
-    entryPoints: { serialize: join(pluginDir, 'src/serialize.ts'), zip: join(pluginDir, 'src/zip.ts') },
+    entryPoints: { serialize: join(pluginDir, 'src/serialize.ts'), zip: join(pluginDir, 'src/zip.ts'), clipboard: join(pluginDir, 'src/clipboard.ts') },
     outdir,
     bundle: true,
     format: 'esm',
@@ -22,5 +22,6 @@ export async function loadPluginModules() {
   });
   const serialize = await import(pathToFileURL(join(outdir, 'serialize.mjs')).href);
   const zip = await import(pathToFileURL(join(outdir, 'zip.mjs')).href);
-  return { serialize, zip };
+  const clipboard = await import(pathToFileURL(join(outdir, 'clipboard.mjs')).href);
+  return { serialize, zip, clipboard };
 }

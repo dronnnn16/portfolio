@@ -13,7 +13,7 @@
  */
 #targetengine "FigmaToAE"
 (function (thisObj) {
-    var VERSION = "1.0.0";
+    var VERSION = "1.1.0";
     var COMP_FPS = 30;
     var COMP_DURATION = 10;
     var LOG_FILE_NAME = "figma-ae-import-log.txt";
@@ -1553,6 +1553,181 @@
         };
     }
 
+
+    // ------------------------------------------------------------------
+    // Clipboard import: "Copy for After Effects" in the Figma plugin puts the whole
+    // export on the clipboard (see figma-plugin/src/clipboard.ts). We read it with
+    // PowerShell (pbpaste on macOS), write scene.json + PNGs to a folder next to the
+    // project (or Documents\FigmaToAE) and import that folder.
+    // ------------------------------------------------------------------
+
+    var CLIPBOARD_HEADER = "FIGMA_TO_AE_CLIPBOARD 1";
+    var B64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    function isWindows() {
+        return String($.os).indexOf("Windows") >= 0;
+    }
+
+    function readClipboard() {
+        var tmp = new File(Folder.temp.fsName + "/figma-to-ae-clipboard.txt");
+        if (tmp.exists) {
+            tmp.remove();
+        }
+        var cmd;
+        if (isWindows()) {
+            cmd = "powershell.exe -NoProfile -NonInteractive -WindowStyle Hidden -Command \"Get-Clipboard -Raw | Set-Content -LiteralPath '" +
+                tmp.fsName.replace(/'/g, "''") + "' -Encoding ASCII -NoNewline\"";
+        } else {
+            cmd = "pbpaste > '" + tmp.fsName.replace(/'/g, "'\\''") + "'";
+        }
+        system.callSystem(cmd);
+        if (!tmp.exists) {
+            return "";
+        }
+        tmp.encoding = "UTF-8";
+        tmp.open("r");
+        var text = tmp.read();
+        tmp.close();
+        tmp.remove();
+        return text;
+    }
+
+    // Returns null when the clipboard holds something else; throws when it is a
+    // Figma export that got cut off.
+    function parseClipboard(text) {
+        if (!text || text.substr(0, CLIPBOARD_HEADER.length) !== CLIPBOARD_HEADER) {
+            return null;
+        }
+        var lines = text.split(/\r?\n/);
+        var clip = { name: "Figma", scene: null, images: [], complete: false };
+        for (var k = 1; k < lines.length; k++) {
+            var line = lines[k];
+            if (line.indexOf("NAME ") === 0) {
+                clip.name = String(parseJSON(line.substring(5)));
+            } else if (line === "SCENE") {
+                clip.scene = lines[++k];
+            } else if (line.indexOf("IMAGE ") === 0) {
+                clip.images.push({ path: line.substring(6), data: lines[++k] || "" });
+            } else if (line === "END") {
+                clip.complete = true;
+                break;
+            }
+        }
+        if (!clip.scene || !clip.complete) {
+            throw new Error("The Figma data on the clipboard is incomplete. Copy it again in Figma.");
+        }
+        return clip;
+    }
+
+    function base64Decode(s) {
+        var map = {};
+        var k;
+        for (k = 0; k < B64_CHARS.length; k++) {
+            map[B64_CHARS.charAt(k)] = k;
+        }
+        var out = [];
+        var chunk = [];
+        var buf = 0, bits = 0, v;
+        for (k = 0; k < s.length; k++) {
+            v = map[s.charAt(k)];
+            if (v === undefined) {
+                continue; // padding or whitespace
+            }
+            buf = ((buf << 6) | v) & 0xFFFFFF;
+            bits += 6;
+            if (bits >= 8) {
+                bits -= 8;
+                chunk.push(String.fromCharCode((buf >> bits) & 255));
+                if (chunk.length >= 8192) {
+                    out.push(chunk.join(""));
+                    chunk = [];
+                }
+            }
+        }
+        out.push(chunk.join(""));
+        return out.join("");
+    }
+
+    function writeFile(path, data, encoding) {
+        var f = new File(path);
+        f.encoding = encoding;
+        if (!f.open("w")) {
+            throw new Error("Could not write " + path);
+        }
+        f.write(data);
+        f.close();
+    }
+
+    function ensureFolder(folder) {
+        if (!folder.exists && !folder.create()) {
+            throw new Error("Could not create folder " + folder.fsName);
+        }
+        return folder;
+    }
+
+    function pad2(n) {
+        return n < 10 ? "0" + n : String(n);
+    }
+
+    // <project folder>\Figma Imports\<frame> <date-time>, or Documents\FigmaToAE\... when unsaved.
+    function clipboardTargetFolder(name) {
+        var base = app.project.file
+            ? new Folder(app.project.file.parent.fsName + "/Figma Imports")
+            : new Folder(Folder.myDocuments.fsName + "/FigmaToAE");
+        ensureFolder(base);
+        var safe = name.replace(/[^A-Za-z0-9 _\-]+/g, "_").replace(/^[\s_]+|[\s_]+$/g, "").substr(0, 60) || "Figma";
+        var d = new Date();
+        var stamp = d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) + "-" + pad2(d.getHours()) + pad2(d.getMinutes()) + pad2(d.getSeconds());
+        var folder = new Folder(base.fsName + "/" + safe + " " + stamp);
+        var n = 2;
+        while (folder.exists) {
+            folder = new Folder(base.fsName + "/" + safe + " " + stamp + "-" + n++);
+        }
+        return ensureFolder(folder);
+    }
+
+    function importFromClipboard(options) {
+        options = options || {};
+        function fail(message) {
+            if (options.showSummary) {
+                alert(message, "Figma -> AE", true);
+            }
+            return { ok: false, error: message };
+        }
+        if (!canWriteFiles()) {
+            return fail("Enable Edit > Preferences > Scripting & Expressions > \"Allow Scripts to Write Files and Access Network\", then try again.");
+        }
+        var clip;
+        try {
+            clip = parseClipboard(readClipboard());
+        } catch (e) {
+            return fail(e.message || String(e));
+        }
+        if (!clip) {
+            return fail("No Figma export on the clipboard.\nIn Figma: select a frame, run the plugin and click \"Copy for After Effects\". Then click \"Paste from Figma\" here.");
+        }
+        var folder;
+        try {
+            folder = clipboardTargetFolder(clip.name);
+            writeFile(folder.fsName + "/scene.json", clip.scene, "UTF-8");
+            if (clip.images.length) {
+                ensureFolder(new Folder(folder.fsName + "/images"));
+            }
+            for (var k = 0; k < clip.images.length; k++) {
+                // Only plain file names inside images/ - never write anywhere else.
+                if (!/^images\/[A-Za-z0-9_\-]+\.png$/.test(clip.images[k].path)) {
+                    return fail("Unexpected image path on the clipboard: " + clip.images[k].path);
+                }
+                writeFile(folder.fsName + "/" + clip.images[k].path, base64Decode(clip.images[k].data), "BINARY");
+            }
+        } catch (e2) {
+            return fail("Could not save the Figma data: " + (e2.message || e2));
+        }
+        var result = importFolder(folder, options);
+        result.folder = folder;
+        return result;
+    }
+
     // ------------------------------------------------------------------
     // ScriptUI panel
     // ------------------------------------------------------------------
@@ -1564,24 +1739,30 @@
         win.spacing = 8;
         win.margins = 12;
 
-        var button = win.add("button", undefined, "Import Figma Export...");
+        var pasteButton = win.add("button", undefined, "Paste from Figma");
+        var folderButton = win.add("button", undefined, "Import from folder...");
         var precompBox = win.add("checkbox", undefined, "Groups/frames as precomps (instead of nulls)");
         precompBox.value = false;
-        var logBox = win.add("checkbox", undefined, "Write import log into the export folder");
+        var logBox = win.add("checkbox", undefined, "Write import log");
         logBox.value = true;
-        var status = win.add("statictext", undefined, "Select the unzipped export folder (it contains scene.json).", { multiline: true });
+        var status = win.add("statictext", undefined, "In Figma click \"Copy for After Effects\", then \"Paste from Figma\" here.", { multiline: true });
         status.preferredSize = [260, 60];
         win.add("statictext", undefined, "v" + VERSION);
 
-        button.onClick = function () {
+        function report(result) {
+            status.text = result.ok
+                ? "Imported " + result.stats.layers + " layers, " + result.warnings.length + " warnings."
+                : "Import failed: " + result.error;
+        }
+        pasteButton.onClick = function () {
+            report(importFromClipboard({ precomps: precompBox.value, writeLog: logBox.value, showSummary: true }));
+        };
+        folderButton.onClick = function () {
             var folder = Folder.selectDialog("Select the unzipped Figma export folder (contains scene.json)");
             if (!folder) {
                 return;
             }
-            var result = importFolder(folder, { precomps: precompBox.value, writeLog: logBox.value, showSummary: true });
-            status.text = result.ok
-                ? "Imported " + result.stats.layers + " layers, " + result.warnings.length + " warnings."
-                : "Import failed: " + result.error;
+            report(importFolder(folder, { precomps: precompBox.value, writeLog: logBox.value, showSummary: true }));
         };
 
         win.onResizing = win.onResize = function () {
@@ -1599,6 +1780,9 @@
     var api = {
         version: VERSION,
         importFolder: importFolder,
+        importFromClipboard: importFromClipboard,
+        parseClipboard: parseClipboard,
+        base64Decode: base64Decode,
         parseJSON: parseJSON,
         parseSvgPath: parseSvgPath,
         roundedRectPath: roundedRectPath,

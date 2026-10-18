@@ -368,7 +368,7 @@
   }
 
   // code.ts
-  figma.showUI(__html__, { width: 340, height: 300, themeColors: true });
+  figma.showUI(__html__, { width: 340, height: 330, themeColors: true });
   function describeSelection() {
     const sel = figma.currentPage.selection;
     if (sel.length !== 1) {
@@ -404,8 +404,9 @@
       });
       figma.ui.postMessage({
         type: "export-result",
+        mode: msg.mode === "zip" ? "zip" : "copy",
         fileName: root.name,
-        scene: JSON.stringify(scene, null, 2),
+        scene: JSON.stringify(scene),
         images,
         stats: scene.stats
       });
