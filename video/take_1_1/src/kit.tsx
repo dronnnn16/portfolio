@@ -67,7 +67,7 @@ export const Small: React.FC<{ at: number; children: React.ReactNode; color?: st
   size = SMALL,
 }) => {
   const f = useCurrentFrame();
-  const o = interpolate(f, [at - 1, at + 2], [0, 1], clamp);
+  const o = interpolate(f, [at - 1, at + 1], [0, 1], clamp);
   const s = interpolate(f, [at - 1, at + 4], [0.92, 1], { ...clamp, easing: out });
   return (
     <span
@@ -81,6 +81,7 @@ export const Small: React.FC<{ at: number; children: React.ReactNode; color?: st
         transform: `scale(${s})`,
         marginRight: size * 0.28,
         letterSpacing: -0.5,
+        textShadow: color === C.white ? "0 2px 10px rgba(0,0,0,0.65), 0 0 2px rgba(0,0,0,0.5)" : undefined,
       }}
     >
       {children}
@@ -89,7 +90,7 @@ export const Small: React.FC<{ at: number; children: React.ReactNode; color?: st
 };
 
 const land = (f: number, at: number, until: number) => {
-  const o = interpolate(f, [at - 1, at + 2], [0, 1], clamp);
+  const o = interpolate(f, [at - 1, at + 1], [0, 1], clamp);
   const s1 = interpolate(f, [at - 1, at + 5], [1.15, 1], { ...clamp, easing: out });
   const drift = interpolate(f, [at + 5, Math.max(at + 6, until)], [1, 0.94], clamp);
   const blur = interpolate(f, [at - 1, at + 5], [8, 0], clamp);
@@ -145,7 +146,7 @@ export const Heavy: React.FC<{
         fontSize: size,
         lineHeight: 1,
         letterSpacing: -size * 0.04,
-        marginRight: size * 0.18,
+        marginRight: size * 0.28,
         color,
         ...(fill ? textured : {}),
         ...land(f, at, until),
@@ -164,7 +165,7 @@ export const Slam: React.FC<{ at: number; until: number; children: React.ReactNo
   size,
 }) => {
   const f = useCurrentFrame();
-  const s = interpolate(f, [at, at + 4], [1.25, 1], { ...clamp, easing: out });
+  const s = interpolate(f, [at, at + 4], [1.12, 1], { ...clamp, easing: out });
   const drift = interpolate(f, [at + 4, until], [1, 0.97], clamp);
   return (
     <span
@@ -175,7 +176,7 @@ export const Slam: React.FC<{ at: number; until: number; children: React.ReactNo
         lineHeight: 1,
         color: C.white,
         textTransform: "uppercase",
-        marginRight: size * 0.12,
+        marginRight: size * 0.2,
         opacity: f >= at ? 1 : 0,
         transform: `scale(${s * drift})`,
       }}

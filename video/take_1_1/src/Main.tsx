@@ -4,8 +4,8 @@ import { ARoll, At, Card, Cutout, Framing, Hero, Heavy, Letterbox, On, PUNCH, Se
 import { C, LOGIC } from "./theme";
 import { END, F, TOTAL } from "./sync";
 
-// Text beside the face (the face sits around x 1000 in the wide frame).
-const SIDE = { x: 700, y: 440 };
+// Small build-up words sit beside the face, on the dark monitor (x 0-520 in the wide frame).
+const SIDE = { x: 470, y: 560 };
 // Fake second camera for the TURN: tight, subject pushed to the right third.
 const TURN: Framing = { s: 1.35, cx: 1000, cy: 440, tx: 1280, ty: 440 };
 // Punch-in toward the award in the hand.
@@ -174,7 +174,7 @@ export const Main: React.FC = () => {
         </At>
         <Reel from={F("ye2")} bg="linear-gradient(160deg, #0B1E4A 0%, #030A1C 100%)">
           <At x={270} y={470}>
-            <Hero at={F("gaddiyan")} until={F("lekin")} size={150} fill>
+            <Hero at={F("gaddiyan")} until={F("lekin")} size={128}>
               gaddiyan
             </Hero>
           </At>
@@ -320,7 +320,7 @@ export const Main: React.FC = () => {
       {/* ───────── TURN: "Ab main yahan par kyun aaya hoon?" (text behind subject) ───────── */}
       <On from={F("ab")} to={F("kyunki")}>
         <ARoll framing={TURN} grade="moody" push={[F("ab"), F("kyunki"), 1, 1.02]} />
-        <At x={700} y={500}>
+        <At x={720} y={500}>
           <TurnWord at={F("kyun")} />
         </At>
         <Cutout framing={TURN} grade="moody" push={[F("ab"), F("kyunki"), 1, 1.02]} />
@@ -395,8 +395,8 @@ const TurnWord: React.FC<{ at: number }> = ({ at }) => {
         display: "inline-block",
         fontFamily: LOGIC,
         fontWeight: 900,
-        fontSize: 440,
-        letterSpacing: -18,
+        fontSize: 380,
+        letterSpacing: -16,
         color: C.grey,
         opacity: o * 0.92,
         transform: `scale(${s})`,
