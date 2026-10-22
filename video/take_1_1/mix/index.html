@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+      #root { width: 100%; height: 100%; position: relative; }
+      #picture { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+    </style>
+  </head>
+  <body>
+    <!-- Sound mix over the Remotion render (picture is muted; stems built by scripts/audio.py). -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26.8667" data-width="1920" data-height="1080">
+      <video id="picture" class="clip" src="media/visual.mp4" muted data-start="0" data-duration="26.8667" data-track-index="0"></video>
+      <audio id="voice" src="media/voice.wav" data-start="0" data-duration="26.8667" data-volume="1" data-audio-group="voiceover" data-track-index="1"
+        data-fx-chain="{&quot;version&quot;:1,&quot;nodes&quot;:[{&quot;type&quot;:&quot;peaking&quot;,&quot;id&quot;:&quot;v1&quot;,&quot;label&quot;:&quot;Clarity&quot;,&quot;params&quot;:{&quot;frequency&quot;:3000,&quot;gain&quot;:1.5,&quot;q&quot;:1}}]}"></audio>
+      <audio id="music" src="media/music.wav" data-start="0" data-duration="26.8667" data-volume="1" data-audio-group="music" data-track-index="2"></audio>
+      <audio id="sfx" src="media/sfx.wav" data-start="0" data-duration="26.8667" data-volume="0.3" data-audio-group="sfx" data-track-index="3"></audio>
+    </div>
+    <script>
+      // No animation here: the picture is the finished Remotion render; this composition only mixes sound.
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

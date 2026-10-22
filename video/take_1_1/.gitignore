@@ -1,0 +1,11 @@
+node_modules/
+out/
+public/take.mp4
+public/turn/
+data/turn_src/
+data/*.wav
+audio/*.wav
+mix/*.wav
+mix/*.mp4
+review/
+mix/media/

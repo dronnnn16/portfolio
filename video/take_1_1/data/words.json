@@ -1,0 +1,835 @@
+[
+ {
+  "w": "2026",
+  "line": 0,
+  "start": 2.845,
+  "syl": 5,
+  "end": 3.53
+ },
+ {
+  "w": "ke",
+  "line": 0,
+  "start": 3.53,
+  "syl": 1,
+  "end": 3.74
+ },
+ {
+  "w": "7",
+  "line": 0,
+  "start": 3.74,
+  "syl": 1,
+  "end": 3.91
+ },
+ {
+  "w": "mahine",
+  "line": 0,
+  "start": 3.91,
+  "syl": 3,
+  "end": 4.1
+ },
+ {
+  "w": "kahan",
+  "line": 0,
+  "start": 4.1,
+  "syl": 2,
+  "end": 4.405
+ },
+ {
+  "w": "chale",
+  "line": 0,
+  "start": 4.405,
+  "syl": 2,
+  "end": 4.485
+ },
+ {
+  "w": "gaye",
+  "line": 0,
+  "start": 4.485,
+  "syl": 1,
+  "end": 4.6
+ },
+ {
+  "w": "tumhe",
+  "line": 0,
+  "start": 4.6,
+  "syl": 2,
+  "end": 4.83
+ },
+ {
+  "w": "bhi",
+  "line": 0,
+  "start": 4.83,
+  "syl": 1,
+  "end": 4.95
+ },
+ {
+  "w": "nahi",
+  "line": 0,
+  "start": 4.95,
+  "syl": 2,
+  "end": 5.03
+ },
+ {
+  "w": "pata",
+  "line": 0,
+  "start": 5.03,
+  "syl": 2,
+  "end": 5.35
+ },
+ {
+  "w": "5",
+  "line": 1,
+  "start": 5.805,
+  "syl": 1,
+  "end": 5.82
+ },
+ {
+  "w": "mahine",
+  "line": 1,
+  "start": 5.82,
+  "syl": 3,
+  "end": 6.08
+ },
+ {
+  "w": "bache",
+  "line": 1,
+  "start": 6.08,
+  "syl": 2,
+  "end": 6.31
+ },
+ {
+  "w": "hain",
+  "line": 1,
+  "start": 6.31,
+  "syl": 1,
+  "end": 6.445
+ },
+ {
+  "w": "tumhare",
+  "line": 1,
+  "start": 6.445,
+  "syl": 3,
+  "end": 6.665
+ },
+ {
+  "w": "paas",
+  "line": 1,
+  "start": 6.665,
+  "syl": 1,
+  "end": 6.745
+ },
+ {
+  "w": "khud",
+  "line": 1,
+  "start": 6.745,
+  "syl": 1,
+  "end": 6.87
+ },
+ {
+  "w": "ko",
+  "line": 1,
+  "start": 6.87,
+  "syl": 1,
+  "end": 7.07
+ },
+ {
+  "w": "prove",
+  "line": 1,
+  "start": 7.07,
+  "syl": 2,
+  "end": 7.23
+ },
+ {
+  "w": "karne",
+  "line": 1,
+  "start": 7.23,
+  "syl": 2,
+  "end": 7.59
+ },
+ {
+  "w": "ke",
+  "line": 1,
+  "start": 7.59,
+  "syl": 1,
+  "end": 7.67
+ },
+ {
+  "w": "liye",
+  "line": 1,
+  "start": 7.67,
+  "syl": 1,
+  "end": 7.98
+ },
+ {
+  "w": "Achha",
+  "line": 2,
+  "start": 8.31,
+  "syl": 2,
+  "end": 8.5
+ },
+ {
+  "w": "tumhari",
+  "line": 2,
+  "start": 8.5,
+  "syl": 3,
+  "end": 8.87
+ },
+ {
+  "w": "feed",
+  "line": 2,
+  "start": 8.87,
+  "syl": 1,
+  "end": 8.97
+ },
+ {
+  "w": "mein",
+  "line": 2,
+  "start": 8.97,
+  "syl": 1,
+  "end": 9.05
+ },
+ {
+  "w": "reels",
+  "line": 2,
+  "start": 9.05,
+  "syl": 1,
+  "end": 9.165
+ },
+ {
+  "w": "bhi",
+  "line": 2,
+  "start": 9.165,
+  "syl": 1,
+  "end": 9.46
+ },
+ {
+  "w": "aati",
+  "line": 2,
+  "start": 9.46,
+  "syl": 2,
+  "end": 9.69
+ },
+ {
+  "w": "hongi",
+  "line": 2,
+  "start": 9.69,
+  "syl": 2,
+  "end": 9.975
+ },
+ {
+  "w": "ki",
+  "line": 2,
+  "start": 9.975,
+  "syl": 1,
+  "end": 10.05
+ },
+ {
+  "w": "ye",
+  "line": 2,
+  "start": 10.05,
+  "syl": 1,
+  "end": 10.19
+ },
+ {
+  "w": "banda",
+  "line": 2,
+  "start": 10.19,
+  "syl": 2,
+  "end": 10.315
+ },
+ {
+  "w": "trading",
+  "line": 2,
+  "start": 10.315,
+  "syl": 2,
+  "end": 10.605
+ },
+ {
+  "w": "se",
+  "line": 2,
+  "start": 10.605,
+  "syl": 1,
+  "end": 10.72
+ },
+ {
+  "w": "gaadi",
+  "line": 2,
+  "start": 10.72,
+  "syl": 2,
+  "end": 11.015
+ },
+ {
+  "w": "le",
+  "line": 2,
+  "start": 11.015,
+  "syl": 1,
+  "end": 11.095
+ },
+ {
+  "w": "raha",
+  "line": 2,
+  "start": 11.095,
+  "syl": 2,
+  "end": 11.13
+ },
+ {
+  "w": "hai",
+  "line": 2,
+  "start": 11.13,
+  "syl": 1,
+  "end": 11.23
+ },
+ {
+  "w": "ye",
+  "line": 2,
+  "start": 11.23,
+  "syl": 1,
+  "end": 11.54
+ },
+ {
+  "w": "gaddiyan",
+  "line": 2,
+  "start": 11.54,
+  "syl": 2,
+  "end": 11.84
+ },
+ {
+  "w": "gin",
+  "line": 2,
+  "start": 11.84,
+  "syl": 1,
+  "end": 11.92
+ },
+ {
+  "w": "raha",
+  "line": 2,
+  "start": 11.92,
+  "syl": 2,
+  "end": 12.225
+ },
+ {
+  "w": "hai",
+  "line": 2,
+  "start": 12.225,
+  "syl": 1,
+  "end": 12.36
+ },
+ {
+  "w": "Lekin",
+  "line": 3,
+  "start": 12.685,
+  "syl": 2,
+  "end": 12.995
+ },
+ {
+  "w": "koi",
+  "line": 3,
+  "start": 12.995,
+  "syl": 1,
+  "end": 13.075
+ },
+ {
+  "w": "bhi",
+  "line": 3,
+  "start": 13.075,
+  "syl": 1,
+  "end": 13.2
+ },
+ {
+  "w": "aake",
+  "line": 3,
+  "start": 13.2,
+  "syl": 2,
+  "end": 13.525
+ },
+ {
+  "w": "nahi",
+  "line": 3,
+  "start": 13.525,
+  "syl": 2,
+  "end": 13.605
+ },
+ {
+  "w": "bata",
+  "line": 3,
+  "start": 13.605,
+  "syl": 2,
+  "end": 13.87
+ },
+ {
+  "w": "raha",
+  "line": 3,
+  "start": 13.87,
+  "syl": 2,
+  "end": 14.14
+ },
+ {
+  "w": "ki",
+  "line": 3,
+  "start": 14.14,
+  "syl": 1,
+  "end": 14.22
+ },
+ {
+  "w": "kahan",
+  "line": 3,
+  "start": 14.22,
+  "syl": 2,
+  "end": 14.28
+ },
+ {
+  "w": "se",
+  "line": 3,
+  "start": 14.28,
+  "syl": 1,
+  "end": 14.55
+ },
+ {
+  "w": "shuru",
+  "line": 3,
+  "start": 14.55,
+  "syl": 2,
+  "end": 14.72
+ },
+ {
+  "w": "karein",
+  "line": 3,
+  "start": 14.72,
+  "syl": 2,
+  "end": 15.04
+ },
+ {
+  "w": "Ye",
+  "line": 4,
+  "start": 15.445,
+  "syl": 1,
+  "end": 15.58
+ },
+ {
+  "w": "shanka",
+  "line": 4,
+  "start": 15.58,
+  "syl": 2,
+  "end": 15.795
+ },
+ {
+  "w": "tumhari",
+  "line": 4,
+  "start": 15.795,
+  "syl": 3,
+  "end": 16.005
+ },
+ {
+  "w": "main",
+  "line": 4,
+  "start": 16.005,
+  "syl": 1,
+  "end": 16.235
+ },
+ {
+  "w": "door",
+  "line": 4,
+  "start": 16.235,
+  "syl": 1,
+  "end": 16.39
+ },
+ {
+  "w": "kar",
+  "line": 4,
+  "start": 16.39,
+  "syl": 1,
+  "end": 16.6
+ },
+ {
+  "w": "deta",
+  "line": 4,
+  "start": 16.6,
+  "syl": 2,
+  "end": 16.895
+ },
+ {
+  "w": "hoon",
+  "line": 4,
+  "start": 16.895,
+  "syl": 1,
+  "end": 16.99
+ },
+ {
+  "w": "Mera",
+  "line": 5,
+  "start": 17.18,
+  "syl": 2,
+  "end": 17.25
+ },
+ {
+  "w": "naam",
+  "line": 5,
+  "start": 17.25,
+  "syl": 1,
+  "end": 17.33
+ },
+ {
+  "w": "hai",
+  "line": 5,
+  "start": 17.33,
+  "syl": 1,
+  "end": 17.495
+ },
+ {
+  "w": "Abhishek",
+  "line": 5,
+  "start": 17.495,
+  "syl": 3,
+  "end": 17.9
+ },
+ {
+  "w": "aur",
+  "line": 5,
+  "start": 17.9,
+  "syl": 1,
+  "end": 17.98
+ },
+ {
+  "w": "main",
+  "line": 5,
+  "start": 17.98,
+  "syl": 1,
+  "end": 18.02
+ },
+ {
+  "w": "pichhle",
+  "line": 5,
+  "start": 18.02,
+  "syl": 2,
+  "end": 18.285
+ },
+ {
+  "w": "8",
+  "line": 5,
+  "start": 18.285,
+  "syl": 1,
+  "end": 18.505
+ },
+ {
+  "w": "saalon",
+  "line": 5,
+  "start": 18.505,
+  "syl": 2,
+  "end": 18.76
+ },
+ {
+  "w": "se",
+  "line": 5,
+  "start": 18.76,
+  "syl": 1,
+  "end": 19.01
+ },
+ {
+  "w": "professionally",
+  "line": 5,
+  "start": 19.01,
+  "syl": 5,
+  "end": 19.55
+ },
+ {
+  "w": "trade",
+  "line": 5,
+  "start": 19.55,
+  "syl": 2,
+  "end": 19.795
+ },
+ {
+  "w": "kar",
+  "line": 5,
+  "start": 19.795,
+  "syl": 1,
+  "end": 20.075
+ },
+ {
+  "w": "raha",
+  "line": 5,
+  "start": 20.075,
+  "syl": 2,
+  "end": 20.195
+ },
+ {
+  "w": "hoon",
+  "line": 5,
+  "start": 20.195,
+  "syl": 1,
+  "end": 20.28
+ },
+ {
+  "w": "Ye",
+  "line": 6,
+  "start": 20.725,
+  "syl": 1,
+  "end": 20.83
+ },
+ {
+  "w": "mujhe",
+  "line": 6,
+  "start": 20.83,
+  "syl": 2,
+  "end": 21.135
+ },
+ {
+  "w": "IIT",
+  "line": 6,
+  "start": 21.135,
+  "syl": 3,
+  "end": 21.66
+ },
+ {
+  "w": "Guwahati",
+  "line": 6,
+  "start": 21.66,
+  "syl": 4,
+  "end": 22.02
+ },
+ {
+  "w": "ne",
+  "line": 6,
+  "start": 22.02,
+  "syl": 1,
+  "end": 22.1
+ },
+ {
+  "w": "diya",
+  "line": 6,
+  "start": 22.1,
+  "syl": 1,
+  "end": 22.245
+ },
+ {
+  "w": "tha",
+  "line": 6,
+  "start": 22.245,
+  "syl": 1,
+  "end": 22.435
+ },
+ {
+  "w": "jab",
+  "line": 6,
+  "start": 22.435,
+  "syl": 1,
+  "end": 22.555
+ },
+ {
+  "w": "main",
+  "line": 6,
+  "start": 22.555,
+  "syl": 1,
+  "end": 22.715
+ },
+ {
+  "w": "wahan",
+  "line": 6,
+  "start": 22.715,
+  "syl": 2,
+  "end": 23.055
+ },
+ {
+  "w": "par",
+  "line": 6,
+  "start": 23.055,
+  "syl": 1,
+  "end": 23.13
+ },
+ {
+  "w": "trading",
+  "line": 7,
+  "start": 23.49,
+  "syl": 2,
+  "end": 23.79
+ },
+ {
+  "w": "sessions",
+  "line": 7,
+  "start": 23.79,
+  "syl": 2,
+  "end": 24.145
+ },
+ {
+  "w": "karne",
+  "line": 7,
+  "start": 24.145,
+  "syl": 2,
+  "end": 24.275
+ },
+ {
+  "w": "gaya",
+  "line": 7,
+  "start": 24.275,
+  "syl": 1,
+  "end": 24.41
+ },
+ {
+  "w": "tha",
+  "line": 7,
+  "start": 24.41,
+  "syl": 1,
+  "end": 24.62
+ },
+ {
+  "w": "Ab",
+  "line": 8,
+  "start": 24.95,
+  "syl": 1,
+  "end": 25.1
+ },
+ {
+  "w": "main",
+  "line": 8,
+  "start": 25.1,
+  "syl": 1,
+  "end": 25.18
+ },
+ {
+  "w": "yahan",
+  "line": 8,
+  "start": 25.18,
+  "syl": 2,
+  "end": 25.405
+ },
+ {
+  "w": "par",
+  "line": 8,
+  "start": 25.405,
+  "syl": 1,
+  "end": 25.615
+ },
+ {
+  "w": "kyun",
+  "line": 8,
+  "start": 25.615,
+  "syl": 1,
+  "end": 25.99
+ },
+ {
+  "w": "aaya",
+  "line": 8,
+  "start": 25.99,
+  "syl": 1,
+  "end": 26.07
+ },
+ {
+  "w": "hoon",
+  "line": 8,
+  "start": 26.07,
+  "syl": 1,
+  "end": 26.08
+ },
+ {
+  "w": "Kyunki",
+  "line": 8,
+  "start": 26.08,
+  "syl": 2,
+  "end": 26.165
+ },
+ {
+  "w": "mere",
+  "line": 8,
+  "start": 26.165,
+  "syl": 2,
+  "end": 26.33
+ },
+ {
+  "w": "paas",
+  "line": 8,
+  "start": 26.33,
+  "syl": 1,
+  "end": 26.595
+ },
+ {
+  "w": "bahut",
+  "line": 8,
+  "start": 26.595,
+  "syl": 2,
+  "end": 26.795
+ },
+ {
+  "w": "saare",
+  "line": 8,
+  "start": 26.795,
+  "syl": 2,
+  "end": 26.9
+ },
+ {
+  "w": "comments",
+  "line": 9,
+  "start": 27.04,
+  "syl": 2,
+  "end": 27.29
+ },
+ {
+  "w": "aate",
+  "line": 9,
+  "start": 27.29,
+  "syl": 2,
+  "end": 27.45
+ },
+ {
+  "w": "hain",
+  "line": 9,
+  "start": 27.45,
+  "syl": 1,
+  "end": 27.555
+ },
+ {
+  "w": "ki",
+  "line": 9,
+  "start": 27.555,
+  "syl": 1,
+  "end": 27.655
+ },
+ {
+  "w": "bhaiya",
+  "line": 9,
+  "start": 27.655,
+  "syl": 1,
+  "end": 27.86
+ },
+ {
+  "w": "humein",
+  "line": 9,
+  "start": 27.86,
+  "syl": 2,
+  "end": 27.955
+ },
+ {
+  "w": "bhi",
+  "line": 9,
+  "start": 27.955,
+  "syl": 1,
+  "end": 28.075
+ },
+ {
+  "w": "sikhao",
+  "line": 9,
+  "start": 28.075,
+  "syl": 2,
+  "end": 28.33
+ },
+ {
+  "w": "humein",
+  "line": 9,
+  "start": 28.33,
+  "syl": 2,
+  "end": 28.7
+ },
+ {
+  "w": "bhi",
+  "line": 9,
+  "start": 28.7,
+  "syl": 1,
+  "end": 28.78
+ },
+ {
+  "w": "sikhao",
+  "line": 9,
+  "start": 28.78,
+  "syl": 2,
+  "end": 29.0
+ }
+]

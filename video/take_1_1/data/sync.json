@@ -1,0 +1,19 @@
+{
+  "_note": "Word onsets in SOURCE seconds (take_1_1). Line windows from the transcript; onsets placed on the voice envelope + spectrogram (fricative/plosive anchors). Output frame = round(t*30) - 84.",
+  "y2026": 2.85, "ke": 3.53, "saat": 3.62, "mahine1": 3.90, "kahan1": 4.17, "chale": 4.40, "gaye": 4.50,
+  "tumhe": 4.60, "bhi1": 4.77, "nahi1": 4.90, "pata": 5.05,
+  "paanch": 5.80, "mahine2": 6.08, "bache": 6.32, "hain1": 6.48, "khud": 7.05, "ko": 7.17, "prove": 7.25,
+  "achha": 8.31, "tumhari": 8.50, "feed": 8.87, "mein": 8.97, "reels": 9.06,
+  "ye1": 10.05, "banda": 10.20, "trading1": 10.42, "se1": 10.84, "gaadi": 10.95,
+  "ye2": 11.28, "gaddiyan": 11.40, "gin": 11.84, "raha1": 11.95, "hai": 12.20,
+  "lekin": 12.68, "koi": 13.00, "bhi2": 13.08, "aake": 13.20, "nahi2": 13.53, "bata": 13.62, "raha2": 13.87,
+  "kahan2": 14.28, "se2": 14.45, "shuru": 14.55, "karein": 14.78,
+  "ye3": 15.40, "shanka": 15.55, "door": 16.24,
+  "mera": 17.17, "naam": 17.25, "abhishek": 17.48, "aath": 18.30, "saalon": 18.47,
+  "professionally": 18.78, "trade": 19.62,
+  "ye4": 20.72, "iit": 21.13, "guwahati": 21.65, "jab": 22.43, "trading2": 23.48, "sessions": 23.74,
+  "ab": 24.93, "kyun": 25.61,
+  "kyunki": 26.08, "bahut": 26.58, "saare": 26.78, "comments": 26.95, "aate": 27.28, "hain2": 27.45,
+  "bhaiya": 27.68, "humein1": 27.85, "bhi3": 27.97, "sikhao1": 28.10,
+  "humein2": 28.33, "bhi4": 28.60, "sikhao2": 28.73, "end": 29.067
+}
