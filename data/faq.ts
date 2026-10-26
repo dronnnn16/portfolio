@@ -1,6 +1,5 @@
 export const faqIntro = {
   label: "FAQ",
-  title: "Questions, answered",
 };
 
 // {{TODO}} adjust the turnaround/revision specifics to what you actually offer.

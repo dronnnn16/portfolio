@@ -8,7 +8,7 @@ export function Process() {
   return (
     <Section id="process" seed={53} labelledBy="process-title">
       <div className="container-x">
-        <SectionHeader id="process-title" label={processIntro.label} title={processIntro.title} sub={processIntro.sub} />
+        <SectionHeader id="process-title" label={processIntro.label} sub={processIntro.sub} />
         <Stagger as="ul" className="mt-14 grid gap-4 md:mt-20 md:grid-cols-2 md:gap-5">
           {processSteps.map((s, i) => (
             <StaggerItem as="li" key={s.title} className="glass card-hover rounded-[20px] p-2">

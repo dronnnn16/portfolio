@@ -24,7 +24,7 @@ All copy lives in `/data`. Search the repo for `{{TODO}}` to find everything wai
 | `data/services.ts` | services + feature banner |
 | `data/process.ts` | process steps + before/after tags |
 | `data/testimonials.ts` | **section hidden while empty** — add real quotes only |
-| `data/tools.ts` | toolkit marquee (add `logo` paths for official logos) |
+| `data/tools.ts` | toolkit marquee. Figma and DaVinci Resolve logos are in `public/tools/`; After Effects and Premiere Pro still use placeholder marks |
 | `data/faq.ts` | FAQ (turnaround/revision specifics are `{{TODO}}`) |
 | `data/cta.ts` | final call to action |
 

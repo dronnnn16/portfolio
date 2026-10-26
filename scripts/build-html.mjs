@@ -34,5 +34,8 @@ html = html.replace("</body>", () => `${js}</body>`);
 html = html.replace(/:HL\[\\"\/_next\/static\/media\/[^\]]*\]\\n/g, "");
 html = html.replace(/\/_next\/static\/css\/[a-z0-9]+\.css/g, "data:text/css,");
 
+// Small local SVGs (tool logos) → data URIs so they show when opened from disk
+html = html.replace(/\/tools\/[\w-]+\.svg/g, (p) => `data:image/svg+xml;base64,${b64(p)}`);
+
 writeFileSync(outFile, html);
 console.log(`${outFile} — ${Math.round(Buffer.byteLength(html) / 1024)} KB`);

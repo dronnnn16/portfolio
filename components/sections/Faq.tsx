@@ -58,7 +58,7 @@ export function Faq() {
   return (
     <Section id="faq" tone="deep" seed={83} labelledBy="faq-title">
       <div className="container-x">
-        <SectionHeader id="faq-title" label={faqIntro.label} title={faqIntro.title} />
+        <SectionHeader id="faq-title" label={faqIntro.label} />
         <Stagger className="mx-auto mt-14 flex max-w-[820px] flex-col gap-3 md:mt-20" stagger={0.07}>
           {faqs.map((f, i) => (
             <StaggerItem key={f.q}>

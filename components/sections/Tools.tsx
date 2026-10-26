@@ -1,15 +1,17 @@
-import { tools, toolsIntro } from "@/data/tools";
+import { tools, toolsIntro, type Tool } from "@/data/tools";
 import { asset } from "@/lib/asset";
 import { Section } from "../ui/Section";
 import { SectionHeader } from "../ui/SectionHeader";
 
-function ToolChip({ t }: { t: (typeof tools)[number] }) {
+function ToolChip({ t }: { t: Tool }) {
   return (
-    <li className="glass flex shrink-0 items-center gap-3 rounded-[16px] py-3 pl-3 pr-6">
+    <li className={`glass flex shrink-0 items-center gap-3 rounded-[16px] py-3 pr-6 ${t.logo || t.short ? "pl-3" : "min-h-16 pl-6"}`}>
       {t.logo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={asset(t.logo)} alt="" className="size-10 rounded-[10px] object-contain" loading="lazy" />
-      ) : (
+        <span className="grid size-10 place-items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={asset(t.logo)} alt="" className="h-8 w-8 object-contain" />
+        </span>
+      ) : t.short && t.color ? (
         <span
           aria-hidden
           className="grid size-10 place-items-center rounded-[10px] border font-ui text-[15px] font-semibold"
@@ -18,7 +20,7 @@ function ToolChip({ t }: { t: (typeof tools)[number] }) {
         >
           {t.short}
         </span>
-      )}
+      ) : null}
       <span className="font-ui text-[17px] font-medium whitespace-nowrap text-white">{t.name}</span>
     </li>
   );

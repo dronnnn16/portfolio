@@ -2,7 +2,6 @@ export type ProcessVisual = "moodboard" | "storyboard" | "animate" | "deliver";
 
 export const processIntro = {
   label: "My Process",
-  title: "From idea to final export — here's how I work",
   sub: "Four steps, the same every time, so you always know what's next and when you'll see it.",
 };
 
