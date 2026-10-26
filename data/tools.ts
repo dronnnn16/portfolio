@@ -13,6 +13,5 @@ export const tools: Tool[] = [
   { name: "After Effects", short: "Ae", color: "#9999FF" }, // {{TODO}} add official logo
   { name: "Premiere Pro", short: "Pr", color: "#9999FF" }, // {{TODO}} add official logo
   { name: "Figma", logo: "/tools/figma.svg" },
-  { name: "Milanote" },
   { name: "DaVinci Resolve", logo: "/tools/davinci-resolve.svg" },
 ];
