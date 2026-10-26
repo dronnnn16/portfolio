@@ -6,7 +6,7 @@ import { ProblemVisual } from "../visuals/ProblemVisuals";
 
 export function Problem() {
   return (
-    <Section id="problem" seed={11} labelledBy="problem-title">
+    <Section id="problem" labelledBy="problem-title">
       <div className="container-x">
         <SectionHeader id="problem-title" label={problems.label} title={problems.title} sub={problems.sub} />
         <Stagger as="ul" className="mt-14 grid gap-4 md:mt-20 md:grid-cols-3 md:gap-5">

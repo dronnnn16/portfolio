@@ -19,7 +19,7 @@ export function Testimonials() {
   const go = (d: number) => setI((v) => (v + d + testimonials.length) % testimonials.length);
 
   return (
-    <Section id="testimonials" tone="deep" seed={61} labelledBy="testimonials-title">
+    <Section id="testimonials" tone="deep" labelledBy="testimonials-title">
       <div className="container-x">
         <SectionHeader id="testimonials-title" label={testimonialsIntro.label} title={testimonialsIntro.title} />
         <Reveal blur={false} className="glass mt-14 grid gap-2 rounded-[20px] p-2 md:mt-20 md:grid-cols-[minmax(0,420px)_1fr]">

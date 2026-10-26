@@ -22,19 +22,9 @@
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-twinkle: twinkle var(--tw-dur, 4s) ease-in-out infinite;
-  --animate-twinkle-layer: twinkle-layer var(--tw-dur, 5s) ease-in-out infinite;
   --animate-float: float 5s ease-in-out infinite;
   --animate-marquee: marquee var(--marquee-dur, 30s) linear infinite;
 
-  @keyframes twinkle {
-    0%, 100% { opacity: var(--tw-min, 0.15); transform: scale(0.85); }
-    50% { opacity: var(--tw-max, 0.9); transform: scale(1); }
-  }
-  @keyframes twinkle-layer {
-    0%, 100% { opacity: 0.25; }
-    50% { opacity: 1; }
-  }
   @keyframes blur-in {
     from { opacity: 0.01; transform: translateY(20px); filter: blur(10px); }
     to { opacity: 1; transform: none; filter: blur(0); }
@@ -51,12 +41,12 @@
 
 @layer base {
   html {
-    background: var(--color-ink);
+    background: var(--color-section);
     color-scheme: dark;
     -webkit-text-size-adjust: 100%;
   }
+  /* No body background: the fixed 360° starfield canvas (z-index -10) must paint above it. */
   body {
-    background: var(--color-ink);
     color: var(--color-body);
     font-family: var(--font-sans);
     font-weight: 400;

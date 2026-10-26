@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { hero, heroReels } from "@/data/site";
 import { EASE } from "@/lib/motion";
 import { Button } from "../ui/Button";
-import { Starfield } from "../ui/Starfield";
 import { ReelCarousel } from "../visuals/ReelCarousel";
 
 const tagPos = [
@@ -16,14 +15,12 @@ const tagPos = [
 export function Hero() {
   const words = hero.title.split(" ");
   return (
-    <section id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-section pb-20 pt-32 md:pb-28 md:pt-44">
+    <section id="top" aria-labelledby="hero-title" className="relative isolate overflow-hidden pb-20 pt-32 md:pb-28 md:pt-44">
       {/* glow orb top-left + vertical line texture + stars */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -left-[18%] -top-[22%] h-[620px] w-[620px] rounded-full bg-[radial-gradient(closest-side,rgba(250,97,20,0.55),rgba(232,80,26,0.18)_55%,transparent)] md:h-[820px] md:w-[820px]" />
         <div className="absolute right-[-10%] top-[30%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(206,127,93,0.14),transparent)]" />
         <div className="vlines absolute inset-0" />
-        <Starfield seed={7} count={56} sparkles={5} />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-section" />
       </div>
 
       <div className="container-x flex flex-col items-center text-center">

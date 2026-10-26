@@ -4,7 +4,7 @@ import { ArrowUpRight } from "../ui/Arrow";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-section pt-16">
+    <footer className="relative overflow-hidden pt-16">
       <div className="container-x">
         <div className="grid gap-12 border-t border-white/[0.08] pt-14 md:grid-cols-[1.4fr_1fr_1fr]">
           <div>

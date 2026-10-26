@@ -30,7 +30,7 @@ export function Tools() {
   // Repeat the list so one half always fills wide screens; the track translates -50% for a seamless loop.
   const half = Array.from({ length: 3 }, () => tools).flat();
   return (
-    <Section id="tools" seed={71} labelledBy="tools-title">
+    <Section id="tools" labelledBy="tools-title">
       <div className="container-x">
         <SectionHeader id="tools-title" label={toolsIntro.label} title={toolsIntro.title} />
       </div>
