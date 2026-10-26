@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter_Tight } from "next/font/google";
 import { Cursor } from "@/components/Cursor";
+import { LiquidGlass } from "@/components/LiquidGlass";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { site, hero } from "@/data/site";
 import "./globals.css";
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SmoothScroll>
           {children}
           <Cursor />
+          <LiquidGlass />
         </SmoothScroll>
       </body>
     </html>

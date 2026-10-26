@@ -8,7 +8,7 @@ type Variant = "primary" | "secondary" | "white";
 
 const styles: Record<Variant, string> = {
   primary: "btn-primary-bg text-white",
-  secondary: "glass glass-blur text-white hover:border-white/20",
+  secondary: "liquid text-white",
   white: "bg-white text-[#100b08] shadow-[0_6px_24px_-8px_rgba(255,255,255,0.4)]",
 };
 

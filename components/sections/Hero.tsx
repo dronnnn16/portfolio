@@ -28,7 +28,7 @@ export function Hero() {
 
       <div className="container-x flex flex-col items-center text-center">
         <p
-          className="blur-in glass glass-blur inline-flex items-center gap-2 rounded-full py-1.5 pl-2 pr-4 font-ui text-[13px] font-medium text-white/85"
+          className="blur-in liquid inline-flex items-center gap-2 rounded-full py-1.5 pl-2 pr-4 font-ui text-[13px] font-medium text-white/85"
           style={{ "--d": "0.05s" } as React.CSSProperties}
         >
           <span className="relative grid size-5 place-items-center rounded-full bg-positive/20">
@@ -80,7 +80,7 @@ export function Hero() {
             >
               <span
                 style={{ animationDuration: `${5 + i}s` }}
-                className="animate-float glass inline-flex items-center gap-2 rounded-full bg-[#100b08]/60 px-3.5 py-2 font-ui text-[13px] font-medium text-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.8)]"
+                className="animate-float liquid liquid-lite inline-flex items-center gap-2 rounded-full px-3.5 py-2 font-ui text-[13px] font-medium text-white"
               >
                 <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_2px_rgba(250,97,20,0.7)]" />
                 {t}
@@ -91,7 +91,7 @@ export function Hero() {
       </motion.div>
       <ul aria-label="Specialities" className="container-x mt-8 flex flex-wrap justify-center gap-2 sm:hidden">
         {hero.tags.map((t) => (
-          <li key={t} className="glass inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-ui text-[12px] text-white/85">
+          <li key={t} className="liquid inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-ui text-[12px] text-white/85">
             <span className="size-1.5 rounded-full bg-accent" />
             {t}
           </li>
