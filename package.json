@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:html": "STATIC_EXPORT=true next build && node scripts/build-html.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.27",
