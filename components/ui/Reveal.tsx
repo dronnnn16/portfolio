@@ -15,7 +15,7 @@ export function BlurText({
   as = "p",
   className,
   delay = 0,
-  stagger = 0.045,
+  stagger = 0.04,
   once = true,
   id,
 }: {
@@ -35,7 +35,7 @@ export function BlurText({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once, margin: "0px 0px -10% 0px" }}
+      viewport={{ once, margin: "0px 0px -6% 0px" }}
       transition={{ staggerChildren: stagger, delayChildren: delay }}
     >
       {words.map((w, i) => (
@@ -43,7 +43,7 @@ export function BlurText({
           key={i}
           className="inline-block will-change-[filter,transform]"
           variants={blurIn}
-          transition={{ duration: 0.8, ease: EASE }}
+          transition={{ duration: 1, ease: EASE }}
         >
           {w}
           {i < words.length - 1 ? " " : ""}
@@ -66,9 +66,9 @@ export function Reveal({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      viewport={{ once: true, margin: "0px 0px -6% 0px" }}
       variants={blur ? blurIn : fadeUp}
-      transition={{ duration: 0.8, ease: EASE, delay }}
+      transition={{ duration: 1, ease: EASE, delay }}
       {...rest}
     >
       {children}
@@ -97,7 +97,7 @@ export function Stagger({
       className,
       initial: "hidden",
       whileInView: "show",
-      viewport: { once: true, margin: "0px 0px -8% 0px" },
+      viewport: { once: true, margin: "0px 0px -6% 0px" },
       transition: { staggerChildren: stagger, delayChildren: delay },
     },
     children,
@@ -116,7 +116,7 @@ export function StaggerItem({
   const Tag = motion[as] as ElementType;
   return createElement(
     Tag,
-    { className, variants: fadeUp, transition: { duration: 0.8, ease: EASE } },
+    { className, variants: fadeUp, transition: { duration: 1, ease: EASE } },
     children,
   );
 }

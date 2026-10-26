@@ -10,8 +10,8 @@ export function Cursor() {
   const [hidden, setHidden] = useState(true);
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  const rx = useSpring(x, { stiffness: 350, damping: 32, mass: 0.6 });
-  const ry = useSpring(y, { stiffness: 350, damping: 32, mass: 0.6 });
+  const rx = useSpring(x, { stiffness: 260, damping: 28, mass: 0.5 });
+  const ry = useSpring(y, { stiffness: 260, damping: 28, mass: 0.5 });
 
   useEffect(() => {
     const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -49,7 +49,7 @@ export function Cursor() {
           backgroundColor: hover ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0)",
           borderColor: hover ? "rgba(250,97,20,0.8)" : "rgba(255,255,255,0.5)",
         }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       />
       <motion.div
         className="absolute left-0 top-0 size-1.5 rounded-full bg-accent"

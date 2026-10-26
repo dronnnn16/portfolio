@@ -8,7 +8,6 @@ export const site = {
   availability: "Available for freelance projects",
   nav: [
     { label: "Services", href: "#services" },
-    { label: "Work", href: "#work" },
     { label: "Process", href: "#process" },
     { label: "Contact", href: "#contact" },
   ],
@@ -25,8 +24,21 @@ export const hero = {
   title: "Motion design & edits that make people stop scrolling",
   sub: "I'm Dron — a motion designer and video editor from Jaipur. I craft SaaS UI animations, Instagram Reels and long-form edits that look premium and hold attention.",
   primary: { label: "Start a Project", href: "#contact" },
-  secondary: { label: "See My Work", href: "#work" },
+  secondary: { label: "See How I Work", href: "#process" },
   tags: ["SaaS Motion", "Reels Editing", "Long-form Edits"],
+};
+
+// Horizontal 16:9 placeholders for the "Long Form Editing and SaaS Projects" carousel.
+// Drop files into /public/long-form/.
+export const longForm = {
+  label: "Widescreen Work",
+  title: "Long Form Editing and SaaS Projects",
+  sub: "YouTube edits, product walkthroughs and SaaS launch videos, cut for 16:9.",
+  items: Array.from({ length: 6 }, (_, i) => ({
+    src: `/long-form/project-${i + 1}.mp4`,
+    poster: `/long-form/project-${i + 1}.jpg`,
+    alt: `Long-form or SaaS project ${i + 1}`, // {{TODO}} describe each project
+  })),
 };
 
 // Vertical 9:16 reels for the hero carousel. Drop files into /public/reels/.

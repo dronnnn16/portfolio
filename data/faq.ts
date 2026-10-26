@@ -7,7 +7,7 @@ export const faqIntro = {
 export const faqs: { q: string; a: string }[] = [
   {
     q: "What do you specialize in?",
-    a: "SaaS UI motion design, Instagram Reels and long-form YouTube edits. I also shoot on location — forts, deserts, mountains and beaches — when a project needs original footage.",
+    a: "SaaS UI motion design, Instagram Reels and long-form YouTube edits.",
   },
   {
     q: "How fast is delivery?",

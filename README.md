@@ -18,11 +18,10 @@ All copy lives in `/data`. Search the repo for `{{TODO}}` to find everything wai
 
 | File | What's in it |
 | --- | --- |
-| `data/site.ts` | name, nav, socials (LinkedIn `{{TODO}}`), hero copy, hero reel paths |
+| `data/site.ts` | name, nav, socials (LinkedIn `{{TODO}}`), hero copy, hero reel paths, long-form/SaaS carousel |
 | `data/problems.ts` | "The Problem" cards |
 | `data/stats.ts` | stat cards. `value: null` shows `{{TODO}}`; set a real number to enable the count-up |
 | `data/services.ts` | services + feature banner |
-| `data/projects.ts` | selected work (row + case studies) |
 | `data/process.ts` | process steps + before/after tags |
 | `data/testimonials.ts` | **section hidden while empty** — add real quotes only |
 | `data/tools.ts` | toolkit marquee (add `logo` paths for official logos) |
@@ -31,13 +30,13 @@ All copy lives in `/data`. Search the repo for `{{TODO}}` to find everything wai
 
 ## Media
 
-Drop files into `public/reels/`, `public/work/` and `public/testimonials/` (each folder has a README with exact file names).
-Until a file exists, a labelled placeholder ("Add /work/…mp4") is shown in its place. Videos load only near the viewport, are muted, loop, play inline and pause off-screen.
+Drop files into `public/reels/`, `public/long-form/` and `public/testimonials/` (each folder has a README with exact file names).
+Until a file exists, a labelled placeholder ("Add /reels/…mp4") is shown in its place. Videos load only near the viewport, are muted, loop, play inline and pause off-screen.
 
 ## Single HTML file
 
 `npm run build:html` exports the site and inlines all CSS, fonts and JS into `dron-portfolio.html`.
-Videos are not embedded; for media to show, keep `reels/`, `work/` and `testimonials/` next to the file
+Videos are not embedded; for media to show, keep `reels/`, `long-form/` and `testimonials/` next to the file
 on a web server (the absolute `/reels/...` paths don't resolve from `file://`).
 
 ## Deploy

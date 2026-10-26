@@ -24,13 +24,6 @@ const glyphs: Record<Kind, React.ReactNode> = {
       <path d="M13.5 11.5v9l7.5-4.5-7.5-4.5Z" fill="currentColor" />
     </>
   ),
-  camera: (
-    <>
-      <path d="M5 11a3 3 0 0 1 3-3h3l2-3h6l2 3h3a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V11Z" fill="currentColor" opacity=".35" />
-      <circle cx="16" cy="17" r="6" stroke="currentColor" strokeWidth="1.8" fill="none" />
-      <circle cx="16" cy="17" r="2.6" fill="currentColor" />
-    </>
-  ),
 };
 
 /** Glossy, layered "3D" icon tile built from gradients + highlights. */

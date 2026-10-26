@@ -1,9 +1,9 @@
-export type ServiceIcon = "ui" | "reels" | "youtube" | "camera";
+export type ServiceIcon = "ui" | "reels" | "youtube";
 
 export const servicesIntro = {
   label: "What I Do",
   title: "Motion and edits for products, creators and brands",
-  sub: "Four ways I can help, from a single launch animation to a monthly content pipeline.",
+  sub: "Three ways I can help, from a single launch animation to a monthly content pipeline.",
 };
 
 export const services: { icon: ServiceIcon; title: string; body: string }[] = [
@@ -21,11 +21,6 @@ export const services: { icon: ServiceIcon; title: string; body: string }[] = [
     icon: "youtube",
     title: "Long-form YouTube Editing",
     body: "Story structure, b-roll, graphics and retention-aware pacing for videos people finish.",
-  },
-  {
-    icon: "camera",
-    title: "On-location Shoots",
-    body: "Cinematic footage at forts, deserts, mountains and beaches — shot and edited end to end.",
   },
 ];
 

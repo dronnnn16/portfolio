@@ -1,6 +1,6 @@
 import { Reveal } from "./Reveal";
 
-/** Small dark chip with short orange dashes either side: "— Selected Work —" */
+/** Small dark chip with short orange dashes either side: "— My Process —" */
 export function SectionLabel({ children }: { children: string }) {
   return (
     <Reveal blur={false} className="inline-flex">

@@ -20,7 +20,7 @@ export function Services() {
       <div className="container-x">
         <SectionHeader id="services-title" label={servicesIntro.label} title={servicesIntro.title} sub={servicesIntro.sub} />
 
-        <Stagger as="ul" className="mt-14 grid gap-4 sm:grid-cols-2 md:mt-20 lg:grid-cols-4 lg:gap-5">
+        <Stagger as="ul" className="mt-14 grid gap-4 md:mt-20 md:grid-cols-3 lg:gap-5">
           {services.map((s) => (
             <StaggerItem as="li" key={s.title} className="glass card-hover group rounded-[20px] p-6 pt-7">
               <ServiceIcon kind={s.icon} />

@@ -1,25 +1,23 @@
 "use client";
 
 import Lenis from "lenis";
-import { MotionConfig } from "motion/react";
+import { MotionConfig, cancelFrame, frame } from "motion/react";
 import { useEffect, type ReactNode } from "react";
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.085, // frame-rate independent smoothing; lower = silkier
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.4,
       anchors: { offset: -80 },
     });
-    let raf = 0;
-    const loop = (t: number) => {
-      lenis.raf(t);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
+    // Drive Lenis from Motion's frame loop so scrolling and animations update in the same frame.
+    const update = ({ timestamp }: { timestamp: number }) => lenis.raf(timestamp);
+    frame.update(update, true);
     return () => {
-      cancelAnimationFrame(raf);
+      cancelFrame(update);
       lenis.destroy();
     };
   }, []);
