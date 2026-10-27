@@ -43,8 +43,23 @@ export const longForm = {
 };
 
 // Vertical 9:16 reels for the hero carousel. Drop files into /public/reels/.
-export const heroReels = Array.from({ length: 8 }, (_, i) => ({
-  src: `/reels/reel-${i + 1}.mp4`,
-  poster: `/reels/reel-${i + 1}.jpg`,
-  alt: `Showreel clip ${i + 1}`, // {{TODO}} describe each clip
-}));
+// The 4th slot starts near the centre of the carousel.
+const reelPlaceholder = (n: number) => ({
+  src: `/reels/reel-${n}.mp4`,
+  poster: `/reels/reel-${n}.jpg`,
+  alt: `Showreel clip ${n}`, // {{TODO}} replace with a real reel
+});
+export const heroReels = [
+  reelPlaceholder(1),
+  reelPlaceholder(2),
+  reelPlaceholder(3),
+  {
+    src: "/reels/ai-audio.mp4",
+    poster: "/reels/ai-audio.jpg",
+    alt: "AI Audio reel with animated market charts",
+  },
+  reelPlaceholder(5),
+  reelPlaceholder(6),
+  reelPlaceholder(7),
+  reelPlaceholder(8),
+];

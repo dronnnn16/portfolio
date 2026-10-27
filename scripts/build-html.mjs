@@ -1,7 +1,7 @@
 // Bundles the static export (out/) into one self-contained HTML file:
 // CSS, fonts, icon and JS are all inlined, so it opens straight from disk.
 // Usage: npm run build:html  →  dron-portfolio.html
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = "out";
@@ -36,6 +36,22 @@ html = html.replace(/\/_next\/static\/css\/[a-z0-9]+\.css/g, "data:text/css,");
 
 // Small local SVGs (tool logos) → data URIs so they show when opened from disk
 html = html.replace(/\/tools\/[\w-]+\.svg/g, (p) => `data:image/svg+xml;base64,${b64(p)}`);
+
+// Media that exists in public/reels and public/long-form → one inline map the client reads
+// (lib/asset.ts), so videos play from disk without duplicating them in the page data.
+const mime = { ".mp4": "video/mp4", ".webm": "video/webm", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp" };
+const inline = {};
+for (const dir of ["reels", "long-form", "testimonials"]) {
+  const full = join(root, dir);
+  if (!existsSync(full)) continue;
+  for (const f of readdirSync(full)) {
+    const ext = f.slice(f.lastIndexOf(".")).toLowerCase();
+    if (mime[ext]) inline[`/${dir}/${f}`] = `data:${mime[ext]};base64,${b64(`/${dir}/${f}`)}`;
+  }
+}
+if (Object.keys(inline).length) {
+  html = html.replace("<head>", () => `<head><script>window.__INLINE_ASSETS=${JSON.stringify(inline)}</script>`);
+}
 
 writeFileSync(outFile, html);
 console.log(`${outFile} — ${Math.round(Buffer.byteLength(html) / 1024)} KB`);
