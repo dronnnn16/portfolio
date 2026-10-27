@@ -4,13 +4,8 @@ import { motion } from "motion/react";
 import { hero, heroReels } from "@/data/site";
 import { EASE } from "@/lib/motion";
 import { Button } from "../ui/Button";
+import { FloatingTags } from "../visuals/FloatingTags";
 import { ReelCarousel } from "../visuals/ReelCarousel";
-
-const tagPos = [
-  "left-[4%] top-[14%] md:left-[9%]",
-  "right-[4%] top-[6%] md:right-[10%]",
-  "left-1/2 -bottom-5 -translate-x-1/2",
-];
 
 export function Hero() {
   const words = hero.title.split(" ");
@@ -66,34 +61,8 @@ export function Hero() {
         transition={{ duration: 1.4, ease: EASE, delay: 0.75 }}
       >
         <ReelCarousel reels={heroReels} />
-        <ul aria-label="Specialities" className="pointer-events-none absolute inset-0 hidden sm:block">
-          {hero.tags.map((t, i) => (
-            <motion.li
-              key={t}
-              className={`absolute z-[2000] ${tagPos[i]}`}
-              initial={{ opacity: 0, scale: 0.8, filter: "blur(6px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, ease: EASE, delay: 1.3 + i * 0.15 }}
-            >
-              <span
-                style={{ animationDuration: `${5 + i}s` }}
-                className="animate-float liquid liquid-lite inline-flex items-center gap-2 rounded-full px-3.5 py-2 font-ui text-[13px] font-medium text-white"
-              >
-                <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_2px_rgba(250,97,20,0.7)]" />
-                {t}
-              </span>
-            </motion.li>
-          ))}
-        </ul>
+        <FloatingTags tags={hero.tags} positions={["right-[4%] top-[6%] md:right-[10%]"]} delay={1.3} />
       </motion.div>
-      <ul aria-label="Specialities" className="container-x mt-8 flex flex-wrap justify-center gap-2 sm:hidden">
-        {hero.tags.map((t) => (
-          <li key={t} className="liquid inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-ui text-[12px] text-white/85">
-            <span className="size-1.5 rounded-full bg-accent" />
-            {t}
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }
