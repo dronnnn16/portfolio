@@ -34,10 +34,8 @@ export function Navbar() {
     >
       <nav
         aria-label="Main"
-        className={`mx-auto flex h-16 max-w-[1200px] items-center justify-between rounded-full border px-3 pl-5 transition-[background-color,border-color,backdrop-filter] duration-500 ${
-          scrolled || open
-            ? "border-white/10 bg-[#100b08]/70 backdrop-blur-xl"
-            : "border-transparent bg-transparent"
+        className={`mx-auto flex h-16 max-w-[1200px] items-center justify-between rounded-full px-3 pl-5 transition-[background-color,box-shadow] duration-500 ${
+          scrolled || open ? "liquid" : "bg-transparent"
         }`}
       >
         <Logo />
@@ -80,7 +78,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -8, filter: "blur(6px)" }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="mx-auto mt-2 max-w-[1200px] rounded-[20px] border border-white/10 bg-[#100b08]/90 p-3 backdrop-blur-xl md:hidden"
+            className="liquid mx-auto mt-2 max-w-[1200px] rounded-[20px] p-3 md:hidden"
           >
             <ul className="flex flex-col">
               {site.nav.map((l) => (

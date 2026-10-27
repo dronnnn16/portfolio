@@ -6,7 +6,7 @@ import { Stagger, StaggerItem } from "../ui/Reveal";
 
 export function Approach() {
   return (
-    <Section id="approach" tone="deep" seed={23} labelledBy="approach-title">
+    <Section id="approach" tone="deep" labelledBy="approach-title">
       <div className="container-x">
         <SectionHeader id="approach-title" label={approach.label} title={approach.title} sub={approach.sub} />
         <Stagger as="ul" className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-20 lg:grid-cols-4 lg:gap-5">

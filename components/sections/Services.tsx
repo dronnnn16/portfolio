@@ -16,7 +16,7 @@ const rowIcons = [
 
 export function Services() {
   return (
-    <Section id="services" seed={31} labelledBy="services-title">
+    <Section id="services" labelledBy="services-title">
       <div className="container-x">
         <SectionHeader id="services-title" label={servicesIntro.label} title={servicesIntro.title} sub={servicesIntro.sub} />
 

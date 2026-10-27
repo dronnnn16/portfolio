@@ -14,10 +14,13 @@ export function Media({
   alt,
   className = "",
   rootMargin = "200px",
+  startAt = 0,
 }: {
   src: string;
   poster?: string;
   alt: string;
+  /** Seconds into the clip to start from (lets repeated clips play out of sync). */
+  startAt?: number;
   className?: string;
   rootMargin?: string;
 }) {
@@ -70,6 +73,10 @@ export function Media({
           playsInline
           preload={reduce ? "metadata" : "none"}
           aria-label={alt}
+          onLoadedMetadata={(e) => {
+            const v = e.currentTarget;
+            if (startAt && v.duration) v.currentTime = startAt % v.duration;
+          }}
           onLoadedData={() => setReady(true)}
           onError={() => setFailed(true)}
         />

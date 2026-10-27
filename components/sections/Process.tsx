@@ -6,7 +6,7 @@ import { ProcessVisual } from "../visuals/ProcessVisuals";
 
 export function Process() {
   return (
-    <Section id="process" seed={53} labelledBy="process-title">
+    <Section id="process" labelledBy="process-title">
       <div className="container-x">
         <SectionHeader id="process-title" label={processIntro.label} sub={processIntro.sub} />
         <Stagger as="ul" className="mt-14 grid gap-4 md:mt-20 md:grid-cols-2 md:gap-5">

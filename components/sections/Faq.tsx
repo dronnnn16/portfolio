@@ -56,7 +56,7 @@ function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; o
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <Section id="faq" tone="deep" seed={83} labelledBy="faq-title">
+    <Section id="faq" tone="deep" labelledBy="faq-title">
       <div className="container-x">
         <SectionHeader id="faq-title" label={faqIntro.label} />
         <Stagger className="mx-auto mt-14 flex max-w-[820px] flex-col gap-3 md:mt-20" stagger={0.07}>

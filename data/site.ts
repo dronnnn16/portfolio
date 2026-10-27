@@ -25,7 +25,7 @@ export const hero = {
   sub: "I'm Dron — a motion designer and video editor from Jaipur. I craft SaaS UI animations, Instagram Reels and long-form edits that look premium and hold attention.",
   primary: { label: "Start a Project", href: "#contact" },
   secondary: { label: "See How I Work", href: "#process" },
-  tags: ["SaaS Motion", "Reels Editing", "Long-form Edits"],
+  tags: ["Reels Editing"], // floating over the short-form (vertical) carousel
 };
 
 // Horizontal 16:9 placeholders for the "Long Form Editing and SaaS Projects" carousel.
@@ -34,6 +34,7 @@ export const longForm = {
   label: "Widescreen Work",
   title: "Long Form Editing and SaaS Projects",
   sub: "YouTube edits, product walkthroughs and SaaS launch videos, cut for 16:9.",
+  tags: ["Long-form Edits", "SaaS Motion"], // floating over the horizontal carousel
   items: Array.from({ length: 6 }, (_, i) => ({
     src: `/long-form/project-${i + 1}.mp4`,
     poster: `/long-form/project-${i + 1}.jpg`,
@@ -42,8 +43,12 @@ export const longForm = {
 };
 
 // Vertical 9:16 reels for the hero carousel. Drop files into /public/reels/.
-export const heroReels = Array.from({ length: 8 }, (_, i) => ({
-  src: `/reels/reel-${i + 1}.mp4`,
-  poster: `/reels/reel-${i + 1}.jpg`,
-  alt: `Showreel clip ${i + 1}`, // {{TODO}} describe each clip
-}));
+// Short-form (9:16) reels for the hero carousel. Files live in /public/reels/.
+// Only one reel so far, so it fills every slot; startAt staggers each copy so
+// neighbouring cards never show the same frame. Replace slots as you add reels.
+const aiAudio = {
+  src: "/reels/ai-audio.mp4",
+  poster: "/reels/ai-audio.jpg",
+  alt: "AI Audio reel with animated market charts",
+};
+export const heroReels = Array.from({ length: 8 }, (_, i) => ({ ...aiAudio, startAt: i * 1.65 }));
