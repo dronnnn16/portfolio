@@ -4,7 +4,7 @@ import { useAnimationFrame, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 import { Media } from "../ui/Media";
 
-type Reel = { src: string; poster: string; alt: string };
+type Reel = { src: string; poster: string; alt: string; startAt?: number };
 
 // Static class strings per orientation (Tailwind needs literal class names).
 const layouts = {
@@ -114,7 +114,7 @@ export function ReelCarousel({
       <div className="absolute inset-0 [transform-style:preserve-3d]">
         {reels.map((reel, i) => (
           <div
-            key={reel.src}
+            key={i}
             ref={(el) => {
               cards.current[i] = el;
             }}
@@ -122,7 +122,7 @@ export function ReelCarousel({
             style={{ opacity: 0 }}
           >
             <div className={`glass overflow-hidden p-1.5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)] ${layout.card}`}>
-              <Media src={reel.src} poster={reel.poster} alt={reel.alt} className={`size-full ${layout.media}`} />
+              <Media src={reel.src} poster={reel.poster} alt={reel.alt} startAt={reel.startAt} className={`size-full ${layout.media}`} />
             </div>
           </div>
         ))}

@@ -43,23 +43,12 @@ export const longForm = {
 };
 
 // Vertical 9:16 reels for the hero carousel. Drop files into /public/reels/.
-// The 4th slot starts near the centre of the carousel.
-const reelPlaceholder = (n: number) => ({
-  src: `/reels/reel-${n}.mp4`,
-  poster: `/reels/reel-${n}.jpg`,
-  alt: `Showreel clip ${n}`, // {{TODO}} replace with a real reel
-});
-export const heroReels = [
-  reelPlaceholder(1),
-  reelPlaceholder(2),
-  reelPlaceholder(3),
-  {
-    src: "/reels/ai-audio.mp4",
-    poster: "/reels/ai-audio.jpg",
-    alt: "AI Audio reel with animated market charts",
-  },
-  reelPlaceholder(5),
-  reelPlaceholder(6),
-  reelPlaceholder(7),
-  reelPlaceholder(8),
-];
+// Short-form (9:16) reels for the hero carousel. Files live in /public/reels/.
+// Only one reel so far, so it fills every slot; startAt staggers each copy so
+// neighbouring cards never show the same frame. Replace slots as you add reels.
+const aiAudio = {
+  src: "/reels/ai-audio.mp4",
+  poster: "/reels/ai-audio.jpg",
+  alt: "AI Audio reel with animated market charts",
+};
+export const heroReels = Array.from({ length: 8 }, (_, i) => ({ ...aiAudio, startAt: i * 1.65 }));
